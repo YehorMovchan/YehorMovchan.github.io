@@ -1,0 +1,31 @@
+body{
+	background-color: #EE3B80;
+}
+h1{
+	color: white;
+	text-align: center;
+}
+dt, dd{
+	color: yellow;
+}
+dt{
+	font-weight: bold;
+	font-size: 30px;
+}
+dd{
+	font-size: 25px;
+}
+.r{
+	font-size: 25px;
+	color: yellow;
+}
+a{
+	color: yellow;
+}
+img{
+	float: right;
+	margin: 5px;
+}
+td>dl>dd{
+    color: black;
+}
