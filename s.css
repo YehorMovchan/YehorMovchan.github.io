@@ -1,6 +1,10 @@
 body{
 	background-color: #EE3B80;
 }
+p{
+    color: rgb(233, 233, 197);
+    font-family: Arial, Helvetica, sans-serif;
+}
 h1{
 	color: white;
 	text-align: center;
@@ -23,14 +27,41 @@ a{
 	color: yellow;
 }
 img{
-	float: right;
-	margin: 5px;
+	display: block;
+    margin: auto;
+    width: 200px;
+    height: 200px;
 }
 td>dl>dd{
     color: black;
 }
-.o>a, .o{
-	font-size: 20px;
-	margin-left: 45%;
-	color: whitesmoke;
+.d{
+	width: 70px;
+	height: 20px;
+	background-color: darkgrey;
+	color: white;
+	float: right;
+	margin: 20px;
+	padding: 2px;
+	text-align: center;
+}
+.wrap{
+	width: 1100px;
+	height: 1000px;
+	margin: auto;
+}
+.card{
+    border-radius: 10px;
+    border: 2px rgb(92, 75, 75) solid;
+    padding: 5px;
+    box-sizing: border-box;
+    margin: 50px;
+    overflow: auto;
+    width: 450px;
+    float: left;
+    height: 500px;
+}
+h2{
+    color: white;
+    text-align: center;
 }
