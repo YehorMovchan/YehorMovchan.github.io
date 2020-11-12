@@ -65,3 +65,17 @@ h2{
     color: white;
     text-align: center;
 }
+table{
+	border: 1px solid black;
+	width: 25%;
+	color:white;
+}
+td{
+	border: 1px solid darkgrey;	
+}
+tr:hover{
+	background-color: grey;
+}
+tr:nth-child(odd){
+	background-color: brown;
+}
