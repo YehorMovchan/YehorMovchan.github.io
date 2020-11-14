@@ -1,5 +1,5 @@
 body{
-	background-color: #EE3B80;
+	background-color:  #269926;
 }
 p{
     color: rgb(233, 233, 197);
@@ -66,16 +66,22 @@ h2{
     text-align: center;
 }
 table{
+	margin: auto;
 	border: 1px solid black;
 	width: 25%;
 	color:white;
+	background-color: #992667;
 }
 td{
 	border: 1px solid darkgrey;	
 }
+tr:nth-child(odd){
+	background-color: #BF7130;
+}
 tr:hover{
 	background-color: grey;
 }
-tr:nth-child(odd){
-	background-color: brown;
+td:hover{
+	background-color: #1D7373;
+	font-weight: bold;
 }
