@@ -72,6 +72,10 @@ table{
 	color:white;
 	background-color: #992667;
 }
+caption{
+	font-weight: bold;
+	font-size: 25px;
+}
 td{
 	border: 1px solid darkgrey;	
 }
