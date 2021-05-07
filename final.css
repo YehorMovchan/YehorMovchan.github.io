@@ -1,0 +1,63 @@
+body{
+    margin: 0;
+}
+.top{
+    background: silver;
+    width: 100%;
+    height: min-content;
+    display: flex;
+    justify-content: space-around;
+}
+.cl11{
+    font-size: 45px;
+    font-family: 'Trebuchet MS';
+    font-weight: bolder;
+    color: DarkSlateGray;
+    margin: 10px;
+}
+.p{
+    margin: 5px;
+}
+.p>p{
+    margin: 0%;
+}
+.mid-top{
+    background: Gainsboro;
+    width: 100%;
+    height: min-content;
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+}
+.mid-top>.p{
+    font-family: DejaVu Sans Mono, monospace;
+    color: navy;
+    font-size: 16pt;
+    text-align: center;
+}
+.mid{
+    background: Gainsboro;
+    width: 100%;
+    height: min-content;
+    display: flex;
+    justify-content: space-around;
+}
+.cardimg{
+    width: 200px;
+    margin-top: 20px;
+    height: 250px;  
+}
+.card-body{
+    background-color: AntiqueWhite;
+}
+.cardim{
+    background-color:antiquewhite;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.bottom{
+    height: 200px;
+    background-color: DarkSlateGrey;
+    width: 100%;
+}
