@@ -2,10 +2,9 @@ body{
     margin: 0;
 }
 .pash{
-    width: 200px;
+    width: 20px;
     text-align: center;
-    background-color: black;
-    height: 50px;
+    height: 20px;
     left: 0px;
     position: absolute;
 }
