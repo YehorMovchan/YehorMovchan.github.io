@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моє дозвілля</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" href="final.css">
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.js"
+    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+    <script>
+      col=prompt("Оберіть кольорову гамму: 1-чорно-біла; 2-сіро-бежевий; 3-у синіх тонах", "Введіть цифру"); 
+      if (col==1){
+        $(function() {
+                  $(".wrapg").css("border", "20px white solid");
+                  $(".wrapg").css("background-color", "white");
+                  $(".top").css("background-color", "black");
+                  $(".cl11").css("color", "white");
+                  $(".mid-top").css("background-color", "white").css("border-bottom", "1px grey solid");
+                  $(".p").css("color", "black");
+                  $(".cardim").css("background-color", "white");
+                  $(".card-body").css("background-color", "white");
+                  $(".footer").css("background-color", "black");
+                  $(".main").css("background-color", "rgba(255, 255, 255, 0.5)");
+                  $(".mid").css("background-color", "black");
+                  $(".mid").css("color", "white");
+        });
+     }
+    if (col==3){
+      $(function() {
+                  $(".wrapg").css("background-color", "navy");
+                  $(".wrapg").css("border", "20px navy solid");
+                  $(".top").css("background-color", "navy");
+                  $(".cl11").css("color", "LightSkyBlue");
+                  $(".mid-top").css("background-color", "CornflowerBlue");
+                  $(".p").css("color", "DarkBlue");
+                  $(".cardim").css("background-color", "CadetBlue");
+                  $(".card-body").css("background-color", "CadetBlue");
+                  $(".footer").css("background-color", "MidnightBlue");
+                  
+        });
+    }
+    </script>
+    <style>
+        .mid{
+            flex-direction: column;
+        }
+       @media screen and (max-width:900px){
+          .mid{
+            flex-direction: column;
+          }
+          .top{
+            align-items: center;
+            flex-direction: column;
+          }
+          .featurette{ 
+            flex-direction: column;
+            align-items: center;
+          }
+          .col-md-5{
+            width: 40%;
+          }
+          .main{
+            display: none;
+          }
+       }
+        @media screen and (max-width:576px){
+          .footer{
+            flex-direction: column;
+            margin: 0px;
+          }
+          .col-md-5{
+            width: 50%;
+          }
+      }
+    </style>
+</head>
+<body>
+  <a href="my11class.html" target="_blank"><div class="main">На головну</div></a>
+    <div class="top">
+        <p class="cl11">11 класс</p>
+        <p class="cl11">2020p.-2021p.</p>
+    </div>
+    <div class="mid-top">
+        <p class="p">Моє дозвілля було досить різноманітним та цікавим. <br> Я витрачав свій вільний час на друзів та саморозвиток</p>
+    </div>
+    <div class="row featurette" style="width: 100%; display: flex; justify-content: space-between;">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">Прогулянки</h2>
+          <p class="lead">Звичайно, що більшість свого часу я витрачав на прогулянки з друзями. Хоча наше місто і не є найяскравішим ми завжди знаходили чим зайнятися. Цбого року ми багато чого пережили та ще багато чого нас чекає попереду.</p>
+        </div>
+        <div class="col-md-5">
+          <img src="d1.jpg" alt="" width="100%" height="300px">
+        </div>
+      </div>
+  
+      <hr class="featurette-divider">
+  
+      <div class="row featurette" style="width: 100%; display: flex; justify-content: space-between;">
+        <div class="col-md-7 order-md-2">
+          <h2 class="featurette-heading">Саморозвиток</h2>
+          <p class="lead">Цього року я відкрив для себе декілька нових царин. У цьому році я почав цікавитися анімацією та її створенням, я трохи почав вивчати synfig studio. Окрім того
+              я зробив два стікерпака для телеграмму. Процесс пошуку цікавих стоп кадрів був досить цікавим та захоплюючим. Ну і звісно як же без книжок, їх я також не забував читати.
+          </p>
+        </div>
+        <div class="col-md-5 order-md-1">
+          <img src="d2.jpg" alt="" width="100%" height="300px">
+        </div>
+      </div>
+  
+      <hr class="featurette-divider">
+  
+      <div class="row featurette" style="width: 100%; display: flex; justify-content: space-between;">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">ЗНО</h2>
+          <p class="lead">Ну і звісно, як же без цього? ЗНО!!! Як випускнику 11 классу мені потрібно буде здавати ЗНО і на його підготовку я такж витрачав хоч і не велику але все ж таки частину часу.</p>
+        </div>
+        <div class="col-md-5">
+          <img src="d3.jpg" alt="" width="100%" height="300px">
+        </div>
+      </div>
+      <hr class="featurette-divider">
+    <div class="footer">
+        <div class="a"><a href="https://www.instagram.com/egormov21/" target="_blank">Inst:<img src="https://pngicon.ru/file/uploads/instagram.png" alt=""></div></a>
+        <div class="a"><a href="https://twitter.com/kxlz4ugnr2xglmu" target="_blank">Twitter:<img src="https://img.icons8.com/color/452/twitter--v1.png" alt=""></div></a>
+        <div class="a"><a href="https://t.me/addstickers/PoperechniyD" target="_blank"> Telegram:<img src="https://pngicon.ru/file/uploads/telegram.png" alt=""></div></a>
+      </div>
+</body>
+</html>

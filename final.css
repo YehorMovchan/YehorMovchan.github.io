@@ -1,11 +1,26 @@
 body{
     margin: 0;
 }
+.pash{
+    width: 200px;
+    text-align: center;
+    background-color: black;
+    height: 50px;
+    left: 0px;
+    position: absolute;
+}
 .wrapg{
     width: 100%;
     background-color: antiquewhite;
     margin: 0px;
     border: 20px antiquewhite solid;
+}
+.h{
+    margin: 20px;
+}
+.txt{
+    margin-left: 20px;
+    font-size: 14pt;
 }
 .main{
     width: 200px;
