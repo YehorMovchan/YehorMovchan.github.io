@@ -1,0 +1,48 @@
+.w1{
+    width: 1px;
+    height: 60px;
+    background-color: red;
+    position: absolute;
+    left: 60px;
+    top: 0px;
+}
+.w2{
+    width: 60px;
+    height: 1px;
+    background-color: red;
+    position: absolute;
+    left: 60px;
+    top: 59px;
+}
+.w3{
+    width: 30px;
+    height: 1px;
+    background-color: red;
+    position: absolute;
+    left: 0px;
+    top: 30px;
+}
+.w4{
+    width: 1px;
+    height: 60px;
+    background-color: red;
+    position: absolute;
+    left: 29px;
+    top: 30px;
+}
+.w5{
+    width: 30px;
+    height: 1px;
+    background-color: red;
+    position: absolute;
+    left: 120px;
+    top: 89px;
+}
+.w6{
+    width: 1px;
+    height: 30px;
+    background-color: red;
+    position: absolute;
+    left: 120px;
+    top: 60px;
+}
