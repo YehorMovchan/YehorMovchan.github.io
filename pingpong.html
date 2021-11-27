@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping-pong</title>
+    <link rel="stylesheet" href="pingpong.css">
+</head>
+<body>
+    <h1>Ping-pong</h1>
+    <div class="menu">
+        <div class="complexity">
+            <div class="choose"><h2>Choose complexity</h2></div>
+            <div class="rad"><input type="radio" name="complexity" id="easy" onchange="complexity()"><label for="easy">easy </label></div>
+            <div class="rad"><input type="radio" name="complexity" id="medium" onchange="complexity()"><label for="medium">medium </label></div>
+            <div class="rad"><input type="radio" name="complexity" id="hard" onchange="complexity()"><label for="hard">hard </label></div>
+            <div class="rad"><input type="radio" name="complexity" id="imposible" onchange="complexity()"><label for="imposible">impossible </label></div>
+        </div>
+        <div class="mode">
+            <div class="choose"><h2>Choose mode</h2></div>
+            <div class="rad"><input type="radio" name="mode" id="PvP" onchange="choose()"><label for="PvP">Player vs Player (local) </label></div>
+            <div class="rad"><input type="radio" name="mode" id="PvAI" onchange="choose()"><label for="PvAI">Player vs AI </label></div>
+        </div>
+    </div>
+    <div class="all">
+        <div class="name_main">
+        <div class="name" id="player1">player1</div>
+        <div class="name" id="player2">player2</div>
+        </div>
+        <div class="main">
+            <div class="score" id="player">0</div>
+            <div class="score" id="AI">0</div>
+            <div class="racket" id="rAI"></div>
+            <div class="ball" id="ball"></div>
+            <div class="racket" id="rplayer"></div>
+        </div>
+    </div>
+    <div class="back" onclick="backToMenu()">Back to menu</div>
+    <div class="behind" id="behind">
+        <div class="win">
+            <p id="win" style="display: block;"> Congratulations!!! <br> You WIN!!!</p>
+            <div class="winok" id="winok" onclick="cl()">Yippee!</div>
+            <div class="back" onclick="backToMenu()">Back to menu</div>
+        </div>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.slim.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script src="function.js"></script>
+<script src="pingpong.js"></script>
+</html>
