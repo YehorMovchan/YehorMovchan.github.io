@@ -1,0 +1,47 @@
+table{
+    border: 1px black solid;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+td{
+    border: 1px black solid;
+    border-collapse: collapse;
+    padding: 5px;
+}
+th{
+    border: 1px black solid;
+    padding: 5px;
+}
+tr{
+    border: 1px black solid;
+}
+tr:nth-child(odd){
+    background-color: rgb(226, 255, 255);
+}
+div{
+    margin-bottom: 20px;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button{
+    margin: auto;
+    background-color: rgb(179, 255, 200);
+    border: 2px black  solid;
+    border-radius: 5px;
+    padding: 5px;
+    transition: 0.3s;
+}
+
+.button:hover{
+    background-color: rgb(226, 255, 255);
+    transition: 0.3s;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}

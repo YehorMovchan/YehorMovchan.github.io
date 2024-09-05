@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Відвідування дітей</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="script.js"> </script>
+    <link rel="stylesheet" href="../../static/style.css">
+</head>
+<body>
+    <table>
+        <tr>
+            <td colspan="8">
+                Номер уроку
+            </td>
+        </tr>
+        <tr id="lesson-chooser">
+            <td><button value="1" onclick="setLesson(this)">1</button></td>
+            <td> <button value="2" onclick="setLesson(this)">2</button></td>
+            <td><button value="3" onclick="setLesson(this)">3</button></td>
+            <td><button value="4" onclick="setLesson(this)">4</button></td>
+            <td><button value="5" onclick="setLesson(this)">5</button></td>
+            <td><button value="6" onclick="setLesson(this)">6</button></td>
+            <td><button value="7" onclick="setLesson(this)">7</button></td>
+            <td><button value="8" onclick="setLesson(this)">8</button></td>
+            <td id="lesson"></td>
+        </tr>
+    </table>
+    <table class="grade-chooser">
+        <tr>
+            <td colspan="8">
+                Клас
+            </td>
+        </tr>
+        <tr id="grade-chooser">
+            <td><button value="1" onclick="showKids(this)">1</button></td>
+           <td> <button value="2" onclick="showKids(this)">2</button></td>
+            <td><button value="3" onclick="showKids(this)">3</button></td>
+            <td><button value="4" onclick="showKids(this)">4</button></td>
+            <td><button value="5" onclick="showKids(this)">5</button></td>
+            <td><button value="6" onclick="showKids(this)">6</button></td>
+            <td><button value="7" onclick="showKids(this)">7</button></td>
+            <td><button value="8" onclick="showKids(this)">8-11</button></td>
+        </tr>
+    </table>
+    <table class="kids" id="kids">
+        
+    </table>
+    <button onclick="sendData()">Підтвердити</button>
+</body>
+</html>
