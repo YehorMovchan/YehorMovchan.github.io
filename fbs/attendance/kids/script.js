@@ -37,7 +37,7 @@ function getKids(grade){
                             kid: element.id,
                             teacher: data[0].teacher,
                             subject: data[0].subject,
-                            date: getFormattedDate(),
+                            date: getFormattedDate(new Date()),
                             present:true})
                     }
                 })
@@ -48,15 +48,6 @@ function getKids(grade){
     })
 }
 
-function getFormattedDate(){
-    let date = new Date();
-    let day = date.getDate() <10 ? "0"+date.getDate() : date.getDate(); 
-    let month = date.getMonth()+1 <10 ? "0"+(date.getMonth()+1) : date.getMonth()+1; 
-    let year = date.getFullYear();
-
-
-    return `${year}-${month}-${day}`
-}
 
 function setLesson(el){
     lesson=el.value;
