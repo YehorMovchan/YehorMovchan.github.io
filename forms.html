@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма реєстрації</title>
+</head>
+<body>
+    <h1>Реєстрація на подію</h1>
+    <form action="#" method="post">
+        <!-- Поле для імені -->
+        <label for="name">Ім'я:</label>
+        <input type="text" id="name" name="name" placeholder="Введіть ваше ім'я" required>
+        <br><br>
+
+        <!-- Поле для електронної пошти -->
+        <label for="email">Електронна пошта:</label>
+        <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+        <br><br>
+
+        <!-- Вибір дати -->
+        <label for="date">Дата події:</label>
+        <input type="date" id="date" name="date" required>
+        <br><br>
+
+        <!-- Випадаючий список -->
+        <label for="role">Тип участі:</label>
+        <select id="role" name="role" required>
+            <option value="">Оберіть роль</option>
+            <option value="participant">Учасник</option>
+            <option value="speaker">Спікер</option>
+            <option value="organizer">Організатор</option>
+        </select>
+        <br><br>
+
+        <!-- Чекбокси -->
+        <fieldset>
+            <legend>Додаткові послуги:</legend>
+            <label>
+                <input type="checkbox" name="services" value="lunch"> Обід
+            </label>
+            <br>
+            <label>
+                <input type="checkbox" name="services" value="materials"> Роздаткові матеріали
+            </label>
+        </fieldset>
+        <br>
+
+        <!-- Радіо-кнопки -->
+        <fieldset>
+            <legend>Спосіб оплати:</legend>
+            <label>
+                <input type="radio" name="payment" value="card" required> Картка
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="payment" value="cash"> Готівка
+            </label>
+            <br>
+            <label>
+                <input type="radio" name="payment" value="bank"> Безготівковий розрахунок
+            </label>
+        </fieldset>
+        <br>
+
+        <!-- Кнопка відправки -->
+        <button type="submit">Зареєструватися</button>
+    </form>
+</body>
+</html>
