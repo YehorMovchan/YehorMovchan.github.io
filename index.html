@@ -39,9 +39,10 @@
             links = data;
             iframe.src=links.page;
         })
+        function changePage(el){
+            iframe.src = links.el.href;
+        }
     })
-    function changePage(el){
-        iframe.src = links.el.href;
-    }
+
 </script>
 </html>
