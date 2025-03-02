@@ -35,7 +35,7 @@
         const iframe = $("#iframe-content")[0];
         let page = location.hash;
         let links;
-        $.getJSON("D:\Навчання\ДИПЛОМ\Front-end\assets\links.json", (data)=>{
+        $.getJSON("https://yehormovchan.github.io/assets/links.json", (data)=>{
             links = data;
         })
         iframe.src=links.page;
