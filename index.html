@@ -38,7 +38,7 @@
         iframe = $("#iframe-content")[0]
         $.getJSON("https://yehormovchan.github.io/assets/links.json", (data)=>{
             links = data;
-            iframe.src=links.page;
+            iframe.src=links[page];
         })
     })
     function changePage(el){
