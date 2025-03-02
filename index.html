@@ -31,18 +31,19 @@
     </footer> -->
 </body>
 <script>
-    $(document).ready(()=>{
-        const iframe = $("#iframe-content")[0];
+        let iframe;
         let page = location.hash;
         let links;
+    $(document).ready(()=>{
+        iframe = $("#iframe-content")[0]
         $.getJSON("https://yehormovchan.github.io/assets/links.json", (data)=>{
             links = data;
             iframe.src=links.page;
         })
-        function changePage(el){
-            iframe.src = links.el.href;
-        }
     })
+    function changePage(el){
+        iframe.src = links.el.href;
+    }
 
 </script>
 </html>
