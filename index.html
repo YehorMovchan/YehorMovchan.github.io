@@ -1,16 +1,51 @@
-<html>
+<!DOCTYPE html>
+<html lang="uk">
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адміністрування школи</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
 </head>
 <body>
-<p style="color:blue;" align="center" >  Hello everyone!<br />
-
-My name is Yehor <br />
-<b> - bold </b>
-<i> - italic</i>
-<u> - underline </u> <br />
-<b><u> bold underline </b></u>
-</p>
-<p style="color: red;"> This text red </p>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="changePage(this)">Головна</a></li>
+                <li><a href="#kids" data-link="D:\Навчання\ДИПЛОМ\Front-end\iframe content\kids.html" onclick="changePage(this)">Учні</a></li>
+                <li><a href="#staff" data-link="D:\Навчання\ДИПЛОМ\Front-end\iframe content\staff.html" onclick="changePage(this)">Працівники</a></li>
+                <li><a href="#schedule" data-link="D:\Навчання\ДИПЛОМ\Front-end\iframe content\schedule.html" onclick="changePage(this)">Розклад</a></li>
+                <li><a href="#settings" onclick="changePage(this)">Налаштування</a></li>
+                <li><a href="#groupstype" data-link="D:\Навчання\ДИПЛОМ\Front-end\iframe content\groupstype.html" onclick="changePage(this)">Гуртки</a></li>
+                <li><a href="#programstype" data-link="D:\Навчання\ДИПЛОМ\Front-end\iframe content\programstype.html" onclick="changePage(this)">Програми навчання</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <iframe id="iframe-content" src="iframe content\kids.html" frameborder="0"></iframe>
+    </main>
+    
+    <!-- <footer>
+        <p>&copy; 2025 Адміністрування школи</p>
+    </footer> -->
 </body>
+<script>
+    $(document).ready(()=>{
+        const iframe = $("#iframe-content")[0];
+        let page = location.hash;
+        $.getJSON("D:\Навчання\ДИПЛОМ\Front-end\assets\links.json", (data)=>{
+            iframe.src=data.page;
+        }).fail((errorMessage)=>{
+            console.log("fail")
+            console.log(errorMessage);
+            
+        })
+    })
+    function changePage(el){
+        const iframe = $("#iframe-content")[0];
+        el.classList.add("active")
+        iframe.src = el.dataset.link;
+    }
+</script>
 </html>

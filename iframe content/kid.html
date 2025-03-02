@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інформація про учня</title>
+    <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/blob-util@2.0.2/dist/blob-util.js"></script>
+    <script>
+
+        $(document).ready(function() {
+            $(".accordion-header").click(function() {
+                $(this).next(".addition-block").slideToggle();
+            });
+        });
+
+        $(document).ready(function() {                                      // Load kid info
+            let urlParams = new URLSearchParams(window.location.search);
+            let kidId = urlParams.get("id");
+            $("#parents")[0].src = `D:/Навчання/ДИПЛОМ/Front-end/iframe content/parent.html?id=${kidId}`
+            $("#transactions")[0].src = `D:/Навчання/ДИПЛОМ/Front-end/iframe content/transactions.html?id=${kidId}`
+            $("#groups")[0].src = `D:/Навчання/ДИПЛОМ/Front-end/iframe content/groupAttendance.html?id=${kidId}`
+            $("#attendance-on-lesson")[0].src = `D:/Навчання/ДИПЛОМ/Front-end/iframe content/lessonAttendance.html?id=${kidId}`
+
+            $(".loader").show();
+            $(".request-error").hide();
+
+            if (kidId) {
+                $.getJSON(`http://localhost:8080/kid/${kidId}`, 
+                (kid) => {
+                    $(".general-loader").hide();
+                    $("#kid-name").text(kid.name);
+                    $("#kid-grade").text(kid.grade);
+                    $("#kid-birthday").text(kid.birthday || 'Немає даних');
+
+                    $("#edit-kid-name").val(kid.name);
+                    $("#edit-kid-grade").val(kid.grade);
+                    $("#edit-kid-birthday").val(kid.birthday);
+                    
+                    if (kid.birthCertificate) {
+                        $("#birth-certificate").text("Переглянути свідоцтво про народження");
+                        $("#birth-certificate").click(()=>{
+                            $("#birth-certificate-modal").fadeIn();
+                        })
+                        $("#birth-certificate-img").attr("src", `data:image/png;base64,${kid.birthCertificate}`);
+                    } else {
+                        $("#birth-certificate").text("Свідоцтво про народження відсутнє");
+                        $("#birth-certificate-img").hide();
+                    }
+                }, 
+                (xhr)=>{
+                    $(".general-loader").hide();
+                    $(".general-request-error").show();
+                });
+
+                $.getJSON(`http://localhost:8080/nutrition/${kidId}`, 
+                (nutrition) => {
+                    console.log(nutrition);
+                    $(".nutrition-loader").hide();
+                    $("#breakfast").prop("checked", nutrition.breakfast);
+                    $("#lunch").prop("checked", nutrition.lunch);
+                    $("#dinner").prop("checked", nutrition.dinner);
+                },
+                (xhr)=>{
+                    console.log(xhr);
+                    $(".nutrition-loader").hide();
+                    $(".nutrition-request-error").show();
+                }
+            );
+
+                $.getJSON(`http://localhost:8080/view/program/${kidId}`,
+                (program) => {
+                    console.log(program);
+                    $(".programs-loader").hide();
+                    $("#program").text(program.programName);
+                },
+                ()=>{
+                    $(".programs-loader").hide();
+                    $(".programs-request-error").show();
+                }    
+            );
+            }
+            
+            $("#edit-kid-button").click(function() {
+                $("#edit-kid-modal").fadeIn();
+            });
+
+            $("#save-kid").click(function() {
+
+                let updatedData = {
+                    id: kidId,
+                    name: $("#edit-kid-name").val(),
+                    grade: $("#edit-kid-grade").val(),
+                    birthday: $("#edit-kid-birthday").val(),
+                    birthCertificate: null,
+                    mother: null,
+                    father: null
+                };
+
+                let formData = new FormData();
+
+                formData.append("kid", new Blob([JSON.stringify(updatedData)], { type: "application/json"}));
+
+                let fileInput = $("#upload-certificate")[0].files[0];
+                let url;
+                if(fileInput!=undefined){
+                    let blob = new Blob([fileInput], { type: fileInput.type });
+                    formData.append("birthCertificate", blob, fileInput.name);
+                    url=`http://localhost:8080/kid/image-update/${kidId}`
+                }
+                else{
+                    url=`http://localhost:8080/kid/update/${kidId}`
+                }
+
+                
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                    contentType: false,
+                    data: formData,
+                    cache : false,
+                    processData: false,
+                    success: (successMessage)=> {
+                        location.reload()
+                    },
+                    error:(errorMessage)=>{
+                        console.log("error" +errorMessage)
+                    }
+                });
+            });
+
+            $("#edit-nutrition").click(function() {
+                $("#edit-nutrition-modal").fadeIn();
+            });
+
+            $("#confirm-nutrition").click(function() {
+                let updatedNutrition = {
+                    kid: kidId,
+                    from: null, 
+                    to: new Date(),
+                    breakfast: $("#edit-breakfast").prop("checked"),
+                    lunch: $("#edit-lunch").prop("checked"),
+                    dinner: $("#edit-dinner").prop("checked"),
+                    reasonOfChange: $("#nutrition-reason").val()
+                };
+                
+                $.ajax({
+                    url: `http://localhost:8080/nutrition/edit/${kidId}`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(updatedNutrition),
+                    success: () => location.reload(),
+                    error: (errorMessage) => console.log("error" + errorMessage)
+                });
+            });
+
+            $("#view-nutrition-history").click(function() {
+                $.getJSON(`http://localhost:8080/nutrition/history/${kidId}`, function(history) {
+                    let tableRows = history.map(entry => 
+                        `<tr>
+                            <td>${entry.from}</td>
+                            <td>${entry.to || 'досі'}</td>
+                            <td><input type="checkbox" disabled ${entry.breakfast === true ? 'checked' : ''}></td>
+                            <td><input type="checkbox" disabled ${entry.lunch === true ? 'checked' : ''}></td>
+                            <td><input type="checkbox" disabled ${entry.dinner === true ? 'checked' : ''}></td>
+                            <td>${entry.reasonOfChange || 'Без причини'}</td>
+                        </tr>`
+                    ).join('');
+                    
+                    let tableHtml = `
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Від</th>
+                                    <th>До</th>
+                                    <th>Сніданок</th>
+                                    <th>Обід</th>
+                                    <th>Вечеря</th>
+                                    <th>Причина зміни</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+                    `;
+                    
+                    $('#nutrition-history-list').html(tableHtml);
+                    $("#nutrition-history-modal").fadeIn();
+                });
+            });
+
+            
+            $.getJSON(`http://localhost:8080/programstype`, function(programTypes) {
+                programTypes.forEach(program => {
+                    $("#program-types").append(`<option value="${program.id}">${program.name}</option>`);
+                });
+            });
+
+            $("#edit-program").click(function() {
+                $("#edit-program-modal").fadeIn();
+            });
+
+            $("#confirm-program").click(function() {
+                let updatedProgram = {
+                    kid: kidId,
+                    from: null,
+                    to: new Date(),
+                    program: $("#program-types").val(),
+                    reasonOfChange: $("#program-reason").val()
+                };
+                
+                $.ajax({
+                    url: `http://localhost:8080/program/edit/${kidId}`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(updatedProgram),
+                    success: () => location.reload(),
+                    error: (errorMessage) => console.log("error" + errorMessage)
+                });
+            });
+        
+            $("#view-program-history").click(function() {
+                $.getJSON(`http://localhost:8080/view/program/history/${kidId}`, function(history) {
+                    let tableRows = history.map(entry => 
+                        `<tr>
+                            <td>${entry.from}</td>
+                            <td>${entry.to || 'досі'}</td>
+                            <td>${entry.programName}</td>
+                            <td>${entry.reasonOfChange || 'Без причини'}</td>
+                        </tr>`
+                    ).join('');
+                    
+                    let tableHtml = `
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Від</th>
+                                    <th>До</th>
+                                    <th>Програма</th>
+                                    <th>Причина зміни</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+                    `;
+                    
+                    $('#program-history-list').html(tableHtml);
+                    $("#program-history-modal").fadeIn();
+                });
+            });
+
+        });
+    </script>
+
+</head>
+<body>
+    <h1 id="kid-name"></h1>
+    <div class="main-info">
+        <div class="general">
+            <div class="loader general-loader"></div>
+            <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
+            <span><strong>Клас:</strong> <span id="kid-grade"></span></span>
+            <span><strong>Дата народження:</strong> <span id="kid-birthday"></span></span>
+            <span><strong id="birth-certificate" class="clickable"></strong></span>
+            <div class="modal hidden" id="birth-certificate-modal">
+                <img id="birth-certificate-img" src="" alt="Свідоцтво про народження" style="max-width: 700px;">
+                <button onclick="$('#birth-certificate-modal').fadeOut()">Закрити</button>
+            </div>
+            <button id="edit-kid-button">Редагувати інформацію</button>
+        </div>
+        <div class="nutrition">
+            <div class="loader nutrition-loader"></div>
+            <div class="nutrition-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
+            <h3>Харчування</h3>
+            <div class="checkbox-block">
+                <label><input type="checkbox" id="breakfast" disabled> Сніданок</label><br>
+                <label><input type="checkbox" id="lunch" disabled> Обід</label><br>
+                <label><input type="checkbox" id="dinner" disabled> Вечеря</label><br>
+            </div>
+            <div class="buttons-block">
+                <button id="edit-nutrition">Редагувати харчування</button>
+                <button id="view-nutrition-history">Історія змін</button>
+            </div>
+        </div>
+        <div class="programs">
+            <div class="loader programs-loader"></div>
+            <div class="programs-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
+            <h3>Програма навчання: <span id="program"></span></h3>
+            <button id="edit-program">Редагувати програму навчання</button>
+            <button id="view-program-history">Історія змін</button>
+        </div>
+    </div>
+
+    
+    <div id="edit-kid-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+                <h2>Редагування учня</h2>
+                <label>Ім'я: <input type="text" id="edit-kid-name"></label><br>
+                <label>Клас: <input type="number" id="edit-kid-grade"></label><br>
+                <label>Дата народження: <input type="date" id="edit-kid-birthday"></label><br>
+                <label>Свідоцтво про народження <input type="file" id="upload-certificate" accept="image/*"> </label> <br>
+                <button id="save-kid">Зберегти</button><br>
+                <button onclick="$('#edit-kid-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+
+    <div id="edit-nutrition-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+            <h2>Редагування харчування</h2>
+            <div class="checkbox-block">
+                <label><input type="checkbox" id="edit-breakfast"> Сніданок</label><br>
+                <label><input type="checkbox" id="edit-lunch"> Обід</label><br>
+                <label><input type="checkbox" id="edit-dinner"> Вечеря</label><br>
+            </div>
+            <label>Причина зміни: <input type="text" id="nutrition-reason"></label><br>
+            <button id="confirm-nutrition">Підтвердити</button>
+            <button onclick="$('#edit-nutrition-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+   
+    <div id="nutrition-history-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+            <h2>Історія змін харчування</h2>
+            <div id="nutrition-history-list"></div>
+            <button onclick="$('#nutrition-history-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+
+    <div id="edit-program-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+            <h2>Редагування програми</h2>
+            <select name="program-types" id="program-types"></select>
+            <label>Причина зміни: <input type="text" id="program-reason"></label><br>
+            <button id="confirm-program">Підтвердити</button>
+            <button onclick="$('#edit-program-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+
+    <div id="program-history-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+            <h2>Історія змін програми навчання</h2>
+            <div id="program-history-list"></div>
+            <button onclick="$('#program-history-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+
+
+   
+    
+    
+    <div class="accordion-block">
+        <div class="accordion-header">Батьки</div>
+        <iframe id="parents" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
+
+    <div class="accordion-block">
+        <div class="accordion-header">Транзакції</div>
+        <iframe id="transactions" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
+
+    <div class="accordion-block">
+        <div class="accordion-header">Гуртки</div>
+        <iframe id="groups" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
+    
+    <div class="accordion-block">
+        <div class="accordion-header">Відвідуваність уроків</div>
+        <iframe id="attendance-on-lesson" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
+    
+</body>
+</html>

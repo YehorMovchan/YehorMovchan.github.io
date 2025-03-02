@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Редагування розкладу</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      var subjects = [];
+      var teachers = [];
+      $("#scheduleHistoryTable").hide();
+    
+      var scheduleData = {};
+      var currentCell = null;
+     
+      $.getJSON("http://localhost:8080/schedule/history-dates", function(data) {
+        data.forEach(function(dateRange) {
+          if (dateRange.length === 2) {
+            var startDate = dateRange[0];
+            var endDate = dateRange[1];
+            var formattedOption = startDate + " - " + endDate;
+
+            $('#date-select').append($('<option>', {
+              value:formattedOption,
+              text: formattedOption
+            }));
+          }
+        });
+      });
+
+      $("#date-select").on("change", ()=>{
+        let val = $("#date-select").val();
+        if(val==""){
+          $("#scheduleHistoryTable").hide();
+          $("#scheduleTable").show();
+        }
+        else{
+          let dates = val.split(' - ');
+          $.getJSON(`http://localhost:8080/view/schedule/history/${dates[0]}/${dates[1]}/${$('#daySelect').val()}`, (data)=>{
+            $("#scheduleHistoryTable").show();
+            $("#scheduleTable").hide();
+            scheduleHistoryData = {};
+            $.each(data, function(index, entry) {
+              // Формуємо ключ: "classField-lessonNumber"
+              var key = entry.classField + '-' + entry.lessonNumber;
+              scheduleHistoryData[key] = {
+                  classField: entry.classField,
+                  dayOfWeek: entry.dayOfWeek,
+                  from: entry.from,
+                  to: entry.to,
+                  teacher: entry.teacherId,
+                  subject: entry.subjectId,
+                  lessonNumber:entry.lessonNumber
+              }
+              // Заповнюємо відповідну клітинку таблиці
+              $('#scheduleHistoryTable tbody tr[data-lesson="'+ entry.lessonNumber +'"] td[data-class="'+ entry.classField +'"]').html(
+                '<span class="subject-name">' + entry.subjectName + '</span><br>' +
+                '<span class="teacher-name">' + entry.teacherName + '</span>'
+              );
+            });
+          })
+        }
+
+        
+      })
+      
+
+      $.getJSON('http://localhost:8080/subject', function(data) {
+        subjects = data;
+        $.each(subjects, function(index, subject) {
+          $('#subjectSelect').append($('<option>', { value: subject.id, text: subject.name }));
+        });
+      });
+      
+      $.getJSON('http://localhost:8080/staff/teachers', function(data) {
+        teachers = data;
+        $.each(teachers, function(index, teacher) {
+          $('#teacherSelect').append($('<option>', { value: teacher.id, text: teacher.name }));
+        });
+      });
+      
+      // Функція завантаження розкладу для вибраного дня
+      function loadSchedule(day) {
+        // Очищення даних та таблиці
+        scheduleData = {};
+        $('#scheduleTable tbody td').each(function() {
+          $(this).empty();
+        });
+        
+        $.getJSON('http://localhost:8080/view/schedule/actual/' + day, function(data) {
+          // Припускаємо, що data – масив об'єктів розкладу
+          $.each(data, function(index, entry) {
+            // Формуємо ключ: "classField-lessonNumber"
+            var key = entry.classField + '-' + entry.lessonNumber;
+            scheduleData[key] = {
+                classField: entry.classField,
+                dayOfWeek: entry.dayOfWeek,
+                from: entry.from,
+                to: entry.to,
+                teacher: entry.teacherId,
+                subject: entry.subjectId,
+                lessonNumber:entry.lessonNumber
+            }
+            // Заповнюємо відповідну клітинку таблиці
+            $('#scheduleTable tbody tr[data-lesson="'+ entry.lessonNumber +'"] td[data-class="'+ entry.classField +'"]').html(
+              '<span class="subject-name">' + entry.subjectName + '</span><br>' +
+              '<span class="teacher-name">' + entry.teacherName + '</span>'
+            );
+          });
+        });
+      }
+      
+      // Завантаження розкладу для початкового дня (Понеділок, value=1)
+      loadSchedule($('#daySelect').val());
+      
+      // При зміні дня тижня перезавантажуємо розклад
+      $('#daySelect').change(function() {
+        var day = $(this).val();
+        loadSchedule(day);
+      });
+      
+      // Обробка кліку по клітинці (тільки по клітинках з data-class)
+      $('#scheduleTable tbody td[data-class]').click(function() {
+        currentCell = $(this);
+        var lessonNumber = currentCell.closest('tr').data('lesson');
+        var classField = currentCell.data('class');
+        var key = classField + '-' + lessonNumber;
+        var entry = scheduleData[key];
+        // Якщо запис існує – встановлюємо вибрані значення в селекторах
+        if (entry) {
+          $('#subjectSelect').val(entry.subjectId);
+          $('#teacherSelect').val(entry.teacherId);
+        } else {
+          $('#subjectSelect').val('');
+          $('#teacherSelect').val('');
+        }
+        // Відображаємо модальне вікно
+        $('.modal').show();
+      });
+      
+      // Обробка кнопки "Скасувати" у модальному вікні
+      $('#modalCancel').click(function() {
+        $('.modal').hide();
+      });
+      
+      // Обробка кнопки "Зберегти" у модальному вікні
+      $('#modalSave').click(function() {
+        var subjectId = $('#subjectSelect').val();
+        var teacherId = $('#teacherSelect').val();
+        
+        var subjectName
+        var teacherName
+
+        if(subjectId === "" || teacherId === "") {
+            subjectName=""
+            teacherName=""
+        }
+        else{
+            subjectName = $('#subjectSelect option:selected').text();
+            teacherName = $('#teacherSelect option:selected').text();
+        }
+        
+        
+        var lessonNumber = currentCell.closest('tr').data('lesson');
+        var classField = currentCell.data('class');
+        var dayOfWeek = $('#daySelect').val();
+        
+        // Створюємо або оновлюємо запис розкладу
+        var key = classField + '-' + lessonNumber;
+        var entry = scheduleData[key] || {};
+        entry.classField = classField;
+        entry.dayOfWeek = parseInt(dayOfWeek);
+        entry.from = new Date();
+        entry.to = null;
+        entry.teacher = parseInt(teacherId);
+        entry.subject = parseInt(subjectId);
+        entry.lessonNumber = lessonNumber;
+        // Зберігаємо також імена для відображення
+        
+        scheduleData[key] = entry;
+        
+        // Оновлюємо вигляд клітинки: предмет великим шрифтом, вчитель – меншим та сірим
+        currentCell.html('<span class="subject-name">' + subjectName + '</span><br>' +
+                         '<span class="teacher-name">' + teacherName + '</span>');
+        
+        // Закриваємо модальне вікно
+        $('.modal').hide();
+      });
+      
+      // Обробка кліку по кнопці "Зберегти розклад"
+      $('#saveSchedule').click(function() {
+        // Формуємо масив з об'єктів розкладу
+        var scheduleArray = [];
+        $.each(scheduleData, function(key, entry) {
+          scheduleArray.push(entry);
+        });
+        
+        // Відправляємо POST запит (URL для збереження потрібно налаштувати під свій бекенд)
+        $.ajax({
+          url: 'http://localhost:8080/schedule/save', // змініть URL за потребою
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(scheduleArray),
+          success: function(response) {
+            alert("Розклад успішно збережено!");
+          },
+          error: function(xhr, status, error) {
+            alert("Помилка при збереженні розкладу: " + error);
+          }
+        });
+      });
+    });
+  </script>
+  <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
+  <style>
+    table{
+        width: 80%;
+        margin: auto;
+        margin-top: 20px;
+        font-size: 12px;
+    }
+    td, th{
+        width: 8%;
+    }
+    .teacher-name {
+      font-size: 0.8em;
+      color: grey;
+    }
+    table.history {
+      background: #f0f0f0; /* Світло-сірий фон */
+      color: #888; /* Тьмяний колір тексту */
+      border: 1px solid #ddd; /* Світло-сірі межі */
+    }
+
+    table.history th {
+      background: #b0b0b0; /* Сірий заголовок */
+      color: #fff; /* Білий текст */
+    }
+
+    table.history tbody tr:nth-child(even) {
+      background: #e8e8e8; /* Тьмяніший відтінок для чергування */
+    }
+
+    table.history tbody tr:hover {
+      background: inherit; /* Відключення підсвічування */
+    }
+
+    table.history td {
+      font-style: italic; /* Курсивний текст */
+    }
+  </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="filter-menu">
+            <label for="daySelect">Виберіть день тижня:</label>
+            <select id="daySelect">
+                <option value="1">Понеділок</option>
+                <option value="2">Вівторок</option>
+                <option value="3">Середа</option>
+                <option value="4">Четвер</option>
+                <option value="5">П'ятниця</option>
+            </select>
+            <div class="addition-filter">
+              <label for="date-select">Історія розкладів:</label>
+              <div class="select-wrapper">
+                <select id="date-select">
+                    <option value="">Актуальний</option>
+                </select>
+              </div>
+            </div>
+        </div>
+    <!-- Таблиця розкладу -->
+        <table id="scheduleTable">
+            <thead>
+            <tr>
+                <!-- Номери класів від 1 до 11 -->
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+                <th>8</th>
+                <th>9</th>
+                <th>10</th>
+                <th>11</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Рядки для уроків 1-8. Перший стовпець – номер уроку,
+                інші клітинки містять data-атрибут data-class -->
+            <tr data-lesson="1">
+                <td data-class="1"></td>
+                <td data-class="2"></td>
+                <td data-class="3"></td>
+                <td data-class="4"></td>
+                <td data-class="5"></td>
+                <td data-class="6"></td>
+                <td data-class="7"></td>
+                <td data-class="8"></td>
+                <td data-class="9"></td>
+                <td data-class="10"></td>
+                <td data-class="11"></td>
+            </tr>
+            <tr data-lesson="2">
+                <td data-class="1"></td>
+                <td data-class="2"></td>
+                <td data-class="3"></td>
+                <td data-class="4"></td>
+                <td data-class="5"></td>
+                <td data-class="6"></td>
+                <td data-class="7"></td>
+                <td data-class="8"></td>
+                <td data-class="9"></td>
+                <td data-class="10"></td>
+                <td data-class="11"></td>
+            </tr>
+            <tr data-lesson="3">
+                <td data-class="1"></td>
+                <td data-class="2"></td>
+                <td data-class="3"></td>
+                <td data-class="4"></td>
+                <td data-class="5"></td>
+                <td data-class="6"></td>
+                <td data-class="7"></td>
+                <td data-class="8"></td>
+                <td data-class="9"></td>
+                <td data-class="10"></td>
+                <td data-class="11"></td>
+            </tr>
+            <tr data-lesson="4">
+                <td data-class="1"></td>
+                <td data-class="2"></td>
+                <td data-class="3"></td>
+                <td data-class="4"></td>
+                <td data-class="5"></td>
+                <td data-class="6"></td>
+                <td data-class="7"></td>
+                <td data-class="8"></td>
+                <td data-class="9"></td>
+                <td data-class="10"></td>
+                <td data-class="11"></td>
+            </tr>
+            <tr data-lesson="5">
+                <td data-class="1"></td>
+                <td data-class="2"></td>
+                <td data-class="3"></td>
+                <td data-class="4"></td>
+                <td data-class="5"></td>
+                <td data-class="6"></td>
+                <td data-class="7"></td>
+                <td data-class="8"></td>
+                <td data-class="9"></td>
+                <td data-class="10"></td>
+                <td data-class="11"></td>
+            </tr>
+            <tr data-lesson="6">
+                <td data-class="1"></td>
+                <td data-class="2"></td>
+                <td data-class="3"></td>
+                <td data-class="4"></td>
+                <td data-class="5"></td>
+                <td data-class="6"></td>
+                <td data-class="7"></td>
+                <td data-class="8"></td>
+                <td data-class="9"></td>
+                <td data-class="10"></td>
+                <td data-class="11"></td>
+            </tr>
+            <tr data-lesson="7">
+                <td data-class="1"></td>
+                <td data-class="2"></td>
+                <td data-class="3"></td>
+                <td data-class="4"></td>
+                <td data-class="5"></td>
+                <td data-class="6"></td>
+                <td data-class="7"></td>
+                <td data-class="8"></td>
+                <td data-class="9"></td>
+                <td data-class="10"></td>
+                <td data-class="11"></td>
+            </tr>
+            <tr data-lesson="8">
+                <td data-class="1"></td>
+                <td data-class="2"></td>
+                <td data-class="3"></td>
+                <td data-class="4"></td>
+                <td data-class="5"></td>
+                <td data-class="6"></td>
+                <td data-class="7"></td>
+                <td data-class="8"></td>
+                <td data-class="9"></td>
+                <td data-class="10"></td>
+                <td data-class="11"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table id="scheduleHistoryTable" class="history">
+          <thead>
+          <tr>
+              <!-- Номери класів від 1 до 11 -->
+              <th>1</th>
+              <th>2</th>
+              <th>3</th>
+              <th>4</th>
+              <th>5</th>
+              <th>6</th>
+              <th>7</th>
+              <th>8</th>
+              <th>9</th>
+              <th>10</th>
+              <th>11</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- Рядки для уроків 1-8. Перший стовпець – номер уроку,
+              інші клітинки містять data-атрибут data-class -->
+          <tr data-lesson="1">
+              <td data-class="1"></td>
+              <td data-class="2"></td>
+              <td data-class="3"></td>
+              <td data-class="4"></td>
+              <td data-class="5"></td>
+              <td data-class="6"></td>
+              <td data-class="7"></td>
+              <td data-class="8"></td>
+              <td data-class="9"></td>
+              <td data-class="10"></td>
+              <td data-class="11"></td>
+          </tr>
+          <tr data-lesson="2">
+              <td data-class="1"></td>
+              <td data-class="2"></td>
+              <td data-class="3"></td>
+              <td data-class="4"></td>
+              <td data-class="5"></td>
+              <td data-class="6"></td>
+              <td data-class="7"></td>
+              <td data-class="8"></td>
+              <td data-class="9"></td>
+              <td data-class="10"></td>
+              <td data-class="11"></td>
+          </tr>
+          <tr data-lesson="3">
+              <td data-class="1"></td>
+              <td data-class="2"></td>
+              <td data-class="3"></td>
+              <td data-class="4"></td>
+              <td data-class="5"></td>
+              <td data-class="6"></td>
+              <td data-class="7"></td>
+              <td data-class="8"></td>
+              <td data-class="9"></td>
+              <td data-class="10"></td>
+              <td data-class="11"></td>
+          </tr>
+          <tr data-lesson="4">
+              <td data-class="1"></td>
+              <td data-class="2"></td>
+              <td data-class="3"></td>
+              <td data-class="4"></td>
+              <td data-class="5"></td>
+              <td data-class="6"></td>
+              <td data-class="7"></td>
+              <td data-class="8"></td>
+              <td data-class="9"></td>
+              <td data-class="10"></td>
+              <td data-class="11"></td>
+          </tr>
+          <tr data-lesson="5">
+              <td data-class="1"></td>
+              <td data-class="2"></td>
+              <td data-class="3"></td>
+              <td data-class="4"></td>
+              <td data-class="5"></td>
+              <td data-class="6"></td>
+              <td data-class="7"></td>
+              <td data-class="8"></td>
+              <td data-class="9"></td>
+              <td data-class="10"></td>
+              <td data-class="11"></td>
+          </tr>
+          <tr data-lesson="6">
+              <td data-class="1"></td>
+              <td data-class="2"></td>
+              <td data-class="3"></td>
+              <td data-class="4"></td>
+              <td data-class="5"></td>
+              <td data-class="6"></td>
+              <td data-class="7"></td>
+              <td data-class="8"></td>
+              <td data-class="9"></td>
+              <td data-class="10"></td>
+              <td data-class="11"></td>
+          </tr>
+          <tr data-lesson="7">
+              <td data-class="1"></td>
+              <td data-class="2"></td>
+              <td data-class="3"></td>
+              <td data-class="4"></td>
+              <td data-class="5"></td>
+              <td data-class="6"></td>
+              <td data-class="7"></td>
+              <td data-class="8"></td>
+              <td data-class="9"></td>
+              <td data-class="10"></td>
+              <td data-class="11"></td>
+          </tr>
+          <tr data-lesson="8">
+              <td data-class="1"></td>
+              <td data-class="2"></td>
+              <td data-class="3"></td>
+              <td data-class="4"></td>
+              <td data-class="5"></td>
+              <td data-class="6"></td>
+              <td data-class="7"></td>
+              <td data-class="8"></td>
+              <td data-class="9"></td>
+              <td data-class="10"></td>
+              <td data-class="11"></td>
+          </tr>
+          </tbody>
+      </table>
+    
+    <!-- Кнопка для збереження розкладу -->
+        <button id="saveSchedule">Зберегти розклад</button>
+    </div>
+  <!-- Модальне вікно -->
+  <div class="modal hidden">
+    <h2>Вибір уроку та вчителя</h2>
+    <label for="subjectSelect">Предмет:</label>
+    <select id="subjectSelect">
+      <option value="">--Виберіть предмет--</option>
+    </select>
+    <br><br>
+    <label for="teacherSelect">Вчитель:</label>
+    <select id="teacherSelect">
+      <option value="">--Виберіть вчителя--</option>
+    </select>
+    <br><br>
+    <button id="modalSave">Зберегти</button>
+    <button id="modalCancel">Скасувати</button>
+  </div>
+  
+
+</body>
+</html>

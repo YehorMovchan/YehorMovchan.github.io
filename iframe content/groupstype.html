@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Перелік гуртків</title>
+    <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "http://localhost:8080/groupstype",
+                method: 'get',
+                dataType: 'json',
+                success:(data)=>{
+                    let container = $("#clubs-list");
+                
+                    data.forEach(club => {
+                        container.append(`
+                            <li>
+                                <span><strong>${club.name}</strong> - Вартість: ${club.price} грн</span>
+                                <a href="club-details.html?id=${club.id}" class="details-link">Детальніше</a>
+                            </li>
+                        `);
+                    });
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    <h1>Перелік гуртків</h1>
+    <ul id="clubs-list" class="item-list"></ul>
+</body>
+</html>

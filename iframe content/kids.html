@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адміністрування школи</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
+</head>
+<body>
+    <h1>Перелік учнів</h1>
+    <div id="students-list" class="item-list">
+        <div class="loader"></div>
+        <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
+    </div>
+</body>
+
+<script>
+    $(".loader").show();
+    $(".request-error").hide();
+    $.ajax({
+        url: "http://localhost:8080/kid",
+        method: 'get',
+        dataType: 'json',
+        success:(data)=>{
+            $(".loader").hide();
+            let studentsByGrade = {};
+                
+            data.forEach(student => {
+                if (!studentsByGrade[student.grade]) {
+                    studentsByGrade[student.grade] = [];
+                }
+                studentsByGrade[student.grade].push(student);
+            });
+            
+            let container = $("#students-list");
+            
+            Object.keys(studentsByGrade).sort((a, b) => a - b).forEach(grade => {
+                container.append(`<h2>Клас ${grade}</h2><ul class='item-list' id='grade-${grade}'></ul>`);
+                studentsByGrade[grade].forEach(student => {
+                    $(`#grade-${grade}`).append(`<a href="D:/Навчання/ДИПЛОМ/Front-end/iframe content/kid.html?id=`+student.id+`"><li><span><strong>${student.name}</strong> (${student.id})</span></li></a>`);
+                });
+            });
+        },
+        error:(xhr)=>{
+            $(".loader").hide();
+            $(".request-error").show();
+        }
+    }
+    )
+</script>
+
+
+</html>
+
+
+

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Історія оплат</title>
+    <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".request-error").hide()
+            let urlParams = new URLSearchParams(window.location.search);
+            let kidId = urlParams.get('id');
+            loadTransactions(kidId);
+            loadTransactionTypes();
+
+            $("#filter-btn").click(function() {
+                loadTransactions(kidId);
+            });
+
+            function loadTransactions(kidId) {
+                let fromDate = $("#from-date").val();
+                let toDate = $("#to-date").val();
+                let transactionType = $("#transaction-type").val();
+                
+                $.getJSON(`http://localhost:8080/view/transaction/${kidId}`, function(data) {
+                    $(".request-error").hide()
+                    let filteredData = data.filter(transaction => {
+                        let date = new Date(transaction.date);
+                        let from = fromDate ? new Date(fromDate) : null;
+                        let to = toDate ? new Date(toDate) : null;
+                        
+                        return (!from || date >= from) && (!to || date <= to) && 
+                               (!transactionType || transaction.transactionTypeId == transactionType);
+                    });
+                    
+                    renderTable(filteredData);
+                }).fail(()=>{
+                    $(".request-error").show();
+                });;
+            }
+
+            function loadTransactionTypes() {
+                $.getJSON("http://localhost:8080/transactiontypes", function(types) {
+                    $(".request-error").hide()
+                    let select = $("#transaction-type");
+                    select.append('<option value="">Усі</option>');
+                    types.forEach(type => {
+                        select.append(`<option value="${type.id}">${type.name}</option>`);
+                    });
+                }).fail(()=>{
+                    $(".request-error").show();
+                });
+            }
+
+            function renderTable(data) {
+                let tableBody = $("#transactions-body");
+                tableBody.empty();
+                data.forEach(transaction => {
+                    tableBody.append(`
+                        <tr>
+                            <td>${transaction.date}</td>
+                            <td>${transaction.transactionTypeName}</td>
+                            <td>${transaction.sum} грн</td>
+                            <td>${transaction.receipt ? '<a href="' + transaction.receipt + '" target="_blank">Квитанція</a>' : 'Немає'}</td>
+                        </tr>
+                    `);
+                });
+            }
+        });
+    </script>
+    <style>
+        body{
+            overflow-y: auto; 
+            overflow-x: auto;
+        }
+        body::-webkit-scrollbar{
+            display: inline;
+            background-color: rgb(150, 170, 202);
+            border-radius: 5px;
+        }
+        body::-webkit-scrollbar-thumb{
+            background-color: rgb(93, 143, 209);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="filter-menu">
+            <div class="dates">
+                <label>Від дати:</label> <input type="date" id="from-date">
+                <label>До дати:</label> <input type="date" id="to-date">
+            </div>
+            <select id="transaction-type"></select>
+            <button id="filter-btn">Фільтрувати</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Тип транзакції</th>
+                    <th>Сума</th>
+                    <th>Квитанція</th>
+                </tr>
+            </thead>
+            <tbody id="transactions-body"></tbody>
+        </table>
+        <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
+    </div>
+</body>
+</html>

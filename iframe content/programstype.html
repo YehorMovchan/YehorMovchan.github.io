@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Перелік гуртків</title>
+    <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "http://localhost:8080/programstype",
+                method: 'get',
+                dataType: 'json',
+                success:(data)=>{
+                    let container = $("#programs-list");
+                
+                    data.forEach(program => {
+                        container.append(`
+                            <li>
+                                <span>
+                                    <strong>${program.name}</strong>
+                                </span>
+                                <a href="program-details.html?id=${program.id}" class="details-link">Детальніше</a>
+                            </li>
+                        `);
+                    })
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    <h1>Перелік програм навчання</h1>
+    <ul id="programs-list" class="item-list"></ul>
+</body>
+</html>

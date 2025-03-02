@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Адміністрування школи</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
+        <script>
+
+            $(document).ready(function() {
+                $(".request-error").hide()
+                let urlParams = new URLSearchParams(window.location.search);
+                let kidId = urlParams.get('id');
+                let currentMonth = new Date().toISOString().slice(0, 7);
+                
+                if (kidId) {
+                    loadLessonsAndAttendance(kidId, currentMonth);
+                }
+                
+                function loadLessonsAndAttendance(kidId, month) {
+                    let [year, m] = month.split('-');
+                    let from = `${year}-${m}-01`;
+                    let to = `${year}-${m}-${new Date(year, m, 0).getDate()}`;
+                    
+                    $.getJSON(`http://localhost:8080/view/attendance/lesson/${kidId}/${from}/${to}`, function(attendance) {
+                        $(".request-error").hide()
+                        let subjects = [...new Set(attendance.map(a => a.subjectName))];
+                        let {dates, days} = getMonthDates(month);
+                        buildTable(subjects, dates, days, attendance);
+                    }).fail(()=>{
+                        $(".request-error").show()
+                    });
+                }
+                
+                function getMonthDates(month) {
+                    let dates = [];
+                    let days = [];
+                    let [year, m] = month.split('-');
+                    let daysInMonth = new Date(year, m, 0).getDate();
+                    for (let day = 1; day <= daysInMonth; day++) {
+                        dates.push(`${month}-${String(day).padStart(2, '0')}`);
+                        days.push(`${String(day).padStart(2, '0')}`);
+                    }
+                    return {dates, days};
+                }
+                
+                function buildTable(subjects, dates, days, attendance) {
+                    let table = $("#attendance-table");
+                    table.empty();
+                    
+                    let thead = "<tr><th>Предмет</th>";
+                    days.forEach(day => thead += `<th>${day}</th>`);
+                    thead += "</tr>";
+                    table.append(`<thead>${thead}</thead>`);
+                    
+                    let tbody = "";
+                    subjects.forEach(subject => {
+                        tbody += `<tr><td>${subject}</td>`;
+                        dates.forEach(date => {
+                            let attended = attendance.some(a => a.subjectName === subject && a.date === date);
+                            let bgColor = attended ? 'lightgreen' : 'lightpink';
+                            tbody += `<td style="background-color: ${bgColor};">${attended ? '+' : '-'}</td>`;
+                        });
+                        tbody += "</tr>";
+                    });
+                    table.append(`<tbody>${tbody}</tbody>`);
+                }
+                
+                $("#month-selector").change(function() {
+                    let selectedMonth = $(this).val();
+                    loadLessonsAndAttendance(kidId, selectedMonth);
+                });
+            });
+        </script>
+            <style>
+                body{
+                    overflow-y: auto; 
+                    overflow-x: auto;
+                }
+                body::-webkit-scrollbar{
+                    display: inline;
+                    background-color: rgb(150, 170, 202);
+                    border-radius: 5px;
+                }
+                body::-webkit-scrollbar-thumb{
+                    background-color: rgb(93, 143, 209);
+                    border-radius: 5px;
+                }
+            </style>
+    </head>
+    <body>
+        <div class="filter-menu">
+            <label for="month-selector" style="display: block; text-align: center;">Оберіть місяць:</label>
+            <input type="month" id="month-selector" value="2025-02" style="display: block; margin: auto;">
+        </div>
+        <table id="attendance-table"></table>
+        <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
+    </body>
+</html>
