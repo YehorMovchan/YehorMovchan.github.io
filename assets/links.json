@@ -1,9 +1,9 @@
 {
     "#": null,
-    "#kids": "https://yehormovchan.github.io/iframe-content/kids.html",
-    "#staff": "https://yehormovchan.github.io/iframe-content/staff.html",
+    "#kid-list": "https://yehormovchan.github.io/iframe-content/kid-list.html",
+    "#staff-list": "https://yehormovchan.github.io/iframe-content/staff-list.html",
     "#schedule": "https://yehormovchan.github.io/iframe-content/schedule.html",
     "#settings": null,
-    "#groupstype": "https://yehormovchan.github.io/iframe-content/groupstype.html",
-    "#programstype": "https://yehormovchan.github.io/iframe-content/programstype.html"
+    "#groups-type": "https://yehormovchan.github.io/iframe-content/groups-type.html",
+    "#programs-type": "https://yehormovchan.github.io/iframe-content/programs-type.html"
 }

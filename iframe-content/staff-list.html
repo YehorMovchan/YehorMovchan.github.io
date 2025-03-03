@@ -9,18 +9,18 @@
 </head>
 <body>
     <h1>Перелік працівників</h1>
-   
-    <label for="filter">Фільтр:</label>
-    <select id="filter">
-        <option value="all">Всі</option>
-        <option value="teachers">Вчителі</option>
-        <option value="staff">Інші працівники</option>
-    </select>
-    <div id="students-list" class="item-list">
+    <div class="filter-menu">
+        <label for="filter">Фільтр:</label>
+        <select id="filter">
+            <option value="all">Всі</option>
+            <option value="teachers">Вчителі</option>
+            <option value="staff">Інші працівники</option>
+        </select>
+    </div>
+    <div id="employees-list" class="item-list">
         <div class="loader"></div>
         <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
     </div>
-    <ul id="employees-list" class="item-list"></ul>
 </body>
 
 <script>
@@ -35,9 +35,10 @@
                 let filteredData = data.filter(emp => filter === "all" || emp.teacher == (filter === "teachers"));
                 
                 filteredData.forEach(emp => {
-                    container.append(`<li>
-                        <span><strong>${emp.name}</strong> - ${emp.position} | Зарплата: ${emp.payment} грн</span>
-                    </li>`);
+                    container.append(`
+                        <a href="YehorMovchan.github.io/iframe-content/staff.html?id=${emp.id}"><li><span><strong>${emp.name}</strong> - ${emp.position} | Зарплата: ${emp.payment} грн</span></li></a>
+                    `);
+                    
                 });
             }
             
