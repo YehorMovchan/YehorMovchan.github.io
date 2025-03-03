@@ -49,6 +49,7 @@
                     } else {
                         $("#birth-certificate").text("Свідоцтво про народження відсутнє");
                         $("#birth-certificate-img").hide();
+                        $("birth-certificate").removeClass("clickable");
                     }
                 }, 
                 (xhr)=>{
@@ -269,7 +270,7 @@
             <span><strong>Дата народження:</strong> <span id="kid-birthday"></span></span>
             <span><strong id="birth-certificate" class="clickable"></strong></span>
             <div class="modal hidden" id="birth-certificate-modal">
-                <img id="birth-certificate-img" src="" alt="Свідоцтво про народження" style="max-width: 700px;">
+                <img id="birth-certificate-img" src="" alt="Свідоцтво про народження" >
                 <button onclick="$('#birth-certificate-modal').fadeOut()">Закрити</button>
             </div>
             <button id="edit-kid-button">Редагувати інформацію</button>

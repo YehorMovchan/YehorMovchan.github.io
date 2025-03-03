@@ -226,6 +226,7 @@ table tr{
 
 /* Модальне вікно */
 .modal {
+    max-height: 100%;
     display: none;
     position: fixed;
     top: 50%;
@@ -389,4 +390,9 @@ table tr{
 .addition-filter{
     width: 30%;
     align-self: flex-end;
+}
+
+.modal img{
+    max-width: 700px;
+    max-height: 60%;
 }

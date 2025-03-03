@@ -15,16 +15,20 @@
             <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
             <span><strong>Посада:</strong> <span id="teacher-position"></span></span>
             <span><strong>Телефон:</strong> <span id="teacher-phone"></span></span>
-            <span><strong>Номер паспорта:</strong> <span id="teacher-passport"></span></spa>
+            <span><strong>Номер паспорта:</strong> <span id="teacher-passport"></span></span>
             <span><strong>Додаткова інформація:</strong> <span id="teacher-info"></span></span>
-            <img id="passport-copy" src="" alt="Копія паспорта" style="max-width: 300px; display: none;">
+            <span><strong id="passport-copy" class="clickable"></strong></span>
+            <div class="modal hidden" id="passport-copy-modal">
+                <img id="passport-copy-img" src="" alt="Копія паспорта">
+                <button onclick="$('#passport-copy-modal').fadeOut()">Закрити</button>
+            </div>
+            <button id="edit-teacher-button">Редагувати інформацію</button>
         </div>
     </div>
 
-    <button id="edit-teacher-button">Редагувати інформацію</button>
     
     <div id="edit-teacher-modal" class="modal hidden">
-        <div class="edit-wrapper">
+        <div class="edit-wrapper wrapper">
             <h2>Редагування інформації про вчителя</h2>
             <label>Ім'я: <input type="text" id="edit-teacher-name"></label><br>
             <label>Посада: <input type="text" id="edit-teacher-position"></label><br>
@@ -39,6 +43,8 @@
     
     <script>
         $(document).ready(function() {
+            $(".loader").show();
+            $(".request-error").hide();
             let urlParams = new URLSearchParams(window.location.search);
             let teacherId = urlParams.get("id");
             
@@ -51,8 +57,19 @@
                     $("#teacher-info").text(teacher.info || 'Немає даних');
                     
                     if (teacher.passportCopy) {
+                        $("#passport-copy").text("Переглянути копію паспорта").click(() => $("#passport-copy-modal").fadeIn());
+
                         $("#passport-copy").attr("src", `data:image/png;base64,${teacher.passportCopy}`).show();
                     }
+                    else{
+                        $("#passport-copy").text("Копія паспорта відсутня");
+                        $("#passport-copy-img").hide();
+                        $("#passport-copy").removeClass("clickable");
+                    }
+                    $(".general-loader").hide();
+                }).fail(() => {
+                    $(".general-loader").hide();
+                    $(".general-request-error").show();
                 });
             }
             
