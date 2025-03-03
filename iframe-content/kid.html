@@ -22,7 +22,7 @@
                 $("#parents").attr("src", `${links.parents}?id=${kidId}`);
                 $("#transactions").attr("src", `${links.transactions}?id=${kidId}`);
                 $("#groups").attr("src", `${links.groups}?id=${kidId}`);
-                $("#attendance-on-lesson").attr("src", `${links.attendance}?id=${kidId}`);
+                $("#attendance-on-lesson").attr("src", `${links.attendance-on-lesson}?id=${kidId}`);
             });
 
             $(".loader").show();
@@ -45,7 +45,8 @@
                         $("#birth-certificate").click(()=>{
                             $("#birth-certificate-modal").css("display", "flex").hide().fadeIn();
                         })
-                        $("#birth-certificate-img").attr("src", `data:image/png;base64,${kid.birthCertificate}`);
+                        $("#birth-certificate-img").attr("src"
+                        , `data:image/png;base64,${kid.birthCertificate}`);
                     } else {
                         $("#birth-certificate").text("Свідоцтво про народження відсутнє");
                         $("#birth-certificate-img").hide();

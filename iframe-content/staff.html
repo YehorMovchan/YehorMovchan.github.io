@@ -17,7 +17,8 @@
             <span><strong>Телефон:</strong> <span id="teacher-phone"></span></span>
             <span><strong>Номер паспорта:</strong> <span id="teacher-passport"></span></span>
             <span><strong>Додаткова інформація:</strong> <span id="teacher-info"></span></span>
-            <span><strong id="passport-copy" class="clickable"></strong></span>
+            <span><input type="checkbox" id="teacher-teacher" disabled> <span>Вчитель</span></span>
+            <span><strong id="passport-copy" class="clickable"></strong></span><br>
             <div class="modal hidden" id="passport-copy-modal">
                 <img id="passport-copy-img" src="" alt="Копія паспорта">
                 <button onclick="$('#passport-copy-modal').fadeOut()">Закрити</button>
@@ -35,6 +36,7 @@
             <label>Телефон: <input type="text" id="edit-teacher-phone"></label><br>
             <label>Номер паспорта: <input type="text" id="edit-teacher-passport"></label><br>
             <label>Додаткова інформація: <textarea id="edit-teacher-info"></textarea></label><br>
+            <label>Вчитель <input type="checkbox" id="edit-teacher-teacher"></label><br>
             <label>Копія паспорта: <input type="file" id="upload-passport" accept="image/*"></label><br>
             <button id="save-teacher">Зберегти</button>
             <button onclick="$('#edit-teacher-modal').fadeOut()">Закрити</button>
@@ -55,11 +57,20 @@
                     $("#teacher-phone").text(teacher.phone || 'Немає даних');
                     $("#teacher-passport").text(teacher.passportNumber || 'Немає даних');
                     $("#teacher-info").text(teacher.info || 'Немає даних');
-                    
+                    $("#teacher-teacher").prop("checked", teacher.teacher);
+
+                    $("#edit-teacher-name").val(teacher.name);
+                    $("#edit-teacher-position").val(teacher.position);
+                    $("#edit-teacher-phone").val(teacher.phone);
+                    $("#edit-teacher-passport").val(teacher.passportNumber );
+                    $("#edit-teacher-info").val(teacher.info);
+                    $("#edit-teacher-teacher").prop("checked", teacher.teacher);
+
                     if (teacher.passportCopy) {
                         $("#passport-copy").text("Переглянути копію паспорта").click(() => $("#passport-copy-modal").css("display", "flex").hide().fadeIn());
 
-                        $("#passport-copy").attr("src", `data:image/png;base64,${teacher.passportCopy}`).show();
+                        $("#passport-copy-img").attr("src"
+                        , `data:image/png;base64,${teacher.passportCopy}`);
                     }
                     else{
                         $("#passport-copy").text("Копія паспорта відсутня");
@@ -84,20 +95,27 @@
                     position: $("#edit-teacher-position").val(),
                     phone: $("#edit-teacher-phone").val(),
                     passportNumber: $("#edit-teacher-passport").val(),
-                    info: $("#edit-teacher-info").val()
+                    info: $("#edit-teacher-info").val(),
+                    teacher: $("#edit-teacher-teacher").prop("checked"),
+                    passportCopy: null
                 };
                 
                 let formData = new FormData();
-                formData.append("teacher", new Blob([JSON.stringify(updatedData)], { type: "application/json" }));
+                formData.append("staff", new Blob([JSON.stringify(updatedData)], { type: "application/json" }));
                 
                 let fileInput = $("#upload-passport")[0].files[0];
-                if (fileInput) {
+                let url;
+                if (fileInput!=undefined){
                     let blob = new Blob([fileInput], { type: fileInput.type });
                     formData.append("passportCopy", blob, fileInput.name);
+                    url = `http://localhost:8080/staff/image-update/${teacherId}`;
+                }
+                else{
+                    url = `http://localhost:8080/staff/update/${teacherId}`;
                 }
                 
                 $.ajax({
-                    url: `http://localhost:8080/staff/update/${teacherId}`,
+                    url: url,
                     method: "POST",
                     contentType: false,
                     data: formData,
