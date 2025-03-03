@@ -18,10 +18,10 @@
         $(document).ready(function() {                                      // Load kid info
             let urlParams = new URLSearchParams(window.location.search);
             let kidId = urlParams.get("id");
-            $("#parents")[0].src = `D:/Навчання/ДИПЛОМ/Front-end/iframe content/parent.html?id=${kidId}`
-            $("#transactions")[0].src = `D:/Навчання/ДИПЛОМ/Front-end/iframe content/transactions.html?id=${kidId}`
-            $("#groups")[0].src = `D:/Навчання/ДИПЛОМ/Front-end/iframe content/groupAttendance.html?id=${kidId}`
-            $("#attendance-on-lesson")[0].src = `D:/Навчання/ДИПЛОМ/Front-end/iframe content/lessonAttendance.html?id=${kidId}`
+            $("#parents")[0].src = `YehorMovchan.github.io/iframe-content/parent.html?id=${kidId}`
+            $("#transactions")[0].src = `YehorMovchan.github.io/iframe-content/transactions.html?id=${kidId}`
+            $("#groups")[0].src = `YehorMovchan.github.io/iframe-content/group-attendance.html?id=${kidId}`
+            $("#attendance-on-lesson")[0].src = `YehorMovchan.github.io/iframe-content/lesson-attendance.html?id=${kidId}`
 
             $(".loader").show();
             $(".request-error").hide();

@@ -1,58 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Адміністрування школи</title>
+    <title>Інформація про вчителя</title>
+    <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
 </head>
 <body>
-    <h1>Перелік працівників</h1>
-   
-    <label for="filter">Фільтр:</label>
-    <select id="filter">
-        <option value="all">Всі</option>
-        <option value="teachers">Вчителі</option>
-        <option value="staff">Інші працівники</option>
-    </select>
-    <div id="students-list" class="item-list">
-        <div class="loader"></div>
-        <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
+    <h1 id="teacher-name"></h1>
+    <p><strong>Посада:</strong> <span id="teacher-position"></span></p>
+    <p><strong>Телефон:</strong> <span id="teacher-phone"></span></p>
+    <p><strong>Номер паспорта:</strong> <span id="teacher-passport"></span></p>
+    <p><strong>Додаткова інформація:</strong> <span id="teacher-info"></span></p>
+    <img id="passport-copy" src="" alt="Копія паспорта" style="max-width: 300px; display: none;">
+    
+    <br>
+    <button id="edit-teacher-button">Редагувати інформацію</button>
+    
+    <div id="edit-teacher-modal" class="modal hidden">
+        <div class="edit-wrapper">
+            <h2>Редагування інформації про вчителя</h2>
+            <label>Ім'я: <input type="text" id="edit-teacher-name"></label><br>
+            <label>Посада: <input type="text" id="edit-teacher-position"></label><br>
+            <label>Телефон: <input type="text" id="edit-teacher-phone"></label><br>
+            <label>Номер паспорта: <input type="text" id="edit-teacher-passport"></label><br>
+            <label>Додаткова інформація: <textarea id="edit-teacher-info"></textarea></label><br>
+            <label>Копія паспорта: <input type="file" id="upload-passport" accept="image/*"></label><br>
+            <button id="save-teacher">Зберегти</button>
+            <button onclick="$('#edit-teacher-modal').fadeOut()">Закрити</button>
+        </div>
     </div>
-    <ul id="employees-list" class="item-list"></ul>
-</body>
-
-<script>
-    $(".loader").show();
-    $(".request-error").hide();
-    $.getJSON("http://localhost:8080/view/staff", (data)=>{
-        console.log(data);
-        let container = $("#employees-list");
+    
+    <script>
+        $(document).ready(function() {
+            let urlParams = new URLSearchParams(window.location.search);
+            let teacherId = urlParams.get("id");
             
-            function renderList(filter) {
-                container.empty();
-                let filteredData = data.filter(emp => filter === "all" || emp.teacher == (filter === "teachers"));
-                
-                filteredData.forEach(emp => {
-                    container.append(`<li>
-                        <span><strong>${emp.name}</strong> - ${emp.position} | Зарплата: ${emp.payment} грн</span>
-                    </li>`);
+            if (teacherId) {
+                $.getJSON(`http://localhost:8080/staff/${teacherId}`, function(teacher) {
+                    $("#teacher-name").text(teacher.name);
+                    $("#teacher-position").text(teacher.position);
+                    $("#teacher-phone").text(teacher.phone || 'Немає даних');
+                    $("#teacher-passport").text(teacher.passportNumber || 'Немає даних');
+                    $("#teacher-info").text(teacher.info || 'Немає даних');
+                    
+                    if (teacher.passportCopy) {
+                        $("#passport-copy").attr("src", `data:image/png;base64,${teacher.passportCopy}`).show();
+                    }
                 });
             }
             
-            $("#filter").change(function() {
-                renderList($(this).val());
+            $("#edit-teacher-button").click(function() {
+                $("#edit-teacher-modal").fadeIn();
             });
             
-            renderList("all");
-            $(".loader").hide();
-    }).fail(()=>{
-        $(".loader").hide();
-        $(".request-error").show();
-    })
-
-</script>
-
-
+            $("#save-teacher").click(function() {
+                let updatedData = {
+                    id: teacherId,
+                    name: $("#edit-teacher-name").val(),
+                    position: $("#edit-teacher-position").val(),
+                    phone: $("#edit-teacher-phone").val(),
+                    passportNumber: $("#edit-teacher-passport").val(),
+                    info: $("#edit-teacher-info").val()
+                };
+                
+                let formData = new FormData();
+                formData.append("teacher", new Blob([JSON.stringify(updatedData)], { type: "application/json" }));
+                
+                let fileInput = $("#upload-passport")[0].files[0];
+                if (fileInput) {
+                    let blob = new Blob([fileInput], { type: fileInput.type });
+                    formData.append("passportCopy", blob, fileInput.name);
+                }
+                
+                $.ajax({
+                    url: `http://localhost:8080/staff/update/${teacherId}`,
+                    method: "POST",
+                    contentType: false,
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    success: () => location.reload(),
+                    error: (errorMessage) => console.log("error" + errorMessage)
+                });
+            });
+        });
+    </script>
+</body>
 </html>

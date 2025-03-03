@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адміністрування школи</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+</head>
+<body>
+    <h1>Перелік працівників</h1>
+   
+    <label for="filter">Фільтр:</label>
+    <select id="filter">
+        <option value="all">Всі</option>
+        <option value="teachers">Вчителі</option>
+        <option value="staff">Інші працівники</option>
+    </select>
+    <div id="students-list" class="item-list">
+        <div class="loader"></div>
+        <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
+    </div>
+    <ul id="employees-list" class="item-list"></ul>
+</body>
+
+<script>
+    $(".loader").show();
+    $(".request-error").hide();
+    $.getJSON("http://localhost:8080/view/staff", (data)=>{
+        console.log(data);
+        let container = $("#employees-list");
+            
+            function renderList(filter) {
+                container.empty();
+                let filteredData = data.filter(emp => filter === "all" || emp.teacher == (filter === "teachers"));
+                
+                filteredData.forEach(emp => {
+                    container.append(`<li>
+                        <span><strong>${emp.name}</strong> - ${emp.position} | Зарплата: ${emp.payment} грн</span>
+                    </li>`);
+                });
+            }
+            
+            $("#filter").change(function() {
+                renderList($(this).val());
+            });
+            
+            renderList("all");
+            $(".loader").hide();
+    }).fail(()=>{
+        $(".loader").hide();
+        $(".request-error").show();
+    })
+
+</script>
+
+
+</html>
