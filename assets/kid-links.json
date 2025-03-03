@@ -1,0 +1,7 @@
+{
+    "parents": "https://yehormovchan.github.io//iframe-content/parent.html",
+    "transactions": "https://yehormovchan.github.io//iframe-content/transactions.html",
+    "groups": "https://yehormovchan.github.io/iframe-content/group-attendance.html",
+    "attendance-on-lesson": "https://yehormovchan.github.io//iframe-content/lesson-attendance.html"
+}
+

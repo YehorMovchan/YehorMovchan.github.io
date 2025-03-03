@@ -18,10 +18,12 @@
         $(document).ready(function() {                                      // Load kid info
             let urlParams = new URLSearchParams(window.location.search);
             let kidId = urlParams.get("id");
-            $("#parents")[0].src = `YehorMovchan.github.io/iframe-content/parent.html?id=${kidId}`
-            $("#transactions")[0].src = `YehorMovchan.github.io/iframe-content/transactions.html?id=${kidId}`
-            $("#groups")[0].src = `YehorMovchan.github.io/iframe-content/group-attendance.html?id=${kidId}`
-            $("#attendance-on-lesson")[0].src = `YehorMovchan.github.io/iframe-content/lesson-attendance.html?id=${kidId}`
+            $.getJSON(`https://yehormovchan.github.io/assets/kid-links.json`, function(links) {
+                $("#parents").attr("src", `${links.parents}?id=${kidId}`);
+                $("#transactions").attr("src", `${links.transactions}?id=${kidId}`);
+                $("#groups").attr("src", `${links.groups}?id=${kidId}`);
+                $("#attendance-on-lesson").attr("src", `${links.attendance}?id=${kidId}`);
+            });
 
             $(".loader").show();
             $(".request-error").hide();
