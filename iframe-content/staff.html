@@ -4,18 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Інформація про вчителя</title>
-    <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
+    <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1 id="teacher-name"></h1>
-    <p><strong>Посада:</strong> <span id="teacher-position"></span></p>
-    <p><strong>Телефон:</strong> <span id="teacher-phone"></span></p>
-    <p><strong>Номер паспорта:</strong> <span id="teacher-passport"></span></p>
-    <p><strong>Додаткова інформація:</strong> <span id="teacher-info"></span></p>
-    <img id="passport-copy" src="" alt="Копія паспорта" style="max-width: 300px; display: none;">
-    
-    <br>
+    <div class="main-info">
+        <div class="general">
+            <div class="loader general-loader"></div>
+            <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
+            <span><strong>Посада:</strong> <span id="teacher-position"></span></span>
+            <span><strong>Телефон:</strong> <span id="teacher-phone"></span></span>
+            <span><strong>Номер паспорта:</strong> <span id="teacher-passport"></span></spa>
+            <span><strong>Додаткова інформація:</strong> <span id="teacher-info"></span></span>
+            <img id="passport-copy" src="" alt="Копія паспорта" style="max-width: 300px; display: none;">
+        </div>
+    </div>
+
     <button id="edit-teacher-button">Редагувати інформацію</button>
     
     <div id="edit-teacher-modal" class="modal hidden">

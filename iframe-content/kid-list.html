@@ -38,7 +38,7 @@
             Object.keys(studentsByGrade).sort((a, b) => a - b).forEach(grade => {
                 container.append(`<h2>Клас ${grade}</h2><ul class='item-list' id='grade-${grade}'></ul>`);
                 studentsByGrade[grade].forEach(student => {
-                    $(`#grade-${grade}`).append(`<a href="https://yehormovchan.github.io//iframe-content/kid.html?id=`+student.id+`"><li><span><strong>${student.name}</strong> (${student.id})</span></li></a>`);
+                    $(`#grade-${grade}`).append(`<a href="https://yehormovchan.github.io/iframe-content/kid.html?id=`+student.id+`"><li><span><strong>${student.name}</strong> (${student.id})</span></li></a>`);
                 });
             });
         },
