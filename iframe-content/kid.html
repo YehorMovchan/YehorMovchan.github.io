@@ -43,7 +43,7 @@
                     if (kid.birthCertificate) {
                         $("#birth-certificate").text("Переглянути свідоцтво про народження");
                         $("#birth-certificate").click(()=>{
-                            $("#birth-certificate-modal").fadeIn();
+                            $("#birth-certificate-modal").css("display", "flex").hide().fadeIn();
                         })
                         $("#birth-certificate-img").attr("src", `data:image/png;base64,${kid.birthCertificate}`);
                     } else {
@@ -86,7 +86,7 @@
             }
             
             $("#edit-kid-button").click(function() {
-                $("#edit-kid-modal").fadeIn();
+                $("#edit-kid-modal").css("display", "flex").hide().fadeIn();
             });
 
             $("#save-kid").click(function() {
@@ -134,7 +134,7 @@
             });
 
             $("#edit-nutrition").click(function() {
-                $("#edit-nutrition-modal").fadeIn();
+                $("#edit-nutrition-modal").css("display", "flex").hide().fadeIn();
             });
 
             $("#confirm-nutrition").click(function() {
@@ -190,7 +190,7 @@
                     `;
                     
                     $('#nutrition-history-list').html(tableHtml);
-                    $("#nutrition-history-modal").fadeIn();
+                    $("#nutrition-history-modal").css("display", "flex").hide().fadeIn();
                 });
             });
 
@@ -202,7 +202,7 @@
             });
 
             $("#edit-program").click(function() {
-                $("#edit-program-modal").fadeIn();
+                $("#edit-program-modal").css("display", "flex").hide().fadeIn();
             });
 
             $("#confirm-program").click(function() {
@@ -252,7 +252,7 @@
                     `;
                     
                     $('#program-history-list').html(tableHtml);
-                    $("#program-history-modal").fadeIn();
+                    $("#program-history-modal").css("display", "flex").hide().fadeIn();
                 });
             });
 

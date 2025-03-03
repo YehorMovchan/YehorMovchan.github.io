@@ -57,7 +57,7 @@
                     $("#teacher-info").text(teacher.info || 'Немає даних');
                     
                     if (teacher.passportCopy) {
-                        $("#passport-copy").text("Переглянути копію паспорта").click(() => $("#passport-copy-modal").fadeIn());
+                        $("#passport-copy").text("Переглянути копію паспорта").click(() => $("#passport-copy-modal").css("display", "flex").hide().fadeIn());
 
                         $("#passport-copy").attr("src", `data:image/png;base64,${teacher.passportCopy}`).show();
                     }
@@ -74,7 +74,7 @@
             }
             
             $("#edit-teacher-button").click(function() {
-                $("#edit-teacher-modal").fadeIn();
+                $("#edit-teacher-modal").css("display", "flex").hide().fadeIn();
             });
             
             $("#save-teacher").click(function() {
