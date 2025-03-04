@@ -31,8 +31,22 @@
         <label>До: <input type="date" id="date-to"></label>
         <button id="filter-button">Застосувати</button>
     </div>
+
+    <div class="summary">
+        <table>
+            <tr>
+                <th>Зарплата за годину</th>
+                <th>Кількість годин за обраний період</th>
+                <th>Сума заробітньої плати</th>
+            </tr>
+            <tr>
+                <td><span id="salary">0</span> грн</td>
+                <td><span id="total-hours">0</span></td>
+                <td><span id="total-salary">0</span> грн</td>
+        </table>
+    </div>  
     
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>Дата</th>
@@ -52,6 +66,8 @@
         $(document).ready(function() {
             let urlParams = new URLSearchParams(window.location.search);
             let staffId = urlParams.get("id");
+            let salary = parseFloat(urlParams.get("salary")) || 0;
+            $("#salary").text(salary.toFixed(2));
             
             $("#filter-button").click(function() {
                 let dateFrom = $("#date-from").val();
@@ -77,6 +93,11 @@
                             tableBody = "<tr><td colspan='6'>Немає даних за обраний період</td></tr>";
                         }
                         $("#attendance-table-body").html(tableBody);
+                    });
+                    $.getJSON(`http://localhost:8080/attendance/staff/total/${staffId}/${dateFrom}/${dateTo}`, function(totalHours) {
+                        let totalSalary = totalHours * salary;
+                        $("#total-hours").text(totalHours.toFixed(2));
+                        $("#total-salary").text(totalSalary.toFixed(2));
                     });
                 } else {
                     alert("Будь ласка, виберіть діапазон дат");

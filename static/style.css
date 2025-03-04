@@ -248,8 +248,8 @@ table tr{
 .accordion-block{
     height: max-content;
     margin: auto;
-    width: 50%;
-   
+    width: 70%;
+    
 }
 
 .accordion-header {
@@ -400,4 +400,15 @@ table tr{
 .modal img{
     max-width: 700px;
     max-height: 60%;
+}
+
+.summary{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+}
+
+.summary>*{
+    width: 50%;
 }
