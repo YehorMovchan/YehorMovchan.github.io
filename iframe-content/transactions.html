@@ -23,7 +23,7 @@
                 let toDate = $("#to-date").val();
                 let transactionType = $("#transaction-type").val();
                 
-                $.getJSON(`http://localhost:8080/view/transaction/${kidId}`, function(data) {
+                $.getJSON(`http://localhost:8080/view/transactions/${kidId}`, function(data) {
                     $(".request-error").hide()
                     let filteredData = data.filter(transaction => {
                         let date = new Date(transaction.date);

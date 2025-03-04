@@ -42,13 +42,34 @@
             <button onclick="$('#edit-teacher-modal').fadeOut()">Закрити</button>
         </div>
     </div>
+
+
+        
+    <div class="accordion-block">
+        <div class="accordion-header">Години роботи</div>
+        <iframe id="attendance" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
     
     <script>
+        $(document).ready(function() {
+            $(".accordion-header").click(function() {
+                $(this).next(".addition-block").slideToggle();
+            });
+        });
+        const formatDateISO = (date) => {
+            // Convert the date to ISO string
+            const isoString = date.toISOString();
+            // Split at the "T" character to get the date part
+            const formattedDate = isoString.split("T")[0];
+            return formattedDate;
+        };
         $(document).ready(function() {
             $(".loader").show();
             $(".request-error").hide();
             let urlParams = new URLSearchParams(window.location.search);
             let teacherId = urlParams.get("id");
+            let today = formatDateISO(new Date());
+            $("#attendance").attr("src", `https://yehormovchan.github.io/iframe-content/staff-attendance.html?id=${teacherId}`);
             
             if (teacherId) {
                 $.getJSON(`http://localhost:8080/staff/${teacherId}`, function(teacher) {

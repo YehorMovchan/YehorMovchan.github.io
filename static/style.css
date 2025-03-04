@@ -385,7 +385,8 @@ table tr{
 
 
 .wrapper>button{
-    width: 20%;
+
+    width: 50%;
     min-width: min-content;
     align-self: center;
     margin-top: 20px;
