@@ -6,6 +6,7 @@
     <title>Адміністрування школи</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
 </head>
 <body>
     <h1>Перелік працівників</h1>
@@ -24,8 +25,7 @@
 </body>
 
 <script>
-    $(".loader").show();
-    $(".request-error").hide();
+
     $.getJSON("http://localhost:8080/view/staff", (data)=>{
         console.log(data);
         let container = $("#employees-list");

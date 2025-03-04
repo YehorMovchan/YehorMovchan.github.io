@@ -7,13 +7,8 @@
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/blob-util@2.0.2/dist/blob-util.js"></script>
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
     <script>
-
-        $(document).ready(function() {
-            $(".accordion-header").click(function() {
-                $(this).next(".addition-block").slideToggle();
-            });
-        });
 
         $(document).ready(function() {                                      // Load kid info
             let urlParams = new URLSearchParams(window.location.search);
@@ -25,8 +20,6 @@
                 $("#attendance-on-lesson").attr("src", `${links.attendance-on-lesson}?id=${kidId}`);
             });
 
-            $(".loader").show();
-            $(".request-error").hide();
 
             if (kidId) {
                 $.getJSON(`http://localhost:8080/kid/${kidId}`, 

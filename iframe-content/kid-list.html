@@ -6,6 +6,7 @@
     <title>Адміністрування школи</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
 </head>
 <body>
     <h1>Перелік учнів</h1>
@@ -16,8 +17,6 @@
 </body>
 
 <script>
-    $(".loader").show();
-    $(".request-error").hide();
     $.ajax({
         url: "http://localhost:8080/kid",
         method: 'get',

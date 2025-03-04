@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Історія оплат</title>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $(".request-error").hide()
             let urlParams = new URLSearchParams(window.location.search);
             let kidId = urlParams.get('id');
             loadTransactions(kidId);

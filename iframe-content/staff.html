@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Інформація про вчителя</title>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -51,24 +52,10 @@
     </div>
     
     <script>
+
         $(document).ready(function() {
-            $(".accordion-header").click(function() {
-                $(this).next(".addition-block").slideToggle();
-            });
-        });
-        const formatDateISO = (date) => {
-            // Convert the date to ISO string
-            const isoString = date.toISOString();
-            // Split at the "T" character to get the date part
-            const formattedDate = isoString.split("T")[0];
-            return formattedDate;
-        };
-        $(document).ready(function() {
-            $(".loader").show();
-            $(".request-error").hide();
             let urlParams = new URLSearchParams(window.location.search);
             let teacherId = urlParams.get("id");
-            let today = formatDateISO(new Date());
             $("#attendance").attr("src", `https://yehormovchan.github.io/iframe-content/staff-attendance.html?id=${teacherId}`);
             
             if (teacherId) {
