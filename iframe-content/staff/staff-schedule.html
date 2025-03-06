@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Розклад класу</title>
+    <title>Розклад вчителя</title>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -15,7 +15,7 @@
                 <th>Вівторок</th>
                 <th>Середа</th>
                 <th>Четвер</th>
-                <th>П’ятниця</th>
+                <th>П'ятниця</th>
             </tr>
         </thead>
         <tbody id="schedule-body">
@@ -25,30 +25,22 @@
     <script>
         $(document).ready(function() {
             let urlParams = new URLSearchParams(window.location.search);
-            let kidId = urlParams.get("id");
-
-            $.getJSON(`http://localhost:8080/view/schedule/kid=${kidId}`, function(data) {
-                let schedule = {};
-                for (let i = 1; i <= 5; i++) {
-                    schedule[i] = [];
-                }
-
-                data.forEach(item => {
-                    schedule[item.dayOfWeek].push({
-                        lessonNumber: item.lessonNumber,
-                        subject: item.subjectName,
-                        teacher: item.teacherName
-                    });
-                });
-
-                let maxLessons = Math.max(...Object.values(schedule).map(day => day.length));
-                let tableContent = "";
+            let teacherId = urlParams.get("id");
+            
+            $.getJSON(`http://localhost:8080/view/schedule/teacher=${teacherId}`, function(data) {
+                let schedule = [[], [], [], [], []];
                 
-                for (let i = 0; i < maxLessons; i++) {
+                data.forEach(item => {
+                    schedule[item.dayOfWeek - 1].push(`<b>${item.subjectName}</b> (Клас: ${item.classField})`);
+                });
+                
+                let tableContent = "";
+                let maxRows = Math.max(...schedule.map(day => day.length));
+                
+                for (let i = 0; i < maxRows; i++) {
                     tableContent += "<tr>";
-                    for (let day = 1; day <= 5; day++) {
-                        let lesson = schedule[day][i];
-                        tableContent += `<td>${lesson ? lesson.subject + "<br><small>" + lesson.teacher + "</small>" : "-"}</td>`;
+                    for (let j = 0; j < 5; j++) {
+                        tableContent += `<td>${schedule[j][i] || ''}</td>`;
                     }
                     tableContent += "</tr>";
                 }

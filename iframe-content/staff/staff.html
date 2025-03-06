@@ -72,6 +72,10 @@
         <div class="accordion-header">Години роботи</div>
         <iframe id="attendance" src="" frameborder="0" class="addition-block"></iframe>
     </div>
+    <div class="accordion-block">
+        <div class="accordion-header">Розклад вчителя</div>
+        <iframe id="schedule" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
 
     
     <script>
@@ -79,10 +83,12 @@
         $(document).ready(function() {
             let urlParams = new URLSearchParams(window.location.search);
             let teacherId = urlParams.get("id");
-            $("#attendance").attr("src", `https://yehormovchan.github.io/iframe-content/staff-attendance.html?id=${teacherId}&salary=100`);
-            
             if (teacherId) {
                 $.getJSON(`http://localhost:8080/staff/${teacherId}`, function(teacher) {
+                    $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
+                        $("#attendance").attr("src", `${data.attendance}?id=${teacherId}&salary=${teacher.payment}`);
+                        $("#schedule").attr("src", `${data.schedule}?id=${teacherId}`);
+                    })
                     $("#teacher-name").text(teacher.name);
                     $("#teacher-position").text(teacher.position);
                     $("#teacher-phone").text(teacher.phone || 'Немає даних');
