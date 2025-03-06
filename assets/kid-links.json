@@ -1,7 +1,8 @@
 {
-    "parents": "https://yehormovchan.github.io//iframe-content/parent.html",
-    "transactions": "https://yehormovchan.github.io//iframe-content/transactions.html",
-    "groups": "https://yehormovchan.github.io/iframe-content/group-attendance.html",
-    "attendance-on-lesson": "https://yehormovchan.github.io//iframe-content/lesson-attendance.html"
+    "parents": "https://yehormovchan.github.io//iframe-content/student/parent.html",
+    "transactions": "https://yehormovchan.github.io//iframe-content/student/transactions.html",
+    "groups": "https://yehormovchan.github.io/iframe-content/student/group-attendance.html",
+    "attendanceOnLesson": "https://yehormovchan.github.io//iframe-content/student/lesson-attendance.html",
+    "studentSchedule": "https://yehormovchan.github.io//iframe-content/student/student-schedule.html"
 }
 

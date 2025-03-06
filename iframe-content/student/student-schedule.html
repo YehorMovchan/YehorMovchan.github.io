@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розклад класу</title>
+    <link rel="stylesheet" href="D:\Навчання\ДИПЛОМ\Front-end\static\style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Понеділок</th>
+                <th>Вівторок</th>
+                <th>Середа</th>
+                <th>Четвер</th>
+                <th>П’ятниця</th>
+            </tr>
+        </thead>
+        <tbody id="schedule-body">
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            let urlParams = new URLSearchParams(window.location.search);
+            let kidId = urlParams.get("id");
+
+            $.getJSON(`http://localhost:8080/view/schedule/kid=${kidId}`, function(data) {
+                let schedule = {};
+                for (let i = 1; i <= 5; i++) {
+                    schedule[i] = [];
+                }
+
+                data.forEach(item => {
+                    schedule[item.dayOfWeek].push({
+                        lessonNumber: item.lessonNumber,
+                        subject: item.subjectName,
+                        teacher: item.teacherName
+                    });
+                });
+
+                let maxLessons = Math.max(...Object.values(schedule).map(day => day.length));
+                let tableContent = "";
+                
+                for (let i = 0; i < maxLessons; i++) {
+                    tableContent += "<tr>";
+                    for (let day = 1; day <= 5; day++) {
+                        let lesson = schedule[day][i];
+                        tableContent += `<td>${lesson ? lesson.subject + "<br><small>" + lesson.teacher + "</small>" : "-"}</td>`;
+                    }
+                    tableContent += "</tr>";
+                }
+                
+                $("#schedule-body").html(tableContent);
+            });
+        });
+    </script>
+</body>
+</html>

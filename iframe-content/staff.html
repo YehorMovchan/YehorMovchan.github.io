@@ -27,9 +27,30 @@
             </div>
             <button id="edit-teacher-button">Редагувати інформацію</button>
         </div>
+        <div class="salary-block">
+            <h3>Зарплата: <span id="salary"></span></h3>
+            <button id="edit-salary">Редагувати зарплату</button>
+            <button id="view-salary-history">Історія змін</button>
+        </div>
+    </div>
+    <div id="edit-salary-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+            <h2>Редагування зарплати</h2>
+            <label>Нова з/п: <input type="text" id="new-salary"></label>
+            <label>Причина зміни: <input type="text" id="salary-reason"></label><br>
+            <button id="confirm-salary">Підтвердити</button>
+            <button onclick="$('#edit-salary-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+    
+    <div id="salary-history-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+            <h2>Історія змін зарплати</h2>
+            <div id="salary-history-list"></div>
+            <button onclick="$('#salary-history-modal').fadeOut()">Закрити</button>
+        </div>
     </div>
 
-    
     <div id="edit-teacher-modal" class="modal hidden">
         <div class="edit-wrapper wrapper">
             <h2>Редагування інформації про вчителя</h2>
@@ -134,6 +155,69 @@
                     success: () => location.reload(),
                     error: (errorMessage) => console.log("error" + errorMessage)
                 });
+            });
+
+            $.getJSON(
+                "http://localhost:8080/staff-payment/" + teacherId,
+                (data) => {
+                    $("#salary").text(data.payment + " грн");
+                }
+            )
+
+            $("#edit-salary").click(function() {
+                $("#edit-salary-modal").css("display", "flex").hide().fadeIn();
+            });
+            $("#confirm-salary").click(function() {
+                let newSalary = $("#new-salary").val();
+                let reason = $("#salary-reason").val();
+                updatedSalary={
+                    staff: teacherId,
+                    from: null,
+                    to: new Date(),
+                    payment: newSalary,
+                    reasonOfChange: reason
+                }
+                $.ajax({
+                    url: `http://localhost:8080/staff-payment/update/${teacherId}`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(updatedSalary),
+                    success: () => location.reload(),
+                    error: (errorMessage) => console.log("error" + errorMessage)
+                });
+            });
+
+            $("#view-salary-history").click(function() {
+                $.getJSON(
+                    `http://localhost:8080/staff-payment/history/${teacherId}`,
+                    (history) => {
+                        let tableRows = history.map(entry => 
+                            `<tr>
+                                <td>${entry.from}</td>
+                                <td>${entry.to || 'досі'}</td>
+                                <td>${entry.payment}</td>
+                                <td>${entry.reasonOfChange || 'Без причини'}</td>
+                            </tr>`
+                        ).join('');
+                        let tableHtml = `
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>Від</th>
+                                        <th>До</th>
+                                        <th>Зарплата</th>
+                                        <th>Причина зміни</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${tableRows}
+                                </tbody>
+                            </table>
+                        `;
+                        $('#salary-history-list').html(tableHtml);
+                        $("#salary-history-modal").css("display", "flex").hide().fadeIn();
+                    }
+                );
             });
         });
     </script>

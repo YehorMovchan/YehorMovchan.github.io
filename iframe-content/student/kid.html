@@ -17,7 +17,8 @@
                 $("#parents").attr("src", `${links.parents}?id=${kidId}`);
                 $("#transactions").attr("src", `${links.transactions}?id=${kidId}`);
                 $("#groups").attr("src", `${links.groups}?id=${kidId}`);
-                $("#attendance-on-lesson").attr("src", `${links.attendance-on-lesson}?id=${kidId}`);
+                $("#attendance-on-lesson").attr("src", `${links.attendanceOnLesson}?id=${kidId}`);
+                $("#student-schedule").attr("src", `${links.studentSchedule}?id=${kidId}`);
             });
 
 
@@ -367,6 +368,10 @@
     <div class="accordion-block">
         <div class="accordion-header">Відвідуваність уроків</div>
         <iframe id="attendance-on-lesson" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
+    <div class="accordion-block">
+        <div class="accordion-header">Розклад дитини</div>
+        <iframe id="student-schedule" src="" frameborder="0" class="addition-block"></iframe>
     </div>
     
 </body>
