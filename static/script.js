@@ -4,6 +4,12 @@ $(document).ready(function() {
     });
     $(".loader").show();
     $(".request-error").hide();
+    $("iframe").each(()=>{
+        let iframeDoc = $(this)[0].contentDocument || $(this)[0].contentWindow.document;
+        if (iframeDoc) {
+            $(iframeDoc.head).append('<style>body { background-color: green; }</style>');
+        }
+    })
 });
 
 

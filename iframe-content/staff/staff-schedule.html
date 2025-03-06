@@ -11,6 +11,7 @@
     <table>
         <thead>
             <tr>
+                <th>Номер уроку</th>
                 <th>Понеділок</th>
                 <th>Вівторок</th>
                 <th>Середа</th>
@@ -39,6 +40,7 @@
                 
                 for (let i = 0; i < maxRows; i++) {
                     tableContent += "<tr>";
+                    tableContent += `<td>${i + 1}</td>`;
                     for (let j = 0; j < 5; j++) {
                         tableContent += `<td>${schedule[j][i] || ''}</td>`;
                     }

@@ -11,6 +11,7 @@
     <table>
         <thead>
             <tr>
+                <th>Номер уроку</th>
                 <th>Понеділок</th>
                 <th>Вівторок</th>
                 <th>Середа</th>
@@ -46,6 +47,7 @@
                 
                 for (let i = 0; i < maxLessons; i++) {
                     tableContent += "<tr>";
+                    tableContent += `<td>${i + 1}</td>`;
                     for (let day = 1; day <= 5; day++) {
                         let lesson = schedule[day][i];
                         tableContent += `<td>${lesson ? lesson.subject + "<br><small>" + lesson.teacher + "</small>" : "-"}</td>`;
