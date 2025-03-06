@@ -1,0 +1,14 @@
+body{
+    overflow-y: auto; 
+    overflow-x: auto;
+    margin: 50px;
+}
+body::-webkit-scrollbar{
+    display: inline;
+    background-color: rgb(150, 170, 202);
+    border-radius: 5px;
+}
+body::-webkit-scrollbar-thumb{
+    background-color: rgb(93, 143, 209);
+    border-radius: 5px;
+}
