@@ -11,18 +11,19 @@
     <script>
         $(document).ready(function() {
             $.ajax({
-                url: "http://localhost:8080/groupstype",
+                url: "http://localhost:8080/view/groups-type",
                 method: 'get',
                 dataType: 'json',
                 success:(data)=>{
                     let container = $("#clubs-list");
                 
-                    data.forEach(club => {
+                    data.forEach(group => {
                         container.append(`
-                            <li>
-                                <span><strong>${club.name}</strong> - Вартість: ${club.price} грн</span>
-                                <a href="club-details.html?id=${club.id}" class="details-link">Детальніше</a>
-                            </li>
+                                <a href="club-details.html?id=${group.id}">
+                                    <li>
+                                        <span><strong>${group.name} </strong>| ${group.leader}</span>
+                                    </li>
+                                </a>
                         `);
                     });
                 }

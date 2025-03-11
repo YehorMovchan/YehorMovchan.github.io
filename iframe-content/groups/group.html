@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
+</head>
+<body>
+    <h1 id="group-name"></h1>
+    <div class="main-info">
+        <div class="general">
+            <div class="loader general-loader"></div>
+            <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
+            <span><strong>Керівник гуртка:</strong> <span id="group-leader"></span></span>
+            <span><strong>Ціна:</strong> <span id="group-price"></span></span>
+            <span><span id="group-info"></span></span>
+            <button id="edit-group-button">Редагувати інформацію</button>
+        </div>
+    </div>
+    <div id="edit-group-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+                <h2>Редагування гуртка</h2>
+                <label>Назва: <input type="text" id="edit-group-name"></label><br>
+                <label>Вартість: <input type="number" id="edit-group-price"></label><br>
+                <label>Інформація про гурток: <textarea type="date" id="edit-group-info"></textarea></label><br>
+                <label>Керівник гуртка:  <select name="leader-list" id="leader-list"></select></label>
+                <button id="save-group">Зберегти</button><br>
+                <button onclick="$('#edit-group-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+
+
+    <script>
+        let groupId = new URLSearchParams(window.location.search).get('id');
+        let leaderId;
+        $.getJSON(`http://localhost:8080/view/groups-type/${groupId}`, (data)=>{
+            $("#group-name").text(data.name);
+            $("#group-leader").text(data.leader);
+            $("#group-price").text(data.price);
+            $("#group-info").text(data.info);
+            leaderId = data.leaderId;
+
+            $("#edit-group-name").val(data.name);
+            $("#edit-group-price").val(data.price);
+            $("#edit-group-info").val(data.info);
+
+            $(".general-loader").hide();
+        }).fail(()=>{
+            $(".general-loader").hide();
+            $(".general-request-error").show();
+        });
+
+        $.getJSON(`http://localhost:8080/staff`, (data)=>{
+            let select = $("#leader-list");
+            data.forEach(teacher => {
+                select.append(`<option value="${teacher.id}">${teacher.name}</option>`);
+            });
+            select.val(leaderId);
+        });
+        $("#edit-group-button").click(()=>{
+            $("#edit-group-modal").fadeIn();
+        });
+
+        $("#save-group").click(()=>{
+            let newData={
+                name: $("#edit-group-name").val(),
+                price: $("#edit-group-price").val(),
+                info: $("#edit-group-info").val(),
+                leader: $("#leader-list").val()
+            }
+            $.ajax({
+                url: `http://localhost:8080/groups-type/update/${groupId}`,
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(newData),
+                success:()=>{
+                    location.reload();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

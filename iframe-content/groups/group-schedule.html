@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
+</head>
+<body>
+    <button id="addSchedule">Додати новий запис</button>
+
+  <table id="scheduleTable">
+    <thead>
+      <tr>
+        <th>День тижня</th>
+        <th>Час початку</th>
+        <th>Час закінчення</th>
+        <th>Дії</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Дані з JSON тут -->
+    </tbody>
+  </table>
+
+  <!-- Модальне вікно для редагування -->
+  <div id="editModal" class="modal hidden">
+    <div class="edit-wrapper wrapper">
+      <h2>Редагування розкладу</h2>
+      <label>День тижня:</label>
+      <select id="dayOfWeek">
+        <option value="1">Понеділок</option>
+        <option value="2">Вівторок</option>
+        <option value="3">Середа</option>
+        <option value="4">Четвер</option>
+        <option value="5">П'ятниця</option>
+      </select><br>
+      
+      <label>Час початку:</label>
+      <input type="time" id="startTime"><br>
+      
+      <label>Час закінчення:</label>
+      <input type="time" id="endTime"><br>
+      
+      <button id="saveChanges">Зберегти</button><br>
+      <button id="closeModal" onclick="$('#editModal').fadeOut()">Закрити</button>
+    </div>
+  </div>
+
+  <script>
+     let groupId = new URLSearchParams(window.location.search).get('id');
+
+    // Завантаження розкладу гуртка
+    $.getJSON(`http://localhost:8080/groups-schedule/${groupId}`, function(data) {
+      const dayNames = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця"];
+
+      data.forEach(item => {
+        const row = `
+          <tr data-id="${item.id}">
+            <td>${dayNames[item.dayOfWeek - 1]}</td>
+            <td>${item.startTime}</td>
+            <td>${item.endTime}</td>
+            <td>
+              <button class="editBtn">Редагувати</button>
+              <button class="deleteBtn">Видалити</button>
+            </td>
+          </tr>
+        `;
+        $('#scheduleTable tbody').append(row);
+      });
+
+      $('.editBtn').on('click', function() {
+        const row = $(this).closest('tr');
+        const id = row.data('id');
+        const startTime = row.find('td').eq(1).text();
+        const endTime = row.find('td').eq(2).text();
+        const dayOfWeek = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця"].indexOf(row.find('td').eq(0).text()) + 1;
+
+
+        $('#dayOfWeek').val(dayOfWeek);
+        $('#startTime').val(startTime);
+        $('#endTime').val(endTime);
+
+
+            $('#saveChanges').off('click').on('click', function() {
+            const updatedSchedule = {
+                id: id,
+                dayOfWeek: $('#dayOfWeek').val(),
+                startTime: $('#startTime').val(),
+                endTime: $('#endTime').val()
+            };
+
+            $.ajax({
+                url: `http://localhost:8080/groups-schedule/${id}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(updatedSchedule),
+                success: ()=> {
+                row.find('td').eq(0).text(dayNames[updatedSchedule.dayOfWeek - 1]);
+                row.find('td').eq(1).text(updatedSchedule.startTime);
+                row.find('td').eq(2).text(updatedSchedule.endTime);
+                $('#editModal').fadeOut();
+                }
+            });
+            });
+
+        $('#editModal').fadeIn();
+      });
+
+      // Видалення запису
+      $('.deleteBtn').on('click', function() {
+        const row = $(this).closest('tr');
+        const id = row.data('id');
+
+        $.ajax({
+            url: `http://localhost:8080/groups-schedule/${id}`,
+            type: 'DELETE',
+            success: ()=> {
+                row.remove(); // Видалити рядок з таблиці
+            }
+        });
+      });
+    });
+
+    // Додавання нового запису
+    $('#addSchedule').on('click', function() {
+      $('#startTime').val('');
+      $('#endTime').val('');
+      $('#dayOfWeek').val(1); // Понеділок за замовчуванням
+
+      $('#saveChanges').off('click').on('click', function() {
+        const newSchedule = {
+            dayOfWeek: $('#dayOfWeek').val(),
+            startTime: $('#startTime').val(),
+            endTime: $('#endTime').val(),
+            _group: groupId,
+            from: new Date().toISOString(),
+        };
+
+        $.ajax({
+          url: `http://localhost:8080/groups-schedule`,
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(newSchedule),
+          success: function(response) {
+            // Додавання нового запису в таблицю
+            const newRow = `
+              <tr data-id="${response.id}">
+                <td>${["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця"][newSchedule.dayOfWeek - 1]}</td>
+                <td>${newSchedule.startTime}</td>
+                <td>${newSchedule.endTime}</td>
+                <td>
+                  <button class="editBtn">Редагувати</button>
+                  <button class="deleteBtn">Видалити</button>
+                </td>
+              </tr>
+            `;
+            $('#scheduleTable tbody').append(newRow);
+            $('#editModal').fadeOut();
+          }
+        });
+      });
+
+      $('#editModal').fadeIn();
+    });
+
+  </script>
+</body>
+</html>
