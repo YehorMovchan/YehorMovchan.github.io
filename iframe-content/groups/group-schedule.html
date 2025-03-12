@@ -26,28 +26,63 @@
   </table>
 
   <!-- Модальне вікно для редагування -->
-  <div id="editModal" class="modal hidden">
+  <div id="edit-modal" class="modal hidden">
     <div class="edit-wrapper wrapper">
       <h2>Редагування розкладу</h2>
-      <label>День тижня:</label>
-      <select id="dayOfWeek">
+      <label>День тижня:
+      <select id="edit-dayOfWeek">
         <option value="1">Понеділок</option>
         <option value="2">Вівторок</option>
         <option value="3">Середа</option>
         <option value="4">Четвер</option>
         <option value="5">П'ятниця</option>
-      </select><br>
+      </select></label><br>
       
-      <label>Час початку:</label>
-      <input type="time" id="startTime"><br>
+      <label>Час початку:
+      <input type="time" id="edit-startTime"></label><br>
       
-      <label>Час закінчення:</label>
-      <input type="time" id="endTime"><br>
+      <label>Час закінчення:
+      <input type="time" id="edit-endTime"></label><br>
+
+      <label>Причина зміни:
+      <input type="text" id="edit-changeReason"></label><br>
       
       <button id="saveChanges">Зберегти</button><br>
-      <button id="closeModal" onclick="$('#editModal').fadeOut()">Закрити</button>
+      <button id="close-edit-modal" onclick="$('#edit-modal').fadeOut()">Закрити</button>
     </div>
   </div>
+
+    <div id="create-modal" class="modal hidden">
+      <div class="edit-wrapper wrapper">
+        <label>День тижня:
+        <select id="new-dayOfWeek">
+          <option value="1">Понеділок</option>
+          <option value="2">Вівторок</option>
+          <option value="3">Середа</option>
+          <option value="4">Четвер</option>
+          <option value="5">П'ятниця</option>
+        </select></label><br>
+        
+        <label>Час початку:
+        <input type="time" id="new-startTime"></label><br>
+        
+        <label>Час закінчення:
+        <input type="time" id="new-endTime"></label><br>
+        
+        <button id="saveNew">Зберегти</button><br>
+        <button id="close-create-modal" onclick="$('#create-modal').fadeOut()">Закрити</button>
+      </div>
+    </div>
+
+    <div id="deleteModal" class="modal hidden">
+      <div class="edit-wrapper wrapper">
+        <h2>Видалення запису</h2>
+        <label>Причина видалення:</label>
+        <input type="text" id="deleteReason"><br>
+        <button id="confirmDelete">Підтвердити</button><br>
+        <button id="closeDeleteModal" onclick="$('#deleteModal').fadeOut()">Скасувати</button>
+      </div>
+    </div>
 
   <script>
      let groupId = new URLSearchParams(window.location.search).get('id');
@@ -79,17 +114,19 @@
         const dayOfWeek = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця"].indexOf(row.find('td').eq(0).text()) + 1;
 
 
-        $('#dayOfWeek').val(dayOfWeek);
-        $('#startTime').val(startTime);
-        $('#endTime').val(endTime);
+        $('#edit-dayOfWeek').val(dayOfWeek);
+        $('#edit-startTime').val(startTime);
+        $('#edit-endTime').val(endTime);
 
 
             $('#saveChanges').off('click').on('click', function() {
             const updatedSchedule = {
-                id: id,
-                dayOfWeek: $('#dayOfWeek').val(),
-                startTime: $('#startTime').val(),
-                endTime: $('#endTime').val()
+                dayOfWeek: $('#edit-dayOfWeek').val(),
+                startTime: $('#edit-startTime').val(),
+                endTime: $('#edit-endTime').val(),
+                reasonOfChange: $('#edit-changeReason').val(),
+                _group: groupId,
+                to: new Date().toISOString(),
             };
 
             $.ajax({
@@ -98,43 +135,46 @@
                 contentType: 'application/json',
                 data: JSON.stringify(updatedSchedule),
                 success: ()=> {
-                row.find('td').eq(0).text(dayNames[updatedSchedule.dayOfWeek - 1]);
-                row.find('td').eq(1).text(updatedSchedule.startTime);
-                row.find('td').eq(2).text(updatedSchedule.endTime);
-                $('#editModal').fadeOut();
+                    location.reload();
                 }
             });
             });
 
-        $('#editModal').fadeIn();
+        $('#edit-modal').fadeIn();
       });
+
+      
 
       // Видалення запису
       $('.deleteBtn').on('click', function() {
         const row = $(this).closest('tr');
         const id = row.data('id');
-
-        $.ajax({
+        $('#deleteModal').fadeIn();
+        $('#confirmDelete').on('click', function () {
+          const reason = $('#deleteReason').val().trim();
+          $.ajax({
             url: `http://localhost:8080/groups-schedule/${id}`,
             type: 'DELETE',
-            success: ()=> {
-                row.remove(); // Видалити рядок з таблиці
+            contentType: 'application/json',
+            data: JSON.stringify({ reasonOfChange: reason, to: new Date().toISOString() }),
+            success: function () {
+             location.reload();
             }
-        });
+          });
       });
     });
 
     // Додавання нового запису
     $('#addSchedule').on('click', function() {
-      $('#startTime').val('');
-      $('#endTime').val('');
-      $('#dayOfWeek').val(1); // Понеділок за замовчуванням
+      $('#new-startTime').val('');
+      $('#new-endTime').val('');
+      $('#new-dayOfWeek').val(1); // Понеділок за замовчуванням
 
-      $('#saveChanges').off('click').on('click', function() {
+      $('#saveNew').off('click').on('click', function() {
         const newSchedule = {
-            dayOfWeek: $('#dayOfWeek').val(),
-            startTime: $('#startTime').val(),
-            endTime: $('#endTime').val(),
+            dayOfWeek: $('#new-dayOfWeek').val(),
+            startTime: $('#new-startTime').val(),
+            endTime: $('#new-endTime').val(),
             _group: groupId,
             from: new Date().toISOString(),
         };
@@ -145,26 +185,14 @@
           contentType: 'application/json',
           data: JSON.stringify(newSchedule),
           success: function(response) {
-            // Додавання нового запису в таблицю
-            const newRow = `
-              <tr data-id="${response.id}">
-                <td>${["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця"][newSchedule.dayOfWeek - 1]}</td>
-                <td>${newSchedule.startTime}</td>
-                <td>${newSchedule.endTime}</td>
-                <td>
-                  <button class="editBtn">Редагувати</button>
-                  <button class="deleteBtn">Видалити</button>
-                </td>
-              </tr>
-            `;
-            $('#scheduleTable tbody').append(newRow);
-            $('#editModal').fadeOut();
+            location.reload();
           }
         });
       });
 
-      $('#editModal').fadeIn();
+      $('#create-modal').fadeIn();
     });
+  });
 
   </script>
 </body>
