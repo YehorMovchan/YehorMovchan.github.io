@@ -44,9 +44,6 @@
       <label>Час закінчення:
       <input type="time" id="edit-endTime"></label><br>
 
-      <label>Причина зміни:
-      <input type="text" id="edit-changeReason"></label><br>
-      
       <button id="saveChanges">Зберегти</button><br>
       <button id="close-edit-modal" onclick="$('#edit-modal').fadeOut()">Закрити</button>
     </div>
@@ -77,8 +74,6 @@
     <div id="deleteModal" class="modal hidden">
       <div class="edit-wrapper wrapper">
         <h2>Видалення запису</h2>
-        <label>Причина видалення:</label>
-        <input type="text" id="deleteReason"><br>
         <button id="confirmDelete">Підтвердити</button><br>
         <button id="closeDeleteModal" onclick="$('#deleteModal').fadeOut()">Скасувати</button>
       </div>
@@ -124,9 +119,7 @@
                 dayOfWeek: $('#edit-dayOfWeek').val(),
                 startTime: $('#edit-startTime').val(),
                 endTime: $('#edit-endTime').val(),
-                reasonOfChange: $('#edit-changeReason').val(),
                 _group: groupId,
-                to: new Date().toISOString(),
             };
 
             $.ajax({
@@ -155,8 +148,6 @@
           $.ajax({
             url: `http://localhost:8080/groups-schedule/${id}`,
             type: 'DELETE',
-            contentType: 'application/json',
-            data: JSON.stringify({ reasonOfChange: reason, to: new Date().toISOString() }),
             success: function () {
              location.reload();
             }
@@ -176,7 +167,6 @@
             startTime: $('#new-startTime').val(),
             endTime: $('#new-endTime').val(),
             _group: groupId,
-            from: new Date().toISOString(),
         };
 
         $.ajax({
