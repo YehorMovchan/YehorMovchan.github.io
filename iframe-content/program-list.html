@@ -19,12 +19,11 @@
                 
                     data.forEach(program => {
                         container.append(`
-                            <li>
-                                <span>
-                                    <strong>${program.name}</strong>
-                                </span>
-                                <a href="program-details.html?id=${program.id}" class="details-link">Детальніше</a>
-                            </li>
+                                <a href="https://yehormovchan.github.io/iframe-content/programs/program?id=${program.id}">
+                                    <li>
+                                        <span><strong>${program.name} </strong></span>
+                                    </li>
+                                </a>
                         `);
                     })
                 }

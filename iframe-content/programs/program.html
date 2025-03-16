@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
+</head>
+<body>
+    <h1 id="program-name"></h1>
+    <div class="main-info">
+        <div class="general">
+            <div class="loader general-loader"></div>
+            <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
+            <span><strong>Ціна:</strong> <span id="group-price"></span></span>
+            <span><span id="group-info"></span></span>
+            <button id="edit-program-button">Редагувати інформацію</button>
+        </div>
+    </div>
+    <div id="edit-program-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+                <h2>Редагування програми</h2>
+                <label>Назва: <input type="text" id="edit-group-name"></label><br>
+                <label>Вартість: <input type="number" id="edit-group-price"></label><br>
+                <label>Причина зміни вартості: <input type="text" name="" id=""></label>
+                <label>Інформація про програму: <textarea type="date" id="edit-group-info"></textarea></label><br>
+                <button id="save-edit-program">Зберегти</button><br>
+                <button onclick="$('#edit-program-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+
+
+    <script>
+        let programId = new URLSearchParams(window.location.search).get('id');
+
+        $.getJSON(`http://localhost:8080/view/program-types/${programId}`, (data)=>{
+            $("#program-name").text(data.name);
+            $("#program-price").text(data.price);
+            $("#program-info").text(data.info);
+
+            $("#edit-program-name").val(data.name);
+            $("#edit-program-price").val(data.price);
+            $("#edit-program-info").val(data.info);
+
+            $(".general-loader").hide();
+        }).fail(()=>{
+            $(".general-loader").hide();
+            $(".general-request-error").show();
+        });
+
+
+        $("#save-edit-program").click(()=>{
+            let program={
+                name: $("#edit-group-name").val(),
+                info: $("#edit-group-info").val(),
+            }
+            let price = {
+                price: $("#edit-group-price").val(),
+                reason: $("#edit-group-price-reason").val(),
+                to: new Date().toISOString()
+            }
+            $.ajax({
+                url: `http://localhost:8080/program-types/update/${programId}`,
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(program),
+                success:()=>{
+                    $.ajax({
+                    url: `http://localhost:8080/program-price/update/${programId}`,
+                    method: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(price),
+                    success:()=>{
+                        location.reload();
+                        }
+                    });
+                }
+            });
+           
+        });
+    </script>
+</body>
+</html>
