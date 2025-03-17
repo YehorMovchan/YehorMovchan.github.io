@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
+</head>
+<body>
+    <div class="filter-menu">
+        <h3>Додати дитину</h3>
+        <select id="kid-select"></select>
+        <button id="add-kid">Додати</button>
+    </div><br>
+    <div id="program-members" class="item-list">
+    </div>
+
+    <div class="modal hidden" id="add-kid-confirm-modal">
+        <div class="wrapper">
+            <strong>Ця дія змінить програму дитини з нинішньої (<span class="kid-program-old"></span>) на <span class="kid-program-new"></span>. 
+            Ви впевнені?</strong>
+            <br>
+            <span>Введіть причину зміни: <input type="text" id="reason-of-change-add-input"></span>
+            <br>
+            <div><button id="add-kid-confirm-button">Підтвердити</button> <button id="add-kid-cancel-button">Скасувати</button></div>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="edit-kid-modal">
+        <div class="wrapper">
+            <strong>Ця дія змінить програму дитини з нинішньої (<span class="kid-program-new"></span>) на обрану вами. </strong>
+            <br>
+            <span>Введіть причину зміни: <input type="text" id="reason-of-change-edit-input"></span>
+            <br>
+            <select id="program-list"></select><br>
+            <div><button id="edit-kid-confirm-button">Підтвердити</button> <button id="edit-kid-cancel-button">Скасувати</button></div>
+
+        </div>
+    </div>
+
+    <script>
+         $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const programId = urlParams.get("id");
+            let currentMemberIds = new Set();
+
+            function loadProgramMembers() {
+                $.getJSON(`http://localhost:8080/view/program/program=${programId}`, function(data) {
+                    $(".kid-program-new").text(data[0].programName);
+                    currentMemberIds.clear();
+                    let membersList = "";
+                    data.forEach(member => {
+                        currentMemberIds.add(member.kidId);
+                        membersList += `<li>${member.kidName} <button class="edit-program-button" data-id="${member.kidId}">Змінити</button></li>`;
+                    });
+                    $("#program-members").html(membersList);
+                    loadKids();
+                });
+            }
+
+            function loadKids() {
+                $.getJSON("http://localhost:8080/kid", function(data) {
+                    let options = "";
+                    data.forEach(kid => {
+                        if (!currentMemberIds.has(kid.id)) {
+                            options += `<option value="${kid.id}">${kid.name}</option>`;
+                        }
+                    });
+                    $("#kid-select").html(options);
+                });
+            }
+
+            
+            
+            $("#program-members").on("click", ".edit-program-button", function(){
+                const kidId = $(this).data("id");
+                $.getJSON(`http://localhost:8080/program-types`, function(programTypes) {
+                    $("#program-list").empty();
+                    $("#edit-kid-confirm-button").data("id", kidId);
+                    programTypes.forEach(program => {
+                        $("#program-list").append(`<option value="${program.id}">${program.name}</option>`);
+                    });
+                    $("#edit-kid-modal").fadeIn();
+                });
+            });
+
+            $("#add-kid").on("click", () => {
+                const kidId = $("#kid-select").val();
+                $.getJSON(`http://localhost:8080/view/program/kid=${kidId}`, (data)=>{
+                    $(".kid-program-old").text(data.programName);
+                    $("#add-kid-confirm-modal").fadeIn();
+                })
+            });
+
+            $("#add-kid-cancel-button").click(function() {
+                $("#add-kid-confirm-modal").fadeOut();
+            });
+
+            $("#edit-kid-cancel-button").click(function() {
+                $("#edit-kid-modal").fadeOut();
+            });
+
+            $("#edit-kid-confirm-button").click(function() {
+                const kidId = $("#edit-kid-confirm-button").data("id");
+                let newProgram = {
+                    program: $("#program-list").val(),
+                    kid: kidId,
+                    to: new Date().toISOString(),
+                    reasonOfChange: $("#reason-of-change-edit-input").val()
+                }
+                $.ajax({
+                    url: `http://localhost:8080/program/${kidId}`,
+                    contentType: "application/json",
+                    data: JSON.stringify(newProgram),
+                    type: "POST",
+                    success: loadProgramMembers
+                });
+                $("#edit-kid-modal").fadeOut();
+            });
+
+            $("#add-kid-confirm-button").click(function() {
+                const kidId = $("#kid-select").val();
+                let newProgram = {
+                    program: programId,
+                    kid: kidId,
+                    to: new Date().toISOString(),
+                    reasonOfChange: $("#reason-of-change-edit-input").val()
+                }
+                $.ajax({
+                    url: `http://localhost:8080/program/${kidId}`,
+                    contentType: "application/json",
+                    data: JSON.stringify(newProgram),
+                    type: "POST",
+                    success: loadProgramMembers
+                });
+                $("#add-kid-confirm-modal").fadeOut();
+            });
+
+            loadProgramMembers();
+        });
+    </script>
+</body>
+</html>

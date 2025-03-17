@@ -68,7 +68,7 @@
                 }
             );
 
-                $.getJSON(`http://localhost:8080/view/program/${kidId}`,
+                $.getJSON(`http://localhost:8080/view/program/kid=${kidId}`,
                 (program) => {
                     console.log(program);
                     $(".programs-loader").hide();
@@ -191,7 +191,7 @@
             });
 
             
-            $.getJSON(`http://localhost:8080/programstype`, function(programTypes) {
+            $.getJSON(`http://localhost:8080/program-types`, function(programTypes) {
                 programTypes.forEach(program => {
                     $("#program-types").append(`<option value="${program.id}">${program.name}</option>`);
                 });
@@ -221,7 +221,7 @@
             });
         
             $("#view-program-history").click(function() {
-                $.getJSON(`http://localhost:8080/view/program/history/${kidId}`, function(history) {
+                $.getJSON(`http://localhost:8080/view/program/history/kid=${kidId}`, function(history) {
                     let tableRows = history.map(entry => 
                         `<tr>
                             <td>${entry.from}</td>

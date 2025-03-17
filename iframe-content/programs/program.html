@@ -14,7 +14,8 @@
         <div class="general">
             <div class="loader general-loader"></div>
             <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
-            <span><strong>Ціна:</strong> <span id="program-price"></span></span>
+            <span><strong>Вартість:</strong> <span id="program-price"></span> </span>
+            <span class="clickable" id="open-history"> (Переглянути історію вартості)</span>
             <span><span id="program-info"></span></span>
             <button id="edit-program-button">Редагувати інформацію</button>
         </div>
@@ -31,11 +32,31 @@
         </div>
     </div>
 
+    <div class="accordion-block">
+        <div class="accordion-header">Діти, які вчаться на цій програмі</div>
+        <iframe id="program-members" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
+
+    <div class="modal hidden" id="price-history">
+        <div class="wrapper">
+            <h2>Історія зміни вартості</h2>
+            <table>
+                <tr>
+                    <th>Вартість</th>
+                    <th>Діяло з</th>
+                    <th>Діяло по</th>
+                    <th>Причина зміни</th>
+                </tr>
+            </table>
+            <button onclick="$('#price-history').fadeOut()">Закрити</button>
+        </div>
+    </div>
 
     <script>
-        let programId = new URLSearchParams(window.location.search).get('id');
+        const programId = new URLSearchParams(window.location.search).get('id');
         let oldPrice;
         let priceId;
+        $("#program-members").attr("src", `https://yehormovchan.github.io/iframe-content/programs/program-members.html?id=${programId}`);
         $("#edit-program-button").click(()=>{
             $("#edit-program-modal").fadeIn();
         });
@@ -57,6 +78,25 @@
             $(".general-request-error").show();
         });
 
+        $("#open-history").click(()=>{
+            $.getJSON(`http://localhost:8080/program-price/history/${programId}`, (data)=>{
+                let table = $("#price-history table");
+                table.find("tr:gt(0)").remove();
+                data.forEach(price=>{
+                    let to = price.to === null ? "нині" : price.to;
+                    let reasonOfChange = price.reasonOfChange === null ? "відсутня" : price.reasonOfChange;
+                    table.append(`
+                        <tr>
+                            <td>${price.price}</td>
+                            <td>${price.from}</td>
+                            <td>${to}</td>
+                            <td>${reasonOfChange}</td>
+                        </tr>
+                    `);
+                });
+                $("#price-history").fadeIn();
+            });
+        });
 
         $("#save-edit-program").click(()=>{
             let program={
