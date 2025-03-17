@@ -63,7 +63,7 @@ main {
     margin: auto;
     width: 100%;
     margin: 0;
-    height: 90%;
+    flex: 1;
     padding: 20px;
     text-align: center;
     overflow: auto;
