@@ -24,7 +24,7 @@
                 <h2>Редагування програми</h2>
                 <label>Назва: <input type="text" id="edit-program-name"></label><br>
                 <label>Вартість: <input type="number" id="edit-program-price"></label><br>
-                <label>Причина зміни вартості: <input type="text" name="" id=""></label>
+                <label>Причина зміни вартості: <input type="text" id="edit-program-price-reason"></label>
                 <label>Інформація про програму: <textarea type="date" id="edit-program-info"></textarea></label><br>
                 <button id="save-edit-program">Зберегти</button><br>
                 <button onclick="$('#edit-program-modal').fadeOut()">Закрити</button>
@@ -35,7 +35,7 @@
     <script>
         let programId = new URLSearchParams(window.location.search).get('id');
         let oldPrice;
-
+        let priceId;
         $("#edit-program-button").click(()=>{
             $("#edit-program-modal").fadeIn();
         });
@@ -44,6 +44,7 @@
             $("#program-name").text(data.name);
             $("#program-price").text(data.price);
             $("#program-info").text(data.info);
+            priceId = data.priceId;
 
             $("#edit-program-name").val(data.name);
             $("#edit-program-price").val(data.price);
@@ -65,7 +66,7 @@
             let price = {
                 program: programId,
                 price: $("#edit-program-price").val(),
-                reason: $("#edit-program-price-reason").val(),
+                reasonOfChange: $("#edit-program-price-reason").val(),
                 to: new Date().toISOString()
             }
             
@@ -77,7 +78,7 @@
                 success:()=>{
                     if(oldPrice != price.price){
                         $.ajax({
-                        url: `http://localhost:8080/program-price/${programId}`,
+                        url: `http://localhost:8080/program-price/${priceId}`,
                         method: 'put',
                         contentType: 'application/json',
                         data: JSON.stringify(price),
