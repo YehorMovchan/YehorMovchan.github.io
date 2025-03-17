@@ -7,10 +7,8 @@ body::-webkit-scrollbar{
     display: inline;
     background-color: rgb(150, 170, 202);
     border-radius: 5px;
-    border-top: 20px solid transparent;
 }
 body::-webkit-scrollbar-thumb{
     background-color: rgb(93, 143, 209);
     border-radius: 5px;
-    border-top: 50px solid transparent;
 }

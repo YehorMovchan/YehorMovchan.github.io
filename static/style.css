@@ -17,6 +17,12 @@ a{
     color: #002d5d;
 }
 
+.container{
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Висота на весь екран */
+}
+
 /* Хедер */
 header {
     display: flex;
@@ -25,7 +31,7 @@ header {
     background-color: #0056b3;
     color: white;
     padding: 15px;
-    height: 10vh;
+    height: 10%;
     margin: 0;
 }
 
@@ -57,7 +63,7 @@ main {
     margin: auto;
     width: 100%;
     margin: 0;
-    height: 90vh;
+    height: 90%;
     padding: 20px;
     text-align: center;
     overflow: auto;
