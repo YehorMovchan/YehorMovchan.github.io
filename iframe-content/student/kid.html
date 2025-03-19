@@ -249,8 +249,20 @@
                 });
             });
 
+            $("#delete-entity").click(function() {
+                $.ajax({
+                    url: `http://localhost:8080/kid/${kidId}`,
+                    method: "DELETE",
+                    success: () => {
+                        location.href = "https://yehormovchan.github.io/iframe-content/kid-list.html";
+                    },
+                    error: (errorMessage) => console.log("error" + errorMessage)
+                });
+            });
+
         });
     </script>
+
 
 </head>
 <body>
@@ -371,6 +383,18 @@
         <div class="accordion-header">Розклад дитини</div>
         <iframe id="student-schedule" src="" frameborder="0" class="addition-block"></iframe>
     </div>
-    
+
+    <div class="delete-button-container">
+        <button class="delete-button" onclick="$('#delete-entity-modal').fadeIn()">Видалити учня</button>
+    </div>
+
+    <div class="modal hidden" id="delete-entity-modal">
+        <div class="edit-wrapper wrapper">
+            <span><strong>Ви впевнені, що хочете видалити учня? Ця дія видалить усі пов'язані з ним дані.</strong></span>
+            <button id="delete-entity">Так</button>
+            <button onclick="$('#delete-entity-modal').fadeOut()">Ні</button>
+        </div>
+    </div>
+
 </body>
 </html>

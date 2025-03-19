@@ -447,3 +447,25 @@ table tr{
 .add-button:hover {
     background-color: #45a049;
 }
+
+.delete-button-container {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    margin-top: 20px;
+    width: max-content;
+}
+.delete-button {
+    background-color: #af4c4c;
+    color: white;
+    font-size: 16px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #a04545;
+}
