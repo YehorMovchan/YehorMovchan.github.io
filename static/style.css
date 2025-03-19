@@ -418,3 +418,32 @@ table tr{
 .summary>*{
     width: 50%;
 }
+
+.headline {
+    max-width: 600px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.headline h1 {
+    grid-column-start: 2;
+    margin: 0;
+}
+
+.add-button {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+    background-color: #45a049;
+}

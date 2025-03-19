@@ -8,16 +8,108 @@
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
     <script src="https://yehormovchan.github.io/static/script.js"></script>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
+    <script src="https://yehormovchan.github.io/static/parents-script.js"></script>
+    <style>
+        iframe{
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Перелік учнів</h1>
+   <div class="headline">
+        <h1>Перелік учнів </h1>
+        <div class="add-button-container">
+            <button class="add-button" onclick="$('#add-entity-modal').fadeIn()">+ Додати</button>
+        </div>
+   </div>
+    
     <div id="students-list" class="item-list">
         <div class="loader"></div>
         <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
     </div>
+
+    <div class="modal hidden" id="add-entity-modal">
+        <div class="wrapper create-wrapper">
+            <label>Ім'я учня: <input type="text" id="add-kid-name"></label><br>
+            <label>Клас: <input number="text" min="1" max="11" id="add-kid-grade"></label><br>
+            <label>Дата народження: <input type="date" id="add-kid-birthday"></label><br>
+            <label>Свідоцтво про народження: <input type="file" id="add-kid-birth-certificate"></label><br>
+
+            <div class="parents">
+                <div class="parent">
+                    <h3>Мати:</h3> 
+                    <select id="mother-select"></select>
+                    <div class="buttons-block">
+                        <button id="add-mother">Додати новий запис</button>
+                        <button id="view-mother" data-parent="mother">Детальніше</button>
+                    </div>
+                </div><br>
+                <div class="parent">
+                    <h3>Батько: </h3>
+                    <select id="father-select"></select>
+                    <div class="buttons-block">
+                        <button id="add-father">Додати новий запис</button>
+                        <button id="view-father" data-parent="father">Детальніше</button>
+                    </div>
+                </div>
+            </div>
+    
+            <br>
+            <div class="nutrition">
+                <h3>Харчування</h3>
+                <div class="checkbox-block">
+                    <label><input type="checkbox" id="breakfast"> Сніданок</label><br>
+                    <label><input type="checkbox" id="lunch"> Обід</label><br>
+                    <label><input type="checkbox" id="dinner"> Вечеря</label><br>
+                </div>
+            </div>
+            <br>
+            <label>Програма навчання: <select id="programs-list"></select></label>
+            <br>
+
+            <button id="add-entity-button">Додати</button>
+            <button id="close-entity-modal" onclick="$('#add-entity-modal').fadeOut()">Закрити</button>
+            
+        </div>
+    </div>
+
+    <div id="parent-form" class="modal">
+        <div class="edit-wrapper wrapper">
+            <h2>Додати нового батька</h2>
+            <label>Ім'я: <input type="text" id="parent-name"></label><br>
+            <label>Телефон: <input type="text" id="parent-phone"></label><br>
+            <label>Адреса: <input type="text" id="parent-address"></label><br>
+            <button id="save-parent">Зберегти</button>
+            <button onclick="$('#parent-form').fadeOut()">Закрити</button>
+        </div>
+    </div>
+    <div id="edit-parent-form" class="modal">
+        <div class="edit-wrapper wrapper">
+            <h2>Редагувати інформацію про батьків</h2>
+            <label>Ім'я: <input type="text" id="edit-parent-name"></label><br>
+            <label>Телефон: <input type="text" id="edit-parent-phone"></label><br>
+            <label>Адреса: <input type="text" id="edit-parent-address"></label><br>
+            <button id="update-parent">Оновити</button>
+            <button onclick="$('#edit-parent-form').fadeOut()">Закрити</button>
+        </div>
+    </div>
 </body>
 
 <script>
+     $.ajax({
+        url: "http://localhost:8080/program-types",
+        method: 'get',
+        dataType: 'json',
+        success:(data)=>{
+            let select = $("#programs-list");
+            data.forEach(program => {
+                select.append(`<option value="${program.id}">${program.name}</option>`);
+            });
+        }
+    })
+
     $.ajax({
         url: "http://localhost:8080/kid",
         method: 'get',
@@ -48,6 +140,74 @@
         }
     }
     )
+
+    $("#add-entity-button").click(()=>{
+        const kid = {
+            name: $("#add-kid-name").val(),
+            grade: $("#add-kid-grade").val(),
+            birthday: $("#add-kid-birthday").val(),
+            mother: $("#mother-select").val(),
+            father: $("#father-select").val(),
+        }
+        let formData = new FormData();
+        formData.append("kid", new Blob([JSON.stringify(kid)], { type: "application/json"}));
+        let birthCertificate = $("#add-kid-birth-certificate")[0].files[0];
+        if(birthCertificate ){
+            let blob = new Blob([birthCertificate], {type: birthCertificate.type});
+            formData.append("birthCertificate", blob, birthCertificate.name);
+        }
+        else{
+            formData.append("birthCertificate", new Blob([null], {type: "application/json"}), "empty");
+        }
+       
+        $.ajax({
+            url: "http://localhost:8080/kid",
+            method: "POST",
+            contentType: false,
+            data: formData,
+            cache : false,
+            processData: false,
+            success: (kidId)=> {
+                addNutrition(kidId);
+            }
+        });
+
+        function addNutrition(kidId){
+            let nutrition = {
+                kid: kidId,
+                breakfast: $("#breakfast").is(":checked"),
+                lunch: $("#lunch").is(":checked"),
+                dinner: $("#dinner").is(":checked"),
+                from: new Date().toISOString()
+            }
+            $.ajax({
+                url: "http://localhost:8080/nutrition",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(nutrition),
+                success: ()=> {
+                    addProgram(kidId);
+                }
+            });
+        }
+        function addProgram(kidId){
+            let program = {
+                kid: kidId,
+                programType: $("#program-list").val(),
+                from: new Date().toISOString()
+            }
+            $.ajax({
+                url: "http://localhost:8080/program",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(program),
+                success: ()=> {
+                    alert("Учня додано!");
+                    location.reload();
+                }
+            });
+        }
+    });
 </script>
 
 

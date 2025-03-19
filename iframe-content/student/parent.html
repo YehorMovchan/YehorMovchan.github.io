@@ -8,7 +8,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://yehormovchan.github.io/static/script.js"></script>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
-    <script>
+    <script src="https://yehormovchan.github.io/static/parents-script.js"></script>
+    <!-- <script>
         $(document).ready(function() {
             let urlParams = new URLSearchParams(window.location.search);
             let kidId = urlParams.get('id');
@@ -19,6 +20,11 @@
                     loadParents(kid.mother, "#mother-select", 2);
                     loadParents(kid.father, "#father-select", 1);
                 });
+            }
+            else{
+                loadParents(null, "#mother-select", 2);
+                loadParents(null, "#father-select", 1);
+                $("#save-parents").hide();
             }
 
             function loadParents(selectedId, selector, sex) {
@@ -80,9 +86,14 @@
                 });
             });
             $("#view-mother, #view-father").click(function() {
-                let parentId = $(this).siblings("select").val();
-                if (!parentId) {
-                    alert("Оберіть батька чи матір!");
+                let parent = $(this).data("parent");
+                if (parent=="mother") {
+                    parentId = $("#mother-select").val();
+                } else {
+                    parentId = $("#father-select").val();
+                }
+                if(!parentId){
+                    alert(`Оберіть ${parent=="mother" ? "мати" : "батька" }`);
                     return;
                 }
 
@@ -113,7 +124,7 @@
                 });
             });
         });
-    </script>
+    </script> -->
 </head>
 <body>
     <div class="wrapper">
@@ -124,7 +135,7 @@
                 <select id="mother-select"></select>
                 <div class="buttons-block">
                     <button id="add-mother">Додати новий запис</button>
-                    <button id="view-mother">Детальніше</button>
+                    <button id="view-mother" data-parent="mother">Детальніше</button>
                 </div>
             </div>
             <div class="parent">
@@ -132,7 +143,7 @@
                 <select id="father-select"></select>
                 <div class="buttons-block">
                     <button id="add-father">Додати новий запис</button>
-                    <button id="view-father">Детальніше</button>
+                    <button id="view-father" data-parent="father">Детальніше</button>
                 </div>
             </div>
             <button id="save-parents">Зберегти</button>

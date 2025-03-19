@@ -102,20 +102,17 @@
                 formData.append("kid", new Blob([JSON.stringify(updatedData)], { type: "application/json"}));
 
                 let fileInput = $("#upload-certificate")[0].files[0];
-                let url;
-                if(fileInput!=undefined){
+                if(fileInput){
                     let blob = new Blob([fileInput], { type: fileInput.type });
                     formData.append("birthCertificate", blob, fileInput.name);
-                    url=`http://localhost:8080/kid/image-update/${kidId}`
                 }
                 else{
-                    url=`http://localhost:8080/kid/update/${kidId}`
+                    formData.append("birthCertificate", new Blob([""], { type: "application/json"}), "empty");
                 }
-
                 
                 $.ajax({
-                    url: url,
-                    method: "POST",
+                    url: `http://localhost:8080/kid/${kidId}`,
+                    method: "PUT",
                     contentType: false,
                     data: formData,
                     cache : false,
