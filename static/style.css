@@ -336,7 +336,7 @@ table tr{
 
 .filter-menu{
     margin: auto;
-    width: 70%;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

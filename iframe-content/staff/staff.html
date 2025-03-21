@@ -77,6 +77,17 @@
         <iframe id="schedule" src="" frameborder="0" class="addition-block"></iframe>
     </div>
 
+    <div class="delete-button-container">
+        <button class="delete-button" onclick="$('#delete-entity-modal').fadeIn()">Видалити працівника</button>
+    </div>
+
+    <div class="modal hidden" id="delete-entity-modal">
+        <div class="edit-wrapper wrapper">
+            <span><strong>Ви впевнені, що хочете видалити працівника? Ця дія видалить усі пов'язані з ним дані.</strong></span>
+            <button id="delete-entity">Так</button>
+            <button onclick="$('#delete-entity-modal').fadeOut()">Ні</button>
+        </div>
+    </div>
     
     <script>
 
@@ -142,18 +153,17 @@
                 
                 let fileInput = $("#upload-passport")[0].files[0];
                 let url;
-                if (fileInput!=undefined){
+                if (fileInput){
                     let blob = new Blob([fileInput], { type: fileInput.type });
                     formData.append("passportCopy", blob, fileInput.name);
-                    url = `http://localhost:8080/staff/image-update/${teacherId}`;
                 }
                 else{
-                    url = `http://localhost:8080/staff/update/${teacherId}`;
+                    formData.append("passportCopy", new Blob([null]), type="application/json");
                 }
                 
                 $.ajax({
-                    url: url,
-                    method: "POST",
+                    url: `http://localhost:8080/staff/${teacherId}`,
+                    method: "PUT",
                     contentType: false,
                     data: formData,
                     cache: false,
@@ -224,6 +234,15 @@
                         $("#salary-history-modal").css("display", "flex").hide().fadeIn();
                     }
                 );
+            });
+
+            $("#delete-entity").click(function() {
+                $.ajax({
+                    url: `http://localhost:8080/staff/${teacherId}`,
+                    method: "DELETE",
+                    success: () => window.location.href = "https://yehormovchan.github.io/iframe-content/staff-list.html",
+                    error: (errorMessage) => console.log("error" + errorMessage)
+                });
             });
         });
     </script>

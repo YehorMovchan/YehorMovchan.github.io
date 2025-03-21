@@ -10,7 +10,12 @@
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
 </head>
 <body>
-    <h1>Перелік працівників</h1>
+    <div class="headline">
+        <h1>Перелік працівників</h1>
+        <div class="add-button-container">
+            <button class="add-button" onclick="$('#add-entity-modal').fadeIn()">+ Додати</button>
+        </div>
+    </div>
     <div class="filter-menu">
         <label for="filter">Фільтр:</label>
         <select id="filter">
@@ -22,6 +27,21 @@
     <div id="employees-list" class="item-list">
         <div class="loader"></div>
         <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
+    </div>
+
+    <div class="modal hidden" id="add-entity-modal">
+        <div class="wrapper edit-wrapper">
+            <label>Ім'я вчителя: <input type="text" id="add-staff-name"></label><br>
+            <label>Вчитель: <input type="checkbox" id="add-staff-teacher"></label>
+            <label>Посада: <input number="text" min="1" max="11" id="add-staff-position"></label><br>
+            <label>Номер телфону: <input type="date" id="add-staff-phone"></label><br>
+            <label>Додаткова інформація: <textarea id="add-staff-info"></textarea></label><br>
+            <label>Номер паспорту: <input type="text" id="add-staff-passport-number"></label>
+            <label>Копія паспорту: <input type="file" id="add-staff-passport-copy"></label><br>
+            <label>Заробітня плата: <input type="number" id="add-staff-salary"></label>
+            <button id="add-staff-button">Додати</button>
+            <button id="close-entity-modal" onclick="$('#add-entity-modal').fadeOut()">Закрити</button>
+        </div>
     </div>
 </body>
 
@@ -60,6 +80,57 @@
         $(".request-error").show();
     })
 
+    $("#add-staff-button").click(()=>{
+        const staff = {
+            name: $("#add-staff-name").val(),
+            teacher: $("#add-staff-teacher").is(":checked"),
+            position: $("#add-staff-position").val(),
+            phone: $("#add-staff-phone").val(),
+            passportNumber: $("#add-staff-passport-number").val(),
+            info: $("#add-staff-info").val(),
+        }
+        let formData = new FormData();
+        formData.append("staff", new Blob([JSON.stringify(staff)], { type: "application/json"}));
+        let passportCopy = $("#add-staff-passport-copy")[0].files[0];
+        if(passportCopy ){
+            let blob = new Blob([passportCopy], {type: passportCopy.type});
+            formData.append("passportCopy", blob, passportCopy.name);
+        }
+        else{
+            formData.append("passportCopy", new Blob([null], {type: "application/json"}), "empty");
+        }
+
+
+
+        $.ajax({
+            url: "http://localhost:8080/staff",
+            method: 'POST',
+            contentType: false,
+            cache: false,
+            processData: false,
+            data: formData,
+            success: (staffId)=>{
+                addSalary(staffId);
+            }
+        })
+
+        function addSalary(staffId){
+            let staff = {
+                staff: staffId,
+                salary: $("#add-staff-salary").val(),
+                from: new Date().toISOString()
+            }
+            $.ajax({
+                url: "http://localhost:8080/staff-payment",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(staff),
+                success: ()=>{
+                    location.reload();
+                }
+            })
+        }
+    })
 </script>
 
 
