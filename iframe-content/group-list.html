@@ -29,47 +29,48 @@
                     });
                 }
             })
-        })
-       $("#add-entity-modal-button").click(()=>{
-            $(".wrapper").css("visibility", "hidden");
-            $('#add-entity-modal').fadeIn();
-            $.ajax({
-                url: "http://localhost:8080/staff",
-                method: 'get',
-                dataType: 'json',
-                success:(data)=>{
-                    let select = $("#add-club-leader");
-                    data.forEach(teacher => {
-                        select.append(`<option value="${teacher.id}">${teacher.name}</option>`);
-                    });
-                    $(".wrapper").css("visibility", "visible");
-                    $("#add-entity-modal-loader").hide();
-                    $("#add-entity-modal-error").hide();
-                },
-                error:()=>{
-                    $("#add-entity-modal-loader").hide();
-                    $("#add-entity-modal-error").show();
+                $("#add-entity-modal-button").click(()=>{
+                    $(".wrapper").css("visibility", "hidden");
+                    $('#add-entity-modal').fadeIn();
+                    $.ajax({
+                        url: "http://localhost:8080/staff",
+                        method: 'get',
+                        dataType: 'json',
+                        success:(data)=>{
+                            let select = $("#add-club-leader");
+                            data.forEach(teacher => {
+                                select.append(`<option value="${teacher.id}">${teacher.name}</option>`);
+                            });
+                            $(".wrapper").css("visibility", "visible");
+                            $("#add-entity-modal-loader").hide();
+                            $("#add-entity-modal-error").hide();
+                        },
+                        error:()=>{
+                            $("#add-entity-modal-loader").hide();
+                            $("#add-entity-modal-error").show();
+                        }
+                    })
+                })
+            
+            $("#add-entity-button").click(()=>{
+                let club = {
+                    name: $("#add-club-name").val(),
+                    price: $("#add-club-price").val(),
+                    info: $("#add-club-info").val(),
+                    leader: $("#add-club-leader").val()
                 }
+                $.ajax({
+                    url: "http://localhost:8080/groups-type",
+                    method: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(club),
+                    success:()=>{
+                        location.reload();
+                    }
+                })
             })
         })
-        
-        $("#add-entity-button").click(()=>{
-            let club = {
-                name: $("#add-club-name").val(),
-                price: $("#add-club-price").val(),
-                info: $("#add-club-info").val(),
-                leader: $("#add-club-leader").val()
-            }
-            $.ajax({
-                url: "http://localhost:8080/groups-type",
-                method: 'post',
-                contentType: 'application/json',
-                data: JSON.stringify(club),
-                success:()=>{
-                    location.reload();
-                }
-            })
-        })
+       
         
     </script>
 </head>
