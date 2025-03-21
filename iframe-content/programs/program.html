@@ -66,87 +66,87 @@
     </div>
 
     <script>
-        const programId = new URLSearchParams(window.location.search).get('id');
-        let oldPrice;
-        let priceId;
-        $("#program-members").attr("src", `https://yehormovchan.github.io/iframe-content/programs/program-members.html?id=${programId}`);
-        $("#edit-program-button").click(()=>{
-            $("#edit-program-modal").fadeIn();
-        });
+        $(document).ready(()=>{
+            const programId = new URLSearchParams(window.location.search).get('id');
+            let oldPrice;
+            let priceId;
+            $("#program-members").attr("src", `https://yehormovchan.github.io/iframe-content/programs/program-members.html?id=${programId}`);
+            $("#edit-program-button").click(()=>{
+                $("#edit-program-modal").fadeIn();
+            });
 
-        $.getJSON(`http://localhost:8080/view/programs-type/${programId}`, (data)=>{
-            $("#program-name").text(data.name);
-            $("#program-price").text(data.price);
-            $("#program-info").text(data.info);
-            priceId = data.priceId;
+            $.getJSON(`http://localhost:8080/view/programs-type/${programId}`, (data)=>{
+                $("#program-name").text(data.name);
+                $("#program-price").text(data.price);
+                $("#program-info").text(data.info);
+                priceId = data.priceId;
 
-            $("#edit-program-name").val(data.name);
-            $("#edit-program-price").val(data.price);
-            $("#edit-program-info").val(data.info);
-            oldPrice = data.price;
+                $("#edit-program-name").val(data.name);
+                $("#edit-program-price").val(data.price);
+                $("#edit-program-info").val(data.info);
+                oldPrice = data.price;
 
-            $(".general-loader").hide();
-        }).fail(()=>{
-            $(".general-loader").hide();
-            $(".general-request-error").show();
-        });
+                $(".general-loader").hide();
+            }).fail(()=>{
+                $(".general-loader").hide();
+                $(".general-request-error").show();
+            });
 
-        $("#open-history").click(()=>{
-            $.getJSON(`http://localhost:8080/programs-price/history/${programId}`, (data)=>{
-                let table = $("#price-history table");
-                table.find("tr:gt(0)").remove();
-                data.forEach(price=>{
-                    let to = price.to === null ? "нині" : price.to;
-                    let reasonOfChange = price.reasonOfChange === null ? "відсутня" : price.reasonOfChange;
-                    table.append(`
-                        <tr>
-                            <td>${price.price}</td>
-                            <td>${price.from}</td>
-                            <td>${to}</td>
-                            <td>${reasonOfChange}</td>
-                        </tr>
-                    `);
+            $("#open-history").click(()=>{
+                $.getJSON(`http://localhost:8080/programs-price/history/${programId}`, (data)=>{
+                    let table = $("#price-history table");
+                    table.find("tr:gt(0)").remove();
+                    data.forEach(price=>{
+                        let to = price.to === null ? "нині" : price.to;
+                        let reasonOfChange = price.reasonOfChange === null ? "відсутня" : price.reasonOfChange;
+                        table.append(`
+                            <tr>
+                                <td>${price.price}</td>
+                                <td>${price.from}</td>
+                                <td>${to}</td>
+                                <td>${reasonOfChange}</td>
+                            </tr>
+                        `);
+                    });
+                    $("#price-history").fadeIn();
                 });
-                $("#price-history").fadeIn();
             });
-        });
 
-        $("#save-edit-program").click(()=>{
-            let program={
-                name: $("#edit-program-name").val(),
-                info: $("#edit-program-info").val(),
-            }
-            let price = {
-                program: programId,
-                price: $("#edit-program-price").val(),
-                reasonOfChange: $("#edit-program-price-reason").val(),
-                to: new Date().toISOString()
-            }
-            
-            $.ajax({
-                url: `http://localhost:8080/programs-type/${programId}`,
-                method: 'put',
-                contentType: 'application/json',
-                data: JSON.stringify(program),
-                success:()=>{
-                    if(oldPrice != price.price){
-                        $.ajax({
-                        url: `http://localhost:8080/programs-price/${priceId}`,
-                        method: 'put',
-                        contentType: 'application/json',
-                        data: JSON.stringify(price),
-                        success:()=>{
-                            location.reload();
-                            }
-                        });
-                    }
-                    else{
-                        location.reload();
-                    }
+            $("#save-edit-program").click(()=>{
+                let program={
+                    name: $("#edit-program-name").val(),
+                    info: $("#edit-program-info").val(),
                 }
+                let price = {
+                    program: programId,
+                    price: $("#edit-program-price").val(),
+                    reasonOfChange: $("#edit-program-price-reason").val(),
+                    to: new Date().toISOString()
+                }
+                
+                $.ajax({
+                    url: `http://localhost:8080/programs-type/${programId}`,
+                    method: 'put',
+                    contentType: 'application/json',
+                    data: JSON.stringify(program),
+                    success:()=>{
+                        if(oldPrice != price.price){
+                            $.ajax({
+                            url: `http://localhost:8080/programs-price/${priceId}`,
+                            method: 'put',
+                            contentType: 'application/json',
+                            data: JSON.stringify(price),
+                            success:()=>{
+                                location.reload();
+                                }
+                            });
+                        }
+                        else{
+                            location.reload();
+                        }
+                    }
+                });
             });
-           
-
             $("#delete-entity").click(()=>{
                 $.ajax({
                     url: `http://localhost:8080/programs-type/${programId}`,
@@ -157,6 +157,7 @@
                 });
             });
         });
+        
     </script>
 </body>
 </html>
