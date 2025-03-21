@@ -16,7 +16,7 @@
                 dataType: 'json',
                 success:(data)=>{
                     let container = $("#clubs-list");
-                
+                    let addContainer
                     data.forEach(group => {
                         container.append(`
                                 <a href="https://yehormovchan.github.io/iframe-content/groups/group?id=${group.id}">
@@ -25,14 +25,76 @@
                                     </li>
                                 </a>
                         `);
+
                     });
                 }
             })
         })
+       $("#add-entity-modal-button").click(()=>{
+            $(".wrapper").css("visibility", "hidden");
+            $('#add-entity-modal').fadeIn();
+            $.ajax({
+                url: "http://localhost:8080/staff",
+                method: 'get',
+                dataType: 'json',
+                success:(data)=>{
+                    let select = $("#add-club-leader");
+                    data.forEach(teacher => {
+                        select.append(`<option value="${teacher.id}">${teacher.name}</option>`);
+                    });
+                    $(".wrapper").css("visibility", "visible");
+                    $("#add-entity-modal-loader").hide();
+                    $("#add-entity-modal-error").hide();
+                },
+                error:()=>{
+                    $("#add-entity-modal-loader").hide();
+                    $("#add-entity-modal-error").show();
+                }
+            })
+        })
+        
+        $("#add-entity-button").click(()=>{
+            let club = {
+                name: $("#add-club-name").val(),
+                price: $("#add-club-price").val(),
+                info: $("#add-club-info").val(),
+                leader: $("#add-club-leader").val()
+            }
+            $.ajax({
+                url: "http://localhost:8080/groups-type",
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(club),
+                success:()=>{
+                    location.reload();
+                }
+            })
+        })
+        
     </script>
 </head>
 <body>
-    <h1>Перелік гуртків</h1>
-    <ul id="clubs-list" class="item-list"></ul>
+    <div class="headline">
+        <h1>Перелік гуртків</h1>
+        <div class="add-button-container">
+            <button class="add-button" id="add-entity-modal-button">+ Додати</button>
+        </div>
+    </div>
+    <br>
+    <div id="clubs-list" class="item-list"></div>
+
+    <div class="modal hidden" id="add-entity-modal">
+        <div class="loader" id="add-entity-modal-loader"></div>
+        <div class="request-error" id="add-entity-modal-error">Сталася помилка, спробуйте пізніше.</div>
+        <div class="wrapper edit-wrapper">
+            <label>Назва гуртка: <input type="text" id="add-club-name"></label><br>
+            <label>Ціна: <input type="number" id="add-club-price"></label><br>
+            <label>Інформація про гурток: <textarea id="add-club-info"></textarea></label><br>
+            <label>Керівник гуртка: <select id="add-club-leader"></select></label><br>
+            <button id="add-entity-button">Додати</button>
+            <button id="close-entity-modal" onclick="$('#add-entity-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+
 </body>
 </html>
