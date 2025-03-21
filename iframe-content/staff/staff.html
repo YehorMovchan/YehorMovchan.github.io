@@ -97,7 +97,7 @@
             if (teacherId) {
                 $.getJSON(`http://localhost:8080/staff/${teacherId}`, function(teacher) {
                     $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
-                        $("#attendance").attr("src", `${data.attendance}?id=${teacherId}&salary=${teacher.payment}`);
+                        $("#attendance").attr("src", `${data.attendance}?id=${teacherId}&salary=${teacher.salary}`);
                         $("#schedule").attr("src", `${data.schedule}?id=${teacherId}`);
                     })
                     $("#teacher-name").text(teacher.name);
@@ -176,7 +176,7 @@
             $.getJSON(
                 "http://localhost:8080/staff-payment/" + teacherId,
                 (data) => {
-                    $("#salary").text(data.payment + " грн");
+                    $("#salary").text(data.salary + " грн");
                 }
             )
 
@@ -190,7 +190,7 @@
                     staff: teacherId,
                     from: null,
                     to: new Date(),
-                    payment: newSalary,
+                    salary: newSalary,
                     reasonOfChange: reason
                 }
                 $.ajax({
@@ -211,7 +211,7 @@
                             `<tr>
                                 <td>${entry.from}</td>
                                 <td>${entry.to || 'досі'}</td>
-                                <td>${entry.payment}</td>
+                                <td>${entry.salary}</td>
                                 <td>${entry.reasonOfChange || 'Без причини'}</td>
                             </tr>`
                         ).join('');
