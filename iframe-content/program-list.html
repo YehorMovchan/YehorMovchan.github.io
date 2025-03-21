@@ -11,7 +11,7 @@
     <script>
         $(document).ready(function() {
             $.ajax({
-                url: "http://localhost:8080/program-types",
+                url: "http://localhost:8080/programs-type",
                 method: 'get',
                 dataType: 'json',
                 success:(data)=>{
@@ -28,11 +28,66 @@
                     })
                 }
             })
+
+            $("#add-entity-modal-button").click(()=>{
+                $('#add-entity-modal').fadeIn();
+            })
+
+            $("#add-program-button").click(()=>{
+                let program = {
+                    name: $("#add-program-name").val(),
+                    info: $("#add-program-info").val()
+                }
+                $.ajax({
+                    url: "http://localhost:8080/programs-type",
+                    method: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(program),
+                    success:(programId)=>{
+                        addPrice(programId);
+                    }
+                })
+
+                function addPrice(programId) {
+                    let price = {
+                        program: programId,
+                        price: $("#add-program-price").val(),
+                        from: new Date().toISOString()
+                    }
+                    $.ajax({
+                        url: `http://localhost:8080/programs-price`,
+                        method: 'post',
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        data: JSON.stringify(price),
+                        success:()=>{
+                            location.reload();
+                        }
+                    })
+                }
+            })
         })
     </script>
 </head>
 <body>
-    <h1>Перелік програм навчання</h1>
-    <ul id="programs-list" class="item-list"></ul>
+    <div class="headline">
+        <h1>Перелік програм навчання</h1>
+        <div class="add-button-container">
+            <button class="add-button" id="add-entity-modal-button">+ Додати</button>
+        </div>
+    </div>
+    <br>
+    <div id="programs-list" class="item-list"></div>
+
+    <div class="modal hidden" id="add-entity-modal">
+        <div class="wrapper edit-wrapper">
+            <label>Назва програми: <input type="text" id="add-program-name"></label><br>
+            <label>Інформація про програму: <textarea id="add-program-info"></textarea></label><br>
+            <label>Вартість програми: <input type="number" id="add-program-price"></label><br>
+            <button id="add-program-button">Додати</button>
+            <button id="close-entity-modal" onclick="$('#add-entity-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
 </body>
 </html>
