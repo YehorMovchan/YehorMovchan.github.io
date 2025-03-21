@@ -78,7 +78,7 @@
             
             $("#program-members").on("click", ".edit-program-button", function(){
                 const kidId = $(this).data("id");
-                $.getJSON(`http://localhost:8080/program-types`, function(programTypes) {
+                $.getJSON(`http://localhost:8080/programs-type`, function(programTypes) {
                     $("#program-list").empty();
                     $("#edit-kid-confirm-button").data("id", kidId);
                     programTypes.forEach(program => {
