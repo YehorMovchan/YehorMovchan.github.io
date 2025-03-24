@@ -471,6 +471,11 @@ table tr{
 
 .side-menu{
     width: 20%;
-    position: static;
-    right: 50px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+label>input{
+    width: 90%;
 }
