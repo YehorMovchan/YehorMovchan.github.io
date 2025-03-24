@@ -188,9 +188,9 @@
             });
 
             
-            $.getJSON(`http://localhost:8080/program-types`, function(programTypes) {
+            $.getJSON(`http://localhost:8080/programs-type`, function(programTypes) {
                 programTypes.forEach(program => {
-                    $("#program-types").append(`<option value="${program.id}">${program.name}</option>`);
+                    $("#programs-type").append(`<option value="${program.id}">${program.name}</option>`);
                 });
             });
 
@@ -203,7 +203,7 @@
                     kid: kidId,
                     from: null,
                     to: new Date(),
-                    program: $("#program-types").val(),
+                    program: $("#programs-type").val(),
                     reasonOfChange: $("#program-reason").val()
                 };
                 
@@ -341,7 +341,7 @@
     <div id="edit-program-modal" class="modal hidden">
         <div class="edit-wrapper wrapper">
             <h2>Редагування програми</h2>
-            <select name="program-types" id="program-types"></select>
+            <select name="programs-type" id="programs-type"></select>
             <label>Причина зміни: <input type="text" id="program-reason"></label><br>
             <button id="confirm-program">Підтвердити</button>
             <button onclick="$('#edit-program-modal').fadeOut()">Закрити</button>

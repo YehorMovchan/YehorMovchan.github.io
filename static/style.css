@@ -398,7 +398,7 @@ table tr{
     margin-top: 20px;
 }
 
-.addition-filter{
+.addition-filter{   
     align-self: flex-end;
 }
 
@@ -467,4 +467,10 @@ table tr{
 
 .delete-button:hover {
     background-color: #a04545;
+}
+
+.side-menu{
+    width: 20%;
+    position: static;
+    right: 50px;
 }
