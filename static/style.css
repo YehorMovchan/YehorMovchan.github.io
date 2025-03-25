@@ -35,7 +35,12 @@ header {
     margin: 0;
 }
 
-/* Навігація */
+nav{
+    flex-grow: 1; 
+    display: flex;
+    justify-content: center;
+}
+
 nav ul {
     list-style: none;
     padding: 0;
@@ -478,4 +483,21 @@ table tr{
 
 label>input{
     width: 90%;
+}
+
+
+
+.sign-in {
+    background-color: white;
+    color: #0056b3;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-left: auto; /* Відсуває кнопку до правого краю */
+}
+
+.sign-in:hover {
+    background-color: #e0e0e0;
 }

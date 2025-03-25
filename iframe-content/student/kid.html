@@ -259,14 +259,65 @@
                     error: (errorMessage) => console.log("error" + errorMessage)
                 });
             });
+            $("#save-transaction").click(()=>{
+                const transaction = {
+                    kid: $("#transaction-kid").val(),
+                    sum: $("#transaction-sum").val(),
+                    date: $("#transaction-date").val(),
+                    type: $("#transaction-type").val()
+                }
+                let formData = new FormData();
+                formData.append("transaction", new Blob([JSON.stringify(transaction)], { type: "application/json"}));
+                let receipt = $("#transaction-receipt")[0].files[0];
+                if(receipt){
+                    let blob = new Blob([receipt], {type: receipt.type});
+                    formData.append("receipt", blob, receipt.name);
+                }
+                else{
+                    formData.append("receipt", new Blob([null], {type: "application/json"}), "empty");
+                }
+                $.ajax({
+                    url: "http://localhost:8080/transaction",
+                    method: "POST",
+                    contentType: false,
+                    data: formData,
+                    cache : false,
+                    processData: false,
+                    success: ()=> {
+                        location.reload();
+                    }
+                });
+            })
+
+
+            $.getJSON("http://localhost:8080/transactions-type", (data)=>{
+                let select = $("#transaction-type");
+                data.forEach(type => {
+                    select.append(`<option value="${type.id}">${type.name}</option>`);
+                });
+            }) 
+            
+            $.getJSON("http://localhost:8080/kid", (data)=>{
+                let select = $("#transaction-kid");
+                data.forEach(kid => {
+                    select.append(`<option value="${kid.id}">${kid.name}</option>`);
+                });
+                select.val(kidId);
+            })
 
         });
+        
+
+
     </script>
 
 
 </head>
 <body>
     <h1 id="kid-name"></h1>
+    <div class="side-menu">
+        <button onclick="$(`#create-transaction`).fadeIn()">Додати оплату</button>
+    </div>
     <div class="main-info">
         <div class="general">
             <div class="loader general-loader"></div>
@@ -303,7 +354,19 @@
         </div>
     </div>
 
-    
+    <div class="modal hidden" id="create-transaction">
+        <div class="wrapper edit-wrapper">
+            <h2>Додати оплату</h2>
+            <label>Дитина: <select id="transaction-kid"></select></label> <br>
+            <label>Сума: <input type="number" id="transaction-sum"></label><br>
+            <label>Дата: <input type="date" id="transaction-date"></label><br>
+            <label>Тип оплати: <select id="transaction-type"></select></label><br>
+            <label>Квитанція: <input type="file" id="transaction-receipt"></label><br>
+            <button id="save-transaction">Зберегти</button>
+            <button onclick="$('#create-transaction').fadeOut()">Закрити</button>
+        </div>
+    </div>
+
     <div id="edit-kid-modal" class="modal hidden">
         <div class="edit-wrapper wrapper">
                 <h2>Редагування учня</h2>
