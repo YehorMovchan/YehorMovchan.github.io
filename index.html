@@ -55,7 +55,7 @@
         getUserRole().then(role=>{
             $.getJSON("https://yehormovchan.github.io/assets/permits.json", (data)=>{
                 let permits = data[role];
-                let aList = $("a");
+                let aList = $("a").toArray();
                 aList.forEach(element => {
                     if(permits.includes(element.id)){
                         element.show();
