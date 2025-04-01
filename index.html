@@ -34,7 +34,7 @@
             <div class="modal hidden" id="sign-in-modal">
                 <div class="wrapper edit-wrapper">
                     <h2>Увійти</h2>
-                    <span id="login-error" style="display: none;">Невірний логін або пароль</span>
+                    <span id="login-error" style="display: none;" class="login-error">Невірний логін або пароль</span>
                     <label>Логін: <br><input type="text" id="login" name="login" required></label><br>
                     <label>Пароль: <br>
                     <input type="password" id="password" name="password" required></label><br>
@@ -82,7 +82,7 @@
                 $("#sign-in-button").show();
             }
             else{
-                $("sign-in-button").hide();
+                $("#sign-in-button").hide();
                 $("#username").show();
                 $("#username").text(user.username);
                 $("#sign-out").show();
