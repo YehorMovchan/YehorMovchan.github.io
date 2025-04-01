@@ -22,11 +22,23 @@
                     <li><a href="#programs-type" onclick="changePage(this)">Програми навчання</a></li>
                 </ul>
             </nav>
-            <button class="sign-in">Увійти</button>
+            <button class="sign-in" id="sign-in-button">Увійти</button>
         </header>
         
         <main>
             <iframe id="iframe-content" src="" frameborder="0"></iframe>
+
+            <div class="modal hidden" id="sign-in-modal">
+                <div class="wrapper edit-wrapper">
+                    <h2>Увійти</h2>
+                    <label>Логін: <br><input type="text" id="login" name="login" required></label><br>
+                    <label>Пароль: <br>
+                    <input type="password" id="password" name="password" required></label><br>
+                    <button id="sign-in-modal-enter">Увійти</button>
+                    <button id="sign-in-modal-close">Закрити</button>
+                </div>
+            </div>
+
         </main>
     </div>
    
@@ -45,10 +57,36 @@
             links = data;
             iframe.src=links[page];
         })
+
+        $("#sign-in-button").click(()=>{
+            $("#sign-in-modal").fadeIn();
+        })
+        $("#sign-in-modal-close").click(()=>{
+            $("#sign-in-modal").fadeOut();
+        })
+        $("#sign-in-modal-enter").click(()=>{
+            let username = $("#login").val();
+            let password = $("#password").val();
+            $.ajax({
+            url: 'http://localhost:8080/auth/login',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ username: username, password: password }),
+            success: function (response) {
+                localStorage.setItem('token', response.token); // Зберігаємо токен
+                alert('Ви успішно увійшли');
+            },
+            error: function () {
+                alert('Невірний логін або пароль');
+            }
+        });
+        })
     })
     function changePage(el){
         iframe.src = links[el.hash];
     }
+
+
 
 </script>
 </html>
