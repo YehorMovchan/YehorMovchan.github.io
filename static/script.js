@@ -34,9 +34,26 @@ function getUserRole(){
         else{
             let payload = JSON.parse(atob(token.split('.')[1]));
             let username = payload.sub;
-            let role
             $.getJSON(`http://localhost:8080/users/${username}`, (user)=>{
                 resolve(user.role);
+            }).fail((error)=>{
+                reject(error);
+            })
+        }
+    })
+}
+
+function getUser(){
+    return new Promise((resolve, reject)=>{
+        let token = localStorage.getItem('token');
+        if(!token){
+            resolve(null)
+        }
+        else{
+            let payload = JSON.parse(atob(token.split('.')[1]));
+            let username = payload.sub;
+            $.getJSON(`http://localhost:8080/users/${username}`, (user)=>{
+                resolve(user);
             }).fail((error)=>{
                 reject(error);
             })

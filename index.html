@@ -21,7 +21,10 @@
                     <li><a id="programs-list" href="#programs-type" onclick="changePage(this)">Програми навчання</a></li>
                 </ul>
             </nav>
-            <button class="sign-in" id="sign-in-button">Увійти</button>
+            <div class="user-info">
+                <button class="sign-in" id="sign-in-button">Увійти</button>
+                <span id="username" style="display: none;"></span>
+            </div>
         </header>
         
         <main>
@@ -30,6 +33,7 @@
             <div class="modal hidden" id="sign-in-modal">
                 <div class="wrapper edit-wrapper">
                     <h2>Увійти</h2>
+                    <span id="login-error" style="display: none;">Невірний логін або пароль</span>
                     <label>Логін: <br><input type="text" id="login" name="login" required></label><br>
                     <label>Пароль: <br>
                     <input type="password" id="password" name="password" required></label><br>
@@ -67,6 +71,11 @@
             })
         })
         
+        getUser().then(user=>{
+            $("#sign-in-button").hide();
+            $("#username").show();
+            $("#username").text(user.username);
+        })
 
         $.getJSON("https://yehormovchan.github.io/assets/links.json", (data)=>{
             links = data;
@@ -90,10 +99,10 @@
             data: JSON.stringify({ username: username, password: password }),
             success: function (response) {
                 localStorage.setItem('token', response.token); // Зберігаємо токен
-                alert('Ви успішно увійшли');
+                location.reload();
             },
             error: function () {
-                alert('Невірний логін або пароль');
+                $("#login-error").show();
             }
         });
         })
