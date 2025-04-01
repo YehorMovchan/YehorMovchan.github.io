@@ -66,11 +66,11 @@
             var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
-            return JSON.parse(jsonPayload);
+            getUser(JSON.parse(jsonPayload).sub);
         }
 
-        function getUser(){
-            $.getJSON("http://localhost:8080/users/me", (user)=>{
+        function getUser(username){
+            $.getJSON(`http://localhost:8080/users/${username}`, (user)=>{
                 console.log(me)
             })
         }
