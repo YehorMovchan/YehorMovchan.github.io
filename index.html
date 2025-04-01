@@ -69,6 +69,12 @@
             return JSON.parse(jsonPayload);
         }
 
+        function getUser(){
+            $.getJSON("http://localhost:8080/users/me", (user)=>{
+                console.log(me)
+            })
+        }
+        getUser();
         getUserRole();
 
         $("#sign-in-button").click(()=>{
