@@ -58,10 +58,10 @@
                 let aList = $("a").toArray();
                 aList.forEach(element => {
                     if(permits.includes(element.id)){
-                        element.show();
+                        $(element).show();
                     }
                     else{
-                        element.hide();
+                        $(element).hide();
                     }
                 });
             })
