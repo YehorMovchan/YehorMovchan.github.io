@@ -14,12 +14,11 @@
             <nav>
                 <ul>
                     <li><a href="#" onclick="changePage(this)">Головна</a></li>
-                    <li><a href="#kid-list" onclick="changePage(this)">Учні</a></li>
-                    <li><a href="#staff-list"  onclick="changePage(this)">Працівники</a></li>
-                    <li><a href="#schedule" onclick="changePage(this)">Розклад</a></li>
-                    <li><a href="#settings" onclick="changePage(this)">Налаштування</a></li>
-                    <li><a href="#groups-type" onclick="changePage(this)">Гуртки</a></li>
-                    <li><a href="#programs-type" onclick="changePage(this)">Програми навчання</a></li>
+                    <li><a id="kid-list" href="#kid-list" onclick="changePage(this)">Учні</a></li>
+                    <li><a id="staff-list" href="#staff-list"  onclick="changePage(this)">Працівники</a></li>
+                    <li><a id="schedule" href="#schedule" onclick="changePage(this)">Розклад</a></li>
+                    <li><a id="groups-list" href="#groups-type" onclick="changePage(this)">Гуртки</a></li>
+                    <li><a id="programs-list" href="#programs-type" onclick="changePage(this)">Програми навчання</a></li>
                 </ul>
             </nav>
             <button class="sign-in" id="sign-in-button">Увійти</button>
@@ -48,27 +47,32 @@
     </footer> -->
 </body>
 <script>
-        let iframe;
-        let page = location.hash;
-        let links;
+    let iframe;
+    let page = location.hash;
+    let links;
     $(document).ready(()=>{
         iframe = $("#iframe-content")[0]
+        getUserRole().then(role=>{
+            $.getJSON("https://yehormovchan.github.io/assets/permits.json", (data)=>{
+                let permits = data[role];
+                let aList = $("a");
+                aList.forEach(element => {
+                    if(permits.includes(element.id)){
+                        element.show();
+                    }
+                    else{
+                        element.hide();
+                    }
+                });
+            })
+        })
+        
+
         $.getJSON("https://yehormovchan.github.io/assets/links.json", (data)=>{
             links = data;
             iframe.src=links[page];
         })
-
-        function getUserRole(){
-            let token = localStorage.getItem('token');
-            if(!token) return null;
-            let payload = JSON.parse(atob(token.split('.')[1]));
-            let username = payload.sub;
-            $.getJSON(`http://localhost:8080/users/${username}`, (user)=>{
-                console.log(user);
-            })
-        }
-
-        getUserRole();
+        
 
         $("#sign-in-button").click(()=>{
             $("#sign-in-modal").fadeIn();

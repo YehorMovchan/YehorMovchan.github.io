@@ -1,0 +1,5 @@
+{
+    "STUDENT":["schedule"],
+    "TEACHER":["kid-list", "schedule"],
+    "ADMIN":["kid-list", "staff-list", "schedule", "groups-list", "programs-list"]
+}
