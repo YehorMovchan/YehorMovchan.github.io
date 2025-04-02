@@ -45,7 +45,7 @@
                 let schedule = [[], [], [], [], []];
                 
                 data.forEach(item => {
-                    schedule[item.dayOfWeek - 1].push(`<b>${item.subjectName}</b> (Клас: ${item.classField})`);
+                    schedule[item.dayOfWeek - 1].push(item);
                 });
                 
                 let tableContent = "";
@@ -55,7 +55,7 @@
                     tableContent += "<tr>";
                     tableContent += `<td>${i + 1}</td>`;
                     for (let j = 0; j < 5; j++) {
-                        tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(lesson)}'>${schedule[j][i] || ''}</td>`;
+                        tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(schedule[j][i])}'>${schedule[j][i].subjectName} (${schedule[j][i].classField}) || ''}</td>`;
                     }
                     tableContent += "</tr>";
                 }
