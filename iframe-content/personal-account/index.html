@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інформація про вчителя</title>
+    <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
+    <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
+</head>
+<body>
+    <h1 id="teacher-name"></h1>
+    <div class="main-info">
+        <div class="general">
+            <div class="loader general-loader"></div>
+            <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
+            <span><strong>Посада:</strong> <span id="teacher-position"></span></span>
+            <span><strong>Телефон:</strong> <span id="teacher-phone"></span></span>
+            <span><strong>Номер паспорта:</strong> <span id="teacher-passport"></span></span>
+            <span><strong>Додаткова інформація:</strong> <span id="teacher-info"></span></span>
+            <span><input type="checkbox" id="teacher-teacher" disabled> <span>Вчитель</span></span>
+            <span><strong id="passport-copy" class="clickable"></strong></span><br>
+            <div class="modal hidden" id="passport-copy-modal">
+                <img id="passport-copy-img" src="" alt="Копія паспорта">
+                <button onclick="$('#passport-copy-modal').fadeOut()">Закрити</button>
+            </div>
+            <button id="edit-teacher-button">Редагувати інформацію</button>
+        </div>
+        <div class="salary-block">
+            <h3>Зарплата: <span id="salary"></span></h3>
+            <button id="edit-salary">Редагувати зарплату</button>
+            <button id="view-salary-history">Історія змін</button>
+        </div>
+    </div>
+    <div id="edit-salary-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+            <h2>Редагування зарплати</h2>
+            <label>Нова з/п: <input type="text" id="new-salary"></label>
+            <label>Причина зміни: <input type="text" id="salary-reason"></label><br>
+            <button id="confirm-salary">Підтвердити</button>
+            <button onclick="$('#edit-salary-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+    
+    <div id="salary-history-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+            <h2>Історія змін зарплати</h2>
+            <div id="salary-history-list"></div>
+            <button onclick="$('#salary-history-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+
+    <div id="edit-teacher-modal" class="modal hidden">
+        <div class="edit-wrapper wrapper">
+            <h2>Редагування інформації про вчителя</h2>
+            <label>Ім'я: <input type="text" id="edit-teacher-name"></label><br>
+            <label>Посада: <input type="text" id="edit-teacher-position"></label><br>
+            <label>Телефон: <input type="text" id="edit-teacher-phone"></label><br>
+            <label>Номер паспорта: <input type="text" id="edit-teacher-passport"></label><br>
+            <label>Додаткова інформація: <textarea id="edit-teacher-info"></textarea></label><br>
+            <label>Вчитель <input type="checkbox" id="edit-teacher-teacher"></label><br>
+            <label>Копія паспорта: <input type="file" id="upload-passport" accept="image/*"></label><br>
+            <button id="save-teacher">Зберегти</button>
+            <button onclick="$('#edit-teacher-modal').fadeOut()">Закрити</button>
+        </div>
+    </div>
+
+
+        
+    <div class="accordion-block">
+        <div class="accordion-header">Години роботи</div>
+        <iframe id="attendance" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
+    <div class="accordion-block">
+        <div class="accordion-header">Розклад вчителя</div>
+        <iframe id="schedule" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
+
+    <div class="delete-button-container">
+        <button class="delete-button" onclick="$('#delete-entity-modal').fadeIn()">Видалити працівника</button>
+    </div>
+
+    <div class="modal hidden" id="delete-entity-modal">
+        <div class="edit-wrapper wrapper">
+            <span><strong>Ви впевнені, що хочете видалити працівника? Ця дія видалить усі пов'язані з ним дані.</strong></span>
+            <button id="delete-entity">Так</button>
+            <button onclick="$('#delete-entity-modal').fadeOut()">Ні</button>
+        </div>
+    </div>
+    
+    <script>
+
+        $(document).ready(function() {
+            let staffId = getUser();
+            if (staffId) {
+                $.getJSON(`http://localhost:8080/staff/${teacherId}`, function(teacher) {
+                    $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
+                        $("#attendance").attr("src", `${data.attendance}?id=${teacherId}&salary=${teacher.salary}`);
+                        $("#schedule").attr("src", `${data.schedule}?id=${teacherId}`);
+                    })
+                    $("#teacher-name").text(teacher.name);
+                    $("#teacher-position").text(teacher.position);
+                    $("#teacher-phone").text(teacher.phone || 'Немає даних');
+                    $("#teacher-passport").text(teacher.passportNumber || 'Немає даних');
+                    $("#teacher-info").text(teacher.info || 'Немає даних');
+                    $("#teacher-teacher").prop("checked", teacher.teacher);
+
+                    $("#edit-teacher-name").val(teacher.name);
+                    $("#edit-teacher-position").val(teacher.position);
+                    $("#edit-teacher-phone").val(teacher.phone);
+                    $("#edit-teacher-passport").val(teacher.passportNumber );
+                    $("#edit-teacher-info").val(teacher.info);
+                    $("#edit-teacher-teacher").prop("checked", teacher.teacher);
+
+                    if (teacher.passportCopy) {
+                        $("#passport-copy").text("Переглянути копію паспорта").click(() => $("#passport-copy-modal").css("display", "flex").hide().fadeIn());
+
+                        $("#passport-copy-img").attr("src"
+                        , `data:image/png;base64,${teacher.passportCopy}`);
+                    }
+                    else{
+                        $("#passport-copy").text("Копія паспорта відсутня");
+                        $("#passport-copy-img").hide();
+                        $("#passport-copy").removeClass("clickable");
+                    }
+                    $(".general-loader").hide();
+                }).fail(() => {
+                    $(".general-loader").hide();
+                    $(".general-request-error").show();
+                });
+            }
+            
+            $("#edit-teacher-button").click(function() {
+                $("#edit-teacher-modal").css("display", "flex").hide().fadeIn();
+            });
+            
+            $("#save-teacher").click(function() {
+                let updatedData = {
+                    id: teacherId,
+                    name: $("#edit-teacher-name").val(),
+                    position: $("#edit-teacher-position").val(),
+                    phone: $("#edit-teacher-phone").val(),
+                    passportNumber: $("#edit-teacher-passport").val(),
+                    info: $("#edit-teacher-info").val(),
+                    teacher: $("#edit-teacher-teacher").prop("checked"),
+                    passportCopy: null
+                };
+                
+                let formData = new FormData();
+                formData.append("staff", new Blob([JSON.stringify(updatedData)], { type: "application/json" }));
+                
+                let fileInput = $("#upload-passport")[0].files[0];
+                let url;
+                if (fileInput){
+                    let blob = new Blob([fileInput], { type: fileInput.type });
+                    formData.append("passportCopy", blob, fileInput.name);
+                }
+                else{
+                    formData.append("passportCopy", new Blob([null]), type="application/json");
+                }
+                
+                $.ajax({
+                    url: `http://localhost:8080/staff/${teacherId}`,
+                    method: "PUT",
+                    contentType: false,
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    success: () => location.reload(),
+                    error: (errorMessage) => console.log("error" + errorMessage)
+                });
+            });
+
+            $.getJSON(
+                "http://localhost:8080/staff-payment/" + teacherId,
+                (data) => {
+                    $("#salary").text(data.salary + " грн");
+                }
+            )
+
+            $("#edit-salary").click(function() {
+                $("#edit-salary-modal").css("display", "flex").hide().fadeIn();
+            });
+            $("#confirm-salary").click(function() {
+                let newSalary = $("#new-salary").val();
+                let reason = $("#salary-reason").val();
+                updatedSalary={
+                    staff: teacherId,
+                    from: null,
+                    to: new Date(),
+                    salary: newSalary,
+                    reasonOfChange: reason
+                }
+                $.ajax({
+                    url: `http://localhost:8080/staff-payment/update/${teacherId}`,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(updatedSalary),
+                    success: () => location.reload(),
+                    error: (errorMessage) => console.log("error" + errorMessage)
+                });
+            });
+
+            $("#view-salary-history").click(function() {
+                $.getJSON(
+                    `http://localhost:8080/staff-payment/history/${teacherId}`,
+                    (history) => {
+                        let tableRows = history.map(entry => 
+                            `<tr>
+                                <td>${entry.from}</td>
+                                <td>${entry.to || 'досі'}</td>
+                                <td>${entry.salary}</td>
+                                <td>${entry.reasonOfChange || 'Без причини'}</td>
+                            </tr>`
+                        ).join('');
+                        let tableHtml = `
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>Від</th>
+                                        <th>До</th>
+                                        <th>Зарплата</th>
+                                        <th>Причина зміни</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${tableRows}
+                                </tbody>
+                            </table>
+                        `;
+                        $('#salary-history-list').html(tableHtml);
+                        $("#salary-history-modal").css("display", "flex").hide().fadeIn();
+                    }
+                );
+            });
+
+            $("#delete-entity").click(function() {
+                $.ajax({
+                    url: `http://localhost:8080/staff/${teacherId}`,
+                    method: "DELETE",
+                    success: () => window.location.href = "https://yehormovchan.github.io/iframe-content/staff-list.html",
+                    error: (errorMessage) => console.log("error" + errorMessage)
+                });
+            });
+        });
+    </script>
+</body>
+</html>

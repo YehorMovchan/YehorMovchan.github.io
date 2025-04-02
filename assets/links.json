@@ -5,5 +5,6 @@
     "#schedule": "https://yehormovchan.github.io/iframe-content/schedule.html",
     "#settings": null,
     "#groups-type": "https://yehormovchan.github.io/iframe-content/group-list.html",
-    "#programs-type": "https://yehormovchan.github.io/iframe-content/program-list.html"
+    "#programs-type": "https://yehormovchan.github.io/iframe-content/program-list.html",
+    "#personal-account": "https://yehormovchan.github.io/iframe-content/personal-account/index.html"
 }
