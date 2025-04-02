@@ -94,24 +94,24 @@
         $(document).ready(function() {
             let staffId = getUser();
             if (staffId) {
-                $.getJSON(`http://localhost:8080/staff/${teacherId}`, function(teacher) {
+                $.getJSON(`http://localhost:8080/staff/${staffId}`, function(staff) {
                     $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
-                        $("#attendance").attr("src", `${data.attendance}?id=${teacherId}&salary=${teacher.salary}`);
-                        $("#schedule").attr("src", `${data.schedule}?id=${teacherId}`);
+                        $("#attendance").attr("src", `${data.attendance}?id=${staffId}&salary=${staff.salary}`);
+                        $("#schedule").attr("src", `${data.schedule}?id=${staffId}`);
                     })
-                    $("#teacher-name").text(teacher.name);
-                    $("#teacher-position").text(teacher.position);
-                    $("#teacher-phone").text(teacher.phone || 'Немає даних');
-                    $("#teacher-passport").text(teacher.passportNumber || 'Немає даних');
-                    $("#teacher-info").text(teacher.info || 'Немає даних');
-                    $("#teacher-teacher").prop("checked", teacher.teacher);
+                    $("#teacher-name").text(staff.name);
+                    $("#teacher-position").text(staff.position);
+                    $("#teacher-phone").text(staff.phone || 'Немає даних');
+                    $("#teacher-passport").text(staff.passportNumber || 'Немає даних');
+                    $("#teacher-info").text(staff.info || 'Немає даних');
+                    $("#teacher-teacher").prop("checked", staff.teacher);
 
-                    $("#edit-teacher-name").val(teacher.name);
-                    $("#edit-teacher-position").val(teacher.position);
-                    $("#edit-teacher-phone").val(teacher.phone);
-                    $("#edit-teacher-passport").val(teacher.passportNumber );
-                    $("#edit-teacher-info").val(teacher.info);
-                    $("#edit-teacher-teacher").prop("checked", teacher.teacher);
+                    $("#edit-teacher-name").val(staff.name);
+                    $("#edit-teacher-position").val(staff.position);
+                    $("#edit-teacher-phone").val(staff.phone);
+                    $("#edit-teacher-passport").val(staff.passportNumber );
+                    $("#edit-teacher-info").val(staff.info);
+                    $("#edit-teacher-teacher").prop("checked", staff.teacher);
 
                     if (teacher.passportCopy) {
                         $("#passport-copy").text("Переглянути копію паспорта").click(() => $("#passport-copy-modal").css("display", "flex").hide().fadeIn());
