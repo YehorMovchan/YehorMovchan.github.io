@@ -131,7 +131,7 @@
 
                 if (date && start && end) {
                     $.ajax({
-                        url: `http://localhost:8080/attendance/staff/${staffId}`,
+                        url: `http://localhost:8080/attendance/staff`,
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify({
