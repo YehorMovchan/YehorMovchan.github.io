@@ -45,8 +45,7 @@
                 let schedule = [[], [], [], [], []];
                 
                 data.forEach(item => {
-                    let lessonInfo = `<b>${item.subjectName}</b> (Клас: ${item.classField})`;
-                    schedule[item.dayOfWeek - 1].push({ info: lessonInfo, classField: item.classField, subjectName: item.subjectName, dayOfWeek: item.dayOfWeek });
+                    schedule[item.dayOfWeek - 1].push(`<b>${item.subjectName}</b> (Клас: ${item.classField})`);
                 });
                 
                 let tableContent = "";
@@ -56,15 +55,14 @@
                     tableContent += "<tr>";
                     tableContent += `<td>${i + 1}</td>`;
                     for (let j = 0; j < 5; j++) {
-                        let lesson = schedule[j][i] || {};
-                        tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(lesson)}'>${lesson.info || ''}</td>`;
+                        tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(lesson)}'>${schedule[j][i] || ''}</td>`;
                     }
                     tableContent += "</tr>";
                 }
                 
                 $("#schedule-body").html(tableContent);
             });
-            
+
             $(document).on("click", ".lesson-cell", function() {
                 let lessonData = $(this).data("info");
                 if (!lessonData.info) return;
@@ -80,7 +78,7 @@
                 }
                 $("#date-select").html(dateOptions);
                 
-                $.getJSON(`http://localhost:8080/students/class/${lessonData.classField}`, function(students) {
+                $.getJSON(`http://localhost:8080/kid/grade=${lessonData.classField}`, function(students) {
                     let studentList = students.map(student => `<li><input type="checkbox" value="${student.id}"> ${student.name}</li>`).join("");
                     $("#student-list").html(studentList);
                 });
@@ -98,11 +96,12 @@
                     return $(this).val();
                 }).get();
                 
-                $.post("http://localhost:8080/attendance/save", JSON.stringify({ date: selectedDate, students: presentStudents }), function() {
+                $.post("http://localhost:8080/attendance/lesson", JSON.stringify({ date: selectedDate, kid: presentStudents }), function() {
                     alert("Відмічено!");
                     $("#attendance-modal").hide();
                 });
             });
+
         });
     </script>
 </body>
