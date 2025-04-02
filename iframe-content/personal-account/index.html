@@ -56,10 +56,17 @@
 
         $(document).ready(function() {
             let staffId;
-            getUser().then(user=>{
+            getUser().then((user)=>{
+                if(!user) {
+                    window.location.href = "https://yehormovchan.github.io/";
+                    return;
+                }
                 staffId = user.staff;
-            })
-            
+            },
+            (error) => {
+                console.error("Error fetching user data:", error);
+            });
+
             if (staffId) {
                 $.getJSON(`http://localhost:8080/staff/${staffId}`, function(staff) {
                     $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
