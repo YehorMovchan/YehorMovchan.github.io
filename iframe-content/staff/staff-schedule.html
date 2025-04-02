@@ -24,6 +24,18 @@
         </tbody>
     </table>
 
+    <div id="attendance-modal" class="modal hidden">
+        <div class="wrapper edit-wrapper">
+            <span class="close">&times;</span>
+            <h2 id="lesson-info"></h2>
+            <label for="date-select">Оберіть дату:</label>
+            <select id="date-select"></select>
+            <h3>Присутні:</h3>
+            <ul id="student-list"></ul>
+            <button id="save-attendance">Зберегти</button>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
             let urlParams = new URLSearchParams(window.location.search);
@@ -33,7 +45,8 @@
                 let schedule = [[], [], [], [], []];
                 
                 data.forEach(item => {
-                    schedule[item.dayOfWeek - 1].push(`<b>${item.subjectName}</b> (Клас: ${item.classField})`);
+                    let lessonInfo = `<b>${item.subjectName}</b> (Клас: ${item.classField})`;
+                    schedule[item.dayOfWeek - 1].push({ info: lessonInfo, classField: item.classField, subjectName: item.subjectName, dayOfWeek: item.dayOfWeek });
                 });
                 
                 let tableContent = "";
@@ -43,12 +56,52 @@
                     tableContent += "<tr>";
                     tableContent += `<td>${i + 1}</td>`;
                     for (let j = 0; j < 5; j++) {
-                        tableContent += `<td>${schedule[j][i] || ''}</td>`;
+                        let lesson = schedule[j][i] || {};
+                        tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(lesson)}'>${lesson.info || ''}</td>`;
                     }
                     tableContent += "</tr>";
                 }
                 
                 $("#schedule-body").html(tableContent);
+            });
+            
+            $(document).on("click", ".lesson-cell", function() {
+                let lessonData = $(this).data("info");
+                if (!lessonData.info) return;
+                
+                $("#lesson-info").html(lessonData.info);
+                
+                let dateOptions = "";
+                let today = new Date();
+                for (let i = 0; i < 5; i++) {
+                    let date = new Date();
+                    date.setDate(today.getDate() - (today.getDay() - lessonData.dayOfWeek) - (i * 7));
+                    dateOptions += `<option value="${date.toISOString().split('T')[0]}">${date.toLocaleDateString()}</option>`;
+                }
+                $("#date-select").html(dateOptions);
+                
+                $.getJSON(`http://localhost:8080/students/class/${lessonData.classField}`, function(students) {
+                    let studentList = students.map(student => `<li><input type="checkbox" value="${student.id}"> ${student.name}</li>`).join("");
+                    $("#student-list").html(studentList);
+                });
+                
+                $("#attendance-modal").show();
+            });
+            
+            $(".close").click(function() {
+                $("#attendance-modal").hide();
+            });
+            
+            $("#save-attendance").click(function() {
+                let selectedDate = $("#date-select").val();
+                let presentStudents = $("#student-list input:checked").map(function() {
+                    return $(this).val();
+                }).get();
+                
+                $.post("http://localhost:8080/attendance/save", JSON.stringify({ date: selectedDate, students: presentStudents }), function() {
+                    alert("Відмічено!");
+                    $("#attendance-modal").hide();
+                });
             });
         });
     </script>
