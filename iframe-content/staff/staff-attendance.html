@@ -80,8 +80,11 @@
 
             let urlParams = new URLSearchParams(window.location.search);
             let staffId = urlParams.get("id");
-            let salary = parseFloat(urlParams.get("salary")) || 0;
-            $("#salary").text(salary.toFixed(2));
+            let salary;
+            $.getJSON(`http://localhost:8080/staff-payment/${staffId}`, (payment) => {
+                salary = payment.salary;
+                $("#salary").text(salary.toFixed(2));
+            });
             $("#date-from").val(new Date().toISOString().split('T')[0]);
             $("#date-to").val(new Date().toISOString().split('T')[0]);
             

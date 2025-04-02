@@ -97,7 +97,7 @@
             if (teacherId) {
                 $.getJSON(`http://localhost:8080/staff/${teacherId}`, function(teacher) {
                     $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
-                        $("#attendance").attr("src", `${data.attendance}?id=${teacherId}&salary=${teacher.salary}`);
+                        $("#attendance").attr("src", `${data.attendance}?id=${teacherId}`);
                         $("#schedule").attr("src", `${data.schedule}?id=${teacherId}`);
                     })
                     $("#teacher-name").text(teacher.name);
