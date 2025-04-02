@@ -62,50 +62,53 @@
                     return;
                 }
                 staffId = user.staff;
+                fillInfo(staffId);
             },
             (error) => {
                 console.error("Error fetching user data:", error);
             });
 
-            if (staffId) {
-                $.getJSON(`http://localhost:8080/staff/${staffId}`, function(staff) {
-                    $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
-                        $("#attendance").attr("src", `${data.attendance}?id=${staffId}&salary=${staff.salary}`);
-                        $("#schedule").attr("src", `${data.schedule}?id=${staffId}`);
-                    })
-                    $("#teacher-name").text(staff.name);
-                    $("#teacher-position").text(staff.position);
-                    $("#teacher-phone").text(staff.phone || 'Немає даних');
-                    $("#teacher-passport").text(staff.passportNumber || 'Немає даних');
-                    $("#teacher-info").text(staff.info || 'Немає даних');
-                    $("#teacher-teacher").prop("checked", staff.teacher);
+            function fillInfo(staffId){
+                if (staffId) {
+                    $.getJSON(`http://localhost:8080/staff/${staffId}`, function(staff) {
+                        $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
+                            $("#attendance").attr("src", `${data.attendance}?id=${staffId}&salary=${staff.salary}`);
+                            $("#schedule").attr("src", `${data.schedule}?id=${staffId}`);
+                        })
+                        $("#teacher-name").text(staff.name);
+                        $("#teacher-position").text(staff.position);
+                        $("#teacher-phone").text(staff.phone || 'Немає даних');
+                        $("#teacher-passport").text(staff.passportNumber || 'Немає даних');
+                        $("#teacher-info").text(staff.info || 'Немає даних');
+                        $("#teacher-teacher").prop("checked", staff.teacher);
 
 
-                    if (staff.passportCopy) {
-                        $("#passport-copy").text("Переглянути копію паспорта").click(() => $("#passport-copy-modal").css("display", "flex").hide().fadeIn());
+                        if (staff.passportCopy) {
+                            $("#passport-copy").text("Переглянути копію паспорта").click(() => $("#passport-copy-modal").css("display", "flex").hide().fadeIn());
 
-                        $("#passport-copy-img").attr("src"
-                        , `data:image/png;base64,${staff.passportCopy}`);
+                            $("#passport-copy-img").attr("src"
+                            , `data:image/png;base64,${staff.passportCopy}`);
+                        }
+                        else{
+                            $("#passport-copy").text("Копія паспорта відсутня");
+                            $("#passport-copy-img").hide();
+                            $("#passport-copy").removeClass("clickable");
+                        }
+                        $(".general-loader").hide();
+                    }).fail(() => {
+                        $(".general-loader").hide();
+                        $(".general-request-error").show();
+                    });
+                }
+
+                $.getJSON(
+                    `http://localhost:8080/staff-payment/${staffId}`,
+                    (data) => {
+                        $("#salary").text(data.salary + " грн");
                     }
-                    else{
-                        $("#passport-copy").text("Копія паспорта відсутня");
-                        $("#passport-copy-img").hide();
-                        $("#passport-copy").removeClass("clickable");
-                    }
-                    $(".general-loader").hide();
-                }).fail(() => {
-                    $(".general-loader").hide();
-                    $(".general-request-error").show();
-                });
+                )
             }
             
-
-            $.getJSON(
-                `http://localhost:8080/staff-payment/${staffId}`,
-                (data) => {
-                    $("#salary").text(data.salary + " грн");
-                }
-            )
 
             $("#view-salary-history").click(function() {
                 $.getJSON(
