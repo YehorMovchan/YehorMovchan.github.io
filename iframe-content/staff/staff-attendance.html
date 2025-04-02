@@ -11,7 +11,9 @@
 </head>
 <body>
     <h1>Відвідуваність працівника</h1>
-    
+    <div class="side-menu hidden" id="create-attendance-side-menu">
+        <button onclick="$(`#create-attendance-modal`).fadeIn()">Додати запис</button>
+    </div>
     <div class="filter-menu">
         <label>Від: <input type="date" id="date-from"></label>
         <label>До: <input type="date" id="date-to"></label>
@@ -31,6 +33,18 @@
                 <td><span id="total-salary">0</span> грн</td>
         </table>
     </div>  
+
+    <div id="create-attendance-modal" class="modal hidden">
+        <div class="wrapper edit-wrapper">
+            <label>Дата: <br><input type="date" id="attendance-date" required></label><br>
+            <label>Час початку: <br><input type="time" id="attendance-start" required></label><br>
+            <label>Час закінчення: <br><input type="time" id="attendance-end" required></label><br>
+            <label>Початок перерви: <br><input type="time" id="attendance-breaktime-from"></label><br>
+            <label>Кінець перерви: <br><input type="time" id="attendance-breaktime-to"></label><br>
+            <label>Додаткова інформація: <br><input type="text" id="attendance-info"></label><br>
+            <button id="create-attendance-button">Додати</button>
+        </div>
+    </div>
     
     <table>
         <thead>
@@ -50,10 +64,26 @@
     
     <script>
         $(document).ready(function() {
+
+            getUser().then((user)=>{
+                if(!user) {
+                    window.location.href = "https://yehormovchan.github.io/";
+                    return;
+                }
+                else{
+                    if(user.role == "TEACHER") {
+                        $("#create-attendance-side-menu").fadeIn();
+                        $("#attendance-date").val(new Date().toISOString().split('T')[0]);
+                    }
+                }
+            });
+
             let urlParams = new URLSearchParams(window.location.search);
             let staffId = urlParams.get("id");
             let salary = parseFloat(urlParams.get("salary")) || 0;
             $("#salary").text(salary.toFixed(2));
+            $("#date-from").val(new Date().toISOString().split('T')[0]);
+            $("#date-to").val(new Date().toISOString().split('T')[0]);
             
             $("#filter-button").click(function() {
                 let dateFrom = $("#date-from").val();
@@ -89,6 +119,42 @@
                     alert("Будь ласка, виберіть діапазон дат");
                 }
             });
+        
+            $("create-attendance-button").click(()=>{
+                let staff = staffId;
+                let date = $("#attendance-date").val();
+                let start = $("#attendance-start").val();
+                let end = $("#attendance-end").val();
+                let breaktimeFrom = $("#attendance-breaktime-from").val();
+                let breaktimeTo = $("#attendance-breaktime-to").val();
+                let info = $("#attendance-info").val();
+
+                if (date && start && end) {
+                    $.ajax({
+                        url: `http://localhost:8080/attendance/staff/${staffId}`,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            staff: staff,
+                            date: date,
+                            start: start,
+                            end: end,
+                            breaktimeFrom: breaktimeFrom,
+                            breaktimeTo: breaktimeTo,
+                            info: info
+                        }),
+                        success: function(response) {
+                            $("#create-attendance-modal").fadeOut();
+                            $("#filter-button").click(); 
+                        },
+                        error: function(xhr, status, error) {
+                            alert("Помилка при додаванні запису: " + error);
+                        }
+                    });
+                } else {
+                    alert("Будь ласка, заповніть всі обов'язкові поля.");
+                }
+            })
         });
     </script>
 </body>
