@@ -92,7 +92,12 @@
     <script>
 
         $(document).ready(function() {
-            let staffId = getUser();
+            let staffId;
+            getUser().then(staff=>{
+                staffId = staff.id;
+            }).error((error)=>{
+                console.log(error);
+            });
             if (staffId) {
                 $.getJSON(`http://localhost:8080/staff/${staffId}`, function(staff) {
                     $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
