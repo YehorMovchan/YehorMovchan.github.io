@@ -56,8 +56,8 @@
 
         $(document).ready(function() {
             let staffId;
-            getUser().then(staff=>{
-                staffId = staff.id;
+            getUser().then(user=>{
+                staffId = user.staff;
             }).error((error)=>{
                 console.log(error);
             });
