@@ -58,9 +58,7 @@
             let staffId;
             getUser().then(user=>{
                 staffId = user.staff;
-            }).error((error)=>{
-                console.log(error);
-            });
+            })
             if (staffId) {
                 $.getJSON(`http://localhost:8080/staff/${staffId}`, function(staff) {
                     $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
