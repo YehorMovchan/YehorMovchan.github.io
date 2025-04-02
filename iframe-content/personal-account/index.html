@@ -59,6 +59,7 @@
             getUser().then(user=>{
                 staffId = user.staff;
             })
+            
             if (staffId) {
                 $.getJSON(`http://localhost:8080/staff/${staffId}`, function(staff) {
                     $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
