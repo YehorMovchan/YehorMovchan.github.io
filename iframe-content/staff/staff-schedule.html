@@ -40,7 +40,7 @@
         $(document).ready(function() {
             let urlParams = new URLSearchParams(window.location.search);
             let teacherId = urlParams.get("id");
-            
+            let lessonData;
             $.getJSON(`http://localhost:8080/view/schedule/teacher=${teacherId}`, function(data) {
 
                 let monday = data.filter(item => item.dayOfWeek === 1);
@@ -71,7 +71,7 @@
             });
 
             $(document).on("click", ".lesson-cell", function() {
-                let lessonData = $(this).data("info");
+                lessonData = $(this).data("info");
                 if (!lessonData) return;
                 
                 $("#lesson-info").html(lessonData.info);
@@ -102,8 +102,13 @@
                 let presentStudents = $("#student-list input:checked").map(function() {
                     return $(this).val();
                 }).get();
+                let lessonId = lessonData.id;
+                let postData=[];
+                presentStudents.forEach(studentId=>{
+                    postData.push({ date: selectedDate, kid: studentId, lesson: lessonId });
+                })
                 
-                $.post("http://localhost:8080/attendance/lesson", JSON.stringify({ date: selectedDate, kid: presentStudents }), function() {
+                $.ajax("http://localhost:8080/attendance/lesson", JSON.stringify(postData), ()=> {
                     alert("Відмічено!");
                     $("#attendance-modal").hide();
                 });
