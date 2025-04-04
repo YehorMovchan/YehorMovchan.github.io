@@ -108,9 +108,20 @@
                     postData.push({ date: selectedDate, kid: studentId, lesson: lessonId });
                 })
                 
-                $.post("http://localhost:8080/attendance/lesson", JSON.stringify(postData), ()=> {
-                    alert("Відмічено!");
-                    $("#attendance-modal").hide();
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/attendance/lesson",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(postData),
+                    success: function(response) {
+                        alert("Відмічено!");
+                        $("#attendance-modal").hide();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                        alert("Сталася помилка при збереженні відмітки.");
+                    }
                 });
             });
 
