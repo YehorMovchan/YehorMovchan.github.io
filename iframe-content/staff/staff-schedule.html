@@ -42,19 +42,22 @@
             let teacherId = urlParams.get("id");
             
             $.getJSON(`http://localhost:8080/view/schedule/teacher=${teacherId}`, function(data) {
-                let schedule = [[], [], [], [], []];
-                
-                data.forEach(item => {
-                    schedule[item.dayOfWeek - 1].push(item);
-                });
+
+                let monday = data.filter(item => item.dayOfWeek === 1);
+                let tuesday = data.filter(item => item.dayOfWeek === 2);
+                let wednesday = data.filter(item => item.dayOfWeek === 3);
+                let thursday = data.filter(item => item.dayOfWeek === 4);
+                let friday = data.filter(item => item.dayOfWeek === 5);
+
+                let schedule = [monday, tuesday, wednesday, thursday, friday];
                 
                 let tableContent = "";
-                let maxRows = Math.max(...schedule.map(day => day.length));
+                let maxRows = 8;
                 
                 for (let i = 0; i < maxRows; i++) {
                     tableContent += "<tr>";
                     tableContent += `<td>${i + 1}</td>`;
-                    for (let j = 0; j < 5; j++) {
+                    for (let j = 0; j < schedule.length; j++) {
                         tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(schedule[j][i])}'>${schedule[j][i].subjectName} (${schedule[j][i].classField}) || ''}</td>`;
                     }
                     tableContent += "</tr>";
