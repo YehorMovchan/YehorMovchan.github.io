@@ -40,14 +40,7 @@
         </div>
     </div>
         
-    <div class="accordion-block">
-        <div class="accordion-header">Години роботи</div>
-        <iframe id="attendance" src="" frameborder="0" class="addition-block"></iframe>
-    </div>
-    <div class="accordion-block">
-        <div class="accordion-header">Розклад вчителя</div>
-        <iframe id="schedule" src="" frameborder="0" class="addition-block"></iframe>
-    </div>
+    <iframe id="attendance" src="" frameborder="0" class="addition-block"></iframe>
 
     
     <script>
@@ -71,7 +64,6 @@
                     $.getJSON(`http://localhost:8080/staff/${staffId}`, function(staff) {
                         $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
                             $("#attendance").attr("src", `${data.attendance}?id=${staffId}`);
-                            $("#schedule").attr("src", `${data.schedule}?id=${staffId}`);
                         })
                         $("#teacher-name").text(staff.name);
                         $("#teacher-position").text(staff.position);
