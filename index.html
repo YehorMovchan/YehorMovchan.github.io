@@ -19,6 +19,7 @@
                     <li><a id="schedule" href="#schedule" onclick="changePage(this)">Розклад</a></li>
                     <li><a id="groups-list" href="#groups-type" onclick="changePage(this)">Гуртки</a></li>
                     <li><a id="programs-list" href="#programs-type" onclick="changePage(this)">Програми навчання</a></li>
+                    <li><a id="staff-schedule" href="#staff-schedule" onclick="changePage(this)">Розклад</a></li>
                     <li><a id="personal-account" href="#personal-account" onclick="changePage(this)">Особистий кабінет</a></li>
                 </ul>
             </nav>
@@ -121,7 +122,8 @@
         })
         $("#sign-out").click(()=>{
             localStorage.removeItem('token');
-            iframe.src("");
+            iframe.src = "";
+            $("a").hide();
         })
     })
     function changePage(el){
