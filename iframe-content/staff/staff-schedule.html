@@ -48,40 +48,44 @@
                         return;
                     }
                     teacherId = user.staff;
+                    fillInfo(teacherId);
                 }, (error) => {
                     console.error("Error fetching user data:", error);
                 });
                 return;
             }
             let lessonData;
-            $.getJSON(`http://localhost:8080/view/schedule/teacher=${teacherId}`, function(data) {
 
-                let monday = data.filter(item => item.dayOfWeek === 1);
-                let tuesday = data.filter(item => item.dayOfWeek === 2);
-                let wednesday = data.filter(item => item.dayOfWeek === 3);
-                let thursday = data.filter(item => item.dayOfWeek === 4);
-                let friday = data.filter(item => item.dayOfWeek === 5);
+            function fillInfo(teacherId){
+                $.getJSON(`http://localhost:8080/view/schedule/teacher=${teacherId}`, function(data) {
+                    let monday = data.filter(item => item.dayOfWeek === 1);
+                    let tuesday = data.filter(item => item.dayOfWeek === 2);
+                    let wednesday = data.filter(item => item.dayOfWeek === 3);
+                    let thursday = data.filter(item => item.dayOfWeek === 4);
+                    let friday = data.filter(item => item.dayOfWeek === 5);
 
-                let schedule = [monday, tuesday, wednesday, thursday, friday];
-                
-                let tableContent = "";
-                let maxRows = 8;
-                
-                for (let i = 0; i < maxRows; i++) {
-                    tableContent += "<tr>";
-                    tableContent += `<td>${i + 1}</td>`;
-                    for (let j = 0; j < schedule.length; j++) {
-                        if(schedule[j][i] === undefined) {
-                            tableContent += `<td class="lesson-cell"></td>`;
-                            continue;
+                    let schedule = [monday, tuesday, wednesday, thursday, friday];
+
+                    let tableContent = "";
+                    let maxRows = 8;
+
+                    for (let i = 0; i < maxRows; i++) {
+                        tableContent += "<tr>";
+                        tableContent += `<td>${i + 1}</td>`;
+                        for (let j = 0; j < schedule.length; j++) {
+                            if(schedule[j][i] === undefined) {
+                                tableContent += `<td class="lesson-cell"></td>`;
+                                continue;
+                            }
+                            tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(schedule[j][i])}'>${schedule[j][i].subjectName} (${schedule[j][i].classField})</td>`;
                         }
-                        tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(schedule[j][i])}'>${schedule[j][i].subjectName} (${schedule[j][i].classField})</td>`;
+                        tableContent += "</tr>";
                     }
-                    tableContent += "</tr>";
-                }
-                
-                $("#schedule-body").html(tableContent);
-            });
+
+                    $("#schedule-body").html(tableContent);
+                    });
+            }
+            
 
             $(document).on("click", ".lesson-cell", function() {
                 lessonData = $(this).data("info");
