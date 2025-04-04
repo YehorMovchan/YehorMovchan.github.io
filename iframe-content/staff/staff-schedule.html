@@ -72,7 +72,7 @@
 
             $(document).on("click", ".lesson-cell", function() {
                 let lessonData = $(this).data("info");
-                if (!lessonData.info) return;
+                if (!lessonData) return;
                 
                 $("#lesson-info").html(lessonData.info);
                 
