@@ -58,7 +58,11 @@
                     tableContent += "<tr>";
                     tableContent += `<td>${i + 1}</td>`;
                     for (let j = 0; j < schedule.length; j++) {
-                        tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(schedule[j][i])}'>${schedule[j][i].subjectName} (${schedule[j][i].classField}) || ''}</td>`;
+                        if(schedule[j][i] === undefined) {
+                            tableContent += `<td class="lesson-cell"></td>`;
+                            continue;
+                        }
+                        tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(schedule[j][i])}'>${schedule[j][i].subjectName} (${schedule[j][i].classField})</td>`;
                     }
                     tableContent += "</tr>";
                 }
