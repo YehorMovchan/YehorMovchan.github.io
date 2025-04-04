@@ -83,11 +83,11 @@
                     }
 
                     $("#schedule-body").html(tableContent);
-                    });
+                });
             }
-            
 
-            $(document).on("click", ".lesson-cell", function() {
+        });
+        $(document).on("click", ".lesson-cell", ()=>{
                 lessonData = $(this).data("info");
                 if (!lessonData) return;
                 
@@ -140,8 +140,6 @@
                     }
                 });
             });
-
-        });
     </script>
 </body>
 </html>
