@@ -87,7 +87,7 @@
             }
 
         });
-        $(document).on("click", ".lesson-cell", ()=>{
+        $(".lesson-cell").click(()=>{
                 lessonData = $(this).data("info");
                 if (!lessonData) return;
                 
