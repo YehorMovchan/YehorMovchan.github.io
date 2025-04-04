@@ -108,7 +108,7 @@
                     postData.push({ date: selectedDate, kid: studentId, lesson: lessonId });
                 })
                 
-                $.ajax("http://localhost:8080/attendance/lesson", JSON.stringify(postData), ()=> {
+                $.post("http://localhost:8080/attendance/lesson", JSON.stringify(postData), ()=> {
                     alert("Відмічено!");
                     $("#attendance-modal").hide();
                 });
