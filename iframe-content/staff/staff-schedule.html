@@ -64,7 +64,7 @@
             else{
                 fillInfo(teacherId);
             }
-            let lessonData;
+            var lessonData;
 
             function fillInfo(teacherId){
                 $.getJSON(`http://localhost:8080/view/schedule/teacher=${teacherId}`, function(data) {
@@ -90,23 +90,23 @@
                                 td.innerText=  `${schedule[j][i].subjectName} (${schedule[j][i].classField})`;
                                 td.style.cursor = "pointer";
                                 td.onclick = ()=>{
-                                    lessonData = schedule[j][i];
-                                    if (!lessonData) return;
-                                    
-                                    $("#lesson-info").html(`${lessonData.subjectName}  (${lessonData.classField})`);
+                                    let lesson = schedule[j][i];
+                                    if (!lesson) return;
+                                    lessonData = lesson;
+                                    $("#lesson-info").html(`${lesson.subjectName}  (${lesson.classField})`);
 
                                     
                                     let dateOptions = "";
                                     let today = new Date();
                                     for (let k = 0; k < 5; k++) {
                                         let date = new Date();
-                                        date.setDate(today.getDate() - (today.getDay() - lessonData.dayOfWeek) - (k * 7));
+                                        date.setDate(today.getDate() - (today.getDay() - lesson.dayOfWeek) - (k * 7));
                                         dateOptions += `<option value="${date.toISOString().split('T')[0]}">${date.toLocaleDateString()}</option>`;
                                     }
                                     $("#date-select").html(dateOptions);
 
 
-                                    $.getJSON(`http://localhost:8080/kid/grade=${lessonData.classField}`, function(students) {
+                                    $.getJSON(`http://localhost:8080/kid/grade=${lesson.classField}`, function(students) {
                                         let studentList = students.map(student => `<li><input type="checkbox" value="${student.id}"> ${student.name}</li>`).join("");
                                         $("#student-list").html(studentList);
                                     });
