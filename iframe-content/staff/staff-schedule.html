@@ -97,7 +97,7 @@
                                     
                                     let dateOptions = "";
                                     let today = new Date();
-                                    for (let i = 0; i < 5; i++) {
+                                    for (let k = 0; k < 5; k++) {
                                         let date = new Date();
                                         date.setDate(today.getDate() - (today.getDay() - lessonData.dayOfWeek) - (i * 7));
                                         dateOptions += `<option value="${date.toISOString().split('T')[0]}">${date.toLocaleDateString()}</option>`;
