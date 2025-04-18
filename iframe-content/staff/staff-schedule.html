@@ -39,6 +39,13 @@
 
     <script>
         $(document).ready(function() {
+            let lessonPrice;
+            $.getJSON(
+                `http://localhost:8080/lesson-price`,
+                (data) => {
+                    lessonPrice = data.price;
+                }
+            )
             let urlParams = new URLSearchParams(window.location.search);
             let teacherId = urlParams.get("id");
             if (!teacherId) {
@@ -122,13 +129,6 @@
             
             $("#save-attendance").click(function() {
                 
-                let lessonPrice;
-                $.getJSON(
-                    `http://localhost:8080/lesson-price`,
-                    (data) => {
-                        lessonPrice = data.price;
-                    }
-                )
                 let selectedDate = $("#date-select").val();
                 let presentStudents = $("#student-list input:checked").map(function() {
                     return $(this).val();
