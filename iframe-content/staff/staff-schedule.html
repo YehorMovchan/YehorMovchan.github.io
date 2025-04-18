@@ -43,6 +43,51 @@
             $("#close-attendance").on("click", function() {
                 $("#attendance-modal").fadeOut();
             });
+            $("#save-attendance").on("click", ()=> {
+                
+                let selectedDate = $("#date-select").val();
+                let presentStudents = $("#student-list input:checked").map(function() {
+                    return $(this).val();
+                }).get();
+                let lessonId = lessonData.id;
+                let postData=[];
+                presentStudents.forEach(studentId=>{
+                    postData.push({ date: selectedDate, kid: studentId, lesson: lessonId });
+                })
+                let transactions = [];
+                presentStudents.forEach(studentId => {
+                    transactions.push({ kid: studentId, date: selectedDate, sum: lessonPrice, type: 4 });
+                });
+                
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/attendance/lesson",
+                    contentType: "application/json",
+                    data: JSON.stringify(postData),
+                    success: function(response) {
+                        alert("Відмітку збережено успішно!");
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost:8080/transaction/list",       
+                            contentType: "application/json",
+                            data: JSON.stringify(transactions),
+                            success: function(response) {
+                                console.log("Transactions saved successfully:", response);
+                                alert("Транзакції збережено успішно!");
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error saving transactions:", error);
+                            }
+                        });
+                        $("#attendance-modal").hide();
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                        alert("Сталася помилка при збереженні відмітки.");
+                    }
+                });
+            });
             let lessonPrice;
             $.getJSON(
                 `http://localhost:8080/lesson-price`,
@@ -129,52 +174,7 @@
             }
 
             
-            
-            $("#save-attendance").on("click", ()=> {
-                
-                let selectedDate = $("#date-select").val();
-                let presentStudents = $("#student-list input:checked").map(function() {
-                    return $(this).val();
-                }).get();
-                let lessonId = lessonData.id;
-                let postData=[];
-                presentStudents.forEach(studentId=>{
-                    postData.push({ date: selectedDate, kid: studentId, lesson: lessonId });
-                })
-                let transactions = [];
-                presentStudents.forEach(studentId => {
-                    transactions.push({ kid: studentId, date: selectedDate, sum: lessonPrice, type: 4 });
-                });
-                
-                $.ajax({
-                    type: "POST",
-                    url: "http://localhost:8080/attendance/lesson",
-                    contentType: "application/json",
-                    data: JSON.stringify(postData),
-                    success: function(response) {
-                        alert("Відмітку збережено успішно!");
-                        $.ajax({
-                            type: "POST",
-                            url: "http://localhost:8080/transaction/list",       
-                            contentType: "application/json",
-                            data: JSON.stringify(transactions),
-                            success: function(response) {
-                                console.log("Transactions saved successfully:", response);
-                                alert("Транзакції збережено успішно!");
-                            },
-                            error: function(xhr, status, error) {
-                                console.error("Error saving transactions:", error);
-                            }
-                        });
-                        $("#attendance-modal").hide();
-
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error:", error);
-                        alert("Сталася помилка при збереженні відмітки.");
-                    }
-                });
-            });
+        
         });
 
     </script>
