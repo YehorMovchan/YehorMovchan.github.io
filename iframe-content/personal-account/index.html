@@ -64,6 +64,7 @@
                     $.getJSON(`http://localhost:8080/staff/${staffId}`, function(staff) {
                         $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
                             $("#attendance").attr("src", `${data.attendance}?id=${staffId}`);
+                            $("#attendance").show();
                         })
                         $("#teacher-name").text(staff.name);
                         $("#teacher-position").text(staff.position);
