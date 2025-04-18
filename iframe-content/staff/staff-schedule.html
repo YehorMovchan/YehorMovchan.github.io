@@ -152,7 +152,7 @@
                         alert("Відмітку збережено успішно!");
                         $.ajax({
                             type: "POST",
-                            url: "http://localhost:8080/transaction",
+                            url: "http://localhost:8080/transaction/list",       
                             contentType: "application/json",
                             data: JSON.stringify(transactions),
                             success: function(response) {
