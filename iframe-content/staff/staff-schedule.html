@@ -79,9 +79,31 @@
                             let td = document.createElement("td");
                             td.className = "lesson-cell";
                             if(schedule[j][i] !== undefined) {
-                                td.dataset("info",JSON.stringify(schedule[j][i]));
+                                td.dataset.info =JSON.stringify(schedule[j][i]);
                                 td.innerText=  `${schedule[j][i].subjectName} (${schedule[j][i].classField})`;
                                 td.style.cursor = "pointer";
+                                td.onclick = ()=>{
+                                    lessonData = schedule[j][i];
+                                    if (!lessonData) return;
+                                    
+                                    $("#lesson-info").html(lessonData.info);
+                                    
+                                    let dateOptions = "";
+                                    let today = new Date();
+                                    for (let i = 0; i < 5; i++) {
+                                        let date = new Date();
+                                        date.setDate(today.getDate() - (today.getDay() - lessonData.dayOfWeek) - (i * 7));
+                                        dateOptions += `<option value="${date.toISOString().split('T')[0]}">${date.toLocaleDateString()}</option>`;
+                                    }
+                                    $("#date-select").html(dateOptions);
+                                    
+                                    $.getJSON(`http://localhost:8080/kid/grade=${lessonData.classField}`, function(students) {
+                                        let studentList = students.map(student => `<li><input type="checkbox" value="${student.id}"> ${student.name}</li>`).join("");
+                                        $("#student-list").html(studentList);
+                                    });
+                                    
+                                    $("#attendance-modal").show();
+                                }
                             }
 
                         }
