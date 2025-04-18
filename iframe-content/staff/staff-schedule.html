@@ -76,11 +76,14 @@
                         tableContent += "<tr>";
                         tableContent += `<td>${i + 1}</td>`;
                         for (let j = 0; j < schedule.length; j++) {
-                            if(schedule[j][i] === undefined) {
-                                tableContent += `<td class="lesson-cell"></td>`;
-                                continue;
+                            let td = document.createElement("td");
+                            td.className = "lesson-cell";
+                            if(schedule[j][i] !== undefined) {
+                                td.dataset("info",JSON.stringify(schedule[j][i]));
+                                td.innerText=  `${schedule[j][i].subjectName} (${schedule[j][i].classField})`;
+                                td.style.cursor = "pointer";
                             }
-                            tableContent += `<td class="lesson-cell" data-info='${JSON.stringify(schedule[j][i])}'>${schedule[j][i].subjectName} (${schedule[j][i].classField})</td>`;
+
                         }
                         tableContent += "</tr>";
                     }
