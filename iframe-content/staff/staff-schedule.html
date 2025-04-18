@@ -140,7 +140,7 @@
                 })
                 let transactions = [];
                 presentStudents.forEach(studentId => {
-                    transactions.push({ kid: studentId, date: selectedDate, price: lessonPrice, type: 3 });
+                    transactions.push({ kid: studentId, date: selectedDate, sum: lessonPrice, type: 3 });
                 });
                 
                 $.ajax({
