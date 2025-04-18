@@ -96,7 +96,8 @@
                                         dateOptions += `<option value="${date.toISOString().split('T')[0]}">${date.toLocaleDateString()}</option>`;
                                     }
                                     $("#date-select").html(dateOptions);
-                                    
+
+
                                     $.getJSON(`http://localhost:8080/kid/grade=${lessonData.classField}`, function(students) {
                                         let studentList = students.map(student => `<li><input type="checkbox" value="${student.id}"> ${student.name}</li>`).join("");
                                         $("#student-list").html(studentList);
@@ -114,40 +115,20 @@
                 });
             }
 
-            $(".lesson-cell").hover(function() {
-                $(this).css("background-color", "#f0f0f0");
-            }, function() {
-                $(this).css("background-color", "");
-            });
-            
-            $(".lesson-cell").click(()=>{
-                lessonData = $(this).data("info");
-                if (!lessonData) return;
-                
-                $("#lesson-info").html(lessonData.info);
-                
-                let dateOptions = "";
-                let today = new Date();
-                for (let i = 0; i < 5; i++) {
-                    let date = new Date();
-                    date.setDate(today.getDate() - (today.getDay() - lessonData.dayOfWeek) - (i * 7));
-                    dateOptions += `<option value="${date.toISOString().split('T')[0]}">${date.toLocaleDateString()}</option>`;
-                }
-                $("#date-select").html(dateOptions);
-                
-                $.getJSON(`http://localhost:8080/kid/grade=${lessonData.classField}`, function(students) {
-                    let studentList = students.map(student => `<li><input type="checkbox" value="${student.id}"> ${student.name}</li>`).join("");
-                    $("#student-list").html(studentList);
-                });
-                
-                $("#attendance-modal").show();
-            });
             
             $(".close").click(function() {
                 $("#attendance-modal").hide();
             });
             
             $("#save-attendance").click(function() {
+                
+                let lessonPrice;
+                $.getJSON(
+                    `http://localhost:8080/lesson-price`,
+                    (data) => {
+                        lessonPrice = data.price;
+                    }
+                )
                 let selectedDate = $("#date-select").val();
                 let presentStudents = $("#student-list input:checked").map(function() {
                     return $(this).val();
@@ -157,6 +138,10 @@
                 presentStudents.forEach(studentId=>{
                     postData.push({ date: selectedDate, kid: studentId, lesson: lessonId });
                 })
+                let transactions = [];
+                presentStudents.forEach(studentId => {
+                    transactions.push({ kid: studentId, date: selectedDate, price: lessonPrice, type: 3 });
+                });
                 
                 $.ajax({
                     type: "POST",
@@ -164,8 +149,22 @@
                     contentType: "application/json",
                     data: JSON.stringify(postData),
                     success: function(response) {
-                        alert("Відмічено!");
+                        alert("Відмітку збережено успішно!");
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost:8080/transaction",
+                            contentType: "application/json",
+                            data: JSON.stringify(transactions),
+                            success: function(response) {
+                                console.log("Transactions saved successfully:", response);
+                                alert("Транзакції збережено успішно!");
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error saving transactions:", error);
+                            }
+                        });
                         $("#attendance-modal").hide();
+
                     },
                     error: function(xhr, status, error) {
                         console.error("Error:", error);
