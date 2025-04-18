@@ -62,6 +62,7 @@
         getUserRole().then(role=>{
             if(!role){
                 $("a").hide()
+                iframe.src = "";
             }
             else{
                 $.getJSON("https://yehormovchan.github.io/assets/permits.json", (data)=>{
