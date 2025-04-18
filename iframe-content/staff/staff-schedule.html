@@ -89,8 +89,13 @@
                 });
             }
 
-        });
-        $(".lesson-cell").click(()=>{
+            $(".lesson-cell").hover(function() {
+                $(this).css("background-color", "#f0f0f0");
+            }, function() {
+                $(this).css("background-color", "");
+            });
+            
+            $(".lesson-cell").click(()=>{
                 lessonData = $(this).data("info");
                 if (!lessonData) return;
                 
@@ -143,6 +148,8 @@
                     }
                 });
             });
+        });
+
     </script>
 </body>
 </html>
