@@ -27,13 +27,13 @@
 
     <div id="attendance-modal" class="modal hidden">
         <div class="wrapper edit-wrapper">
-            <span class="close">&times;</span>
             <h2 id="lesson-info"></h2>
             <label for="date-select">Оберіть дату:</label>
             <select id="date-select"></select>
             <h3>Присутні:</h3>
             <ul id="student-list"></ul>
-            <button id="save-attendance">Зберегти</button>
+            <button id="save-attendance">Зберегти</button> <br>
+            <button id="close-attendance">Закрити</button>
         </div>
     </div>
 
@@ -93,7 +93,8 @@
                                     let lessonData = schedule[j][i];
                                     if (!lessonData) return;
                                     
-                                    $("#lesson-info").html(lessonData.info);
+                                    $("#lesson-info").html(`${lessonData.subjectName}  (${lessonData.classField})`);
+
                                     
                                     let dateOptions = "";
                                     let today = new Date();
@@ -123,7 +124,7 @@
             }
 
             
-            $(".close").click(function() {
+            $("#close-attendance").click(function() {
                 $("#attendance-modal").hide();
             });
             
