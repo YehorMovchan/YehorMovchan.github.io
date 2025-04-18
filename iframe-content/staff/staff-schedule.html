@@ -69,14 +69,15 @@
 
                     let schedule = [monday, tuesday, wednesday, thursday, friday];
 
-                    let tableContent = "";
+                    let tableContent = document.createElement("tbody");
                     let maxRows = 8;
 
                     for (let i = 0; i < maxRows; i++) {
-                        tableContent += "<tr>";
-                        tableContent += `<td>${i + 1}</td>`;
+                        let tr = document.createElement("tr");
+                        tr.appendChild(document.createElement("td")).innerText = i + 1;
+                        let td;
                         for (let j = 0; j < schedule.length; j++) {
-                            let td = document.createElement("td");
+                            td = document.createElement("td");
                             td.className = "lesson-cell";
                             if(schedule[j][i] !== undefined) {
                                 td.dataset.info =JSON.stringify(schedule[j][i]);
@@ -107,7 +108,8 @@
                             }
 
                         }
-                        tableContent += "</tr>";
+                        tr.appendChild(td);
+                        tableContent.appendChild(tr);
                     }
 
                     $("#schedule-body").html(tableContent);
