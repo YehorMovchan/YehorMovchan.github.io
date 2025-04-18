@@ -90,7 +90,7 @@
                                 td.innerText=  `${schedule[j][i].subjectName} (${schedule[j][i].classField})`;
                                 td.style.cursor = "pointer";
                                 td.onclick = ()=>{
-                                    lessonData = schedule[j][i];
+                                    let lessonData = schedule[j][i];
                                     if (!lessonData) return;
                                     
                                     $("#lesson-info").html(lessonData.info);
