@@ -69,7 +69,6 @@
 
                     let schedule = [monday, tuesday, wednesday, thursday, friday];
 
-                    let tableContent = document.createElement("tbody");
                     let maxRows = 8;
 
                     for (let i = 0; i < maxRows; i++) {
@@ -109,10 +108,9 @@
                             }
 
                         }
-                        tableContent.appendChild(tr);
+                        $("#schedule-body").appendChild(tr);
                     }
 
-                    $("#schedule-body").html(tableContent);
                 });
             }
 
