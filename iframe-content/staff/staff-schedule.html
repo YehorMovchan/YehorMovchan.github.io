@@ -100,7 +100,7 @@
                                     let today = new Date();
                                     for (let k = 0; k < 5; k++) {
                                         let date = new Date();
-                                        date.setDate(today.getDate() - (today.getDay() - lessonData.dayOfWeek) - (i * 7));
+                                        date.setDate(today.getDate() - (today.getDay() - lessonData.dayOfWeek) - (k * 7));
                                         dateOptions += `<option value="${date.toISOString().split('T')[0]}">${date.toLocaleDateString()}</option>`;
                                     }
                                     $("#date-select").html(dateOptions);
@@ -141,7 +141,7 @@
                 })
                 let transactions = [];
                 presentStudents.forEach(studentId => {
-                    transactions.push({ kid: studentId, date: selectedDate, sum: lessonPrice, type: 3 });
+                    transactions.push({ kid: studentId, date: selectedDate, sum: lessonPrice, type: 4 });
                 });
                 
                 $.ajax({
