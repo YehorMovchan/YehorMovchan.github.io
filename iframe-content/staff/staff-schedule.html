@@ -39,6 +39,10 @@
 
     <script>
         $(document).ready(function() {
+
+            $("#close-attendance").on("click", function() {
+                $("#attendance-modal").fadeOut();
+            });
             let lessonPrice;
             $.getJSON(
                 `http://localhost:8080/lesson-price`,
@@ -119,16 +123,14 @@
                         }
                         $("#schedule-body").append(tr);
                     }
-
+                   
                 });
+
             }
 
             
-            $("#close-attendance").click(function() {
-                $("#attendance-modal").hide();
-            });
             
-            $("#save-attendance").click(function() {
+            $("#save-attendance").on("click", ()=> {
                 
                 let selectedDate = $("#date-select").val();
                 let presentStudents = $("#student-list input:checked").map(function() {
