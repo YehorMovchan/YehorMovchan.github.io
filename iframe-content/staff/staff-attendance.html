@@ -43,6 +43,7 @@
             <label>Кінець перерви: <br><input type="time" id="attendance-breaktime-to"></label><br>
             <label>Додаткова інформація: <br><input type="text" id="attendance-info"></label><br>
             <button id="create-attendance-button">Додати</button>
+            <button id="create-attendance-close">Закрити</button>
         </div>
     </div>
     
@@ -157,6 +158,9 @@
                 } else {
                     alert("Будь ласка, заповніть всі обов'язкові поля.");
                 }
+            })
+            $("#create-attendance-close").click(()=>{
+                $("#create-attendance-modal").fadeOut();
             })
         });
     </script>
