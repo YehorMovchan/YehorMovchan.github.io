@@ -100,7 +100,7 @@
                         alert("Відмітку збережено успішно!");
                         $.ajax({
                             type: "POST",
-                            url: "http://localhost:8080/transaction/list",       
+                            url: "http://localhost:8080/transaction/lessons-list",       
                             contentType: "application/json",
                             data: JSON.stringify(transactions),
                             success: function(response) {
@@ -136,7 +136,7 @@
                     postData.push({ date: selectedDate, kid: memberId, groupId: groupId });
                 });
                 
-                // TODO: Replace with the actual API endpoint for group attendance
+                // API запит для збереження відвідування гуртка
                 $.ajax({
                     type: "POST",
                     url: "http://localhost:8080/attendance/group",
@@ -144,7 +144,36 @@
                     data: JSON.stringify(postData),
                     success: function(response) {
                         alert("Відмітку відвідування гуртка збережено успішно!");
-                        $("#group-attendance-modal").hide();
+                        
+                        // Створення транзакцій після успішної відмітки відвідування
+                        let transactions = [];
+                        presentMembers.forEach(memberId => {
+                            // Використовуємо від'ємне значення вартості гуртка для транзакції
+                            // і встановлюємо type = 5, як вимагається
+                            transactions.push({ 
+                                kid: memberId, 
+                                date: selectedDate, 
+                                sum: -Math.abs(groupData.price), // Гарантуємо від'ємне значення
+                                type: 5 
+                            });
+                        });
+                        
+                        // Відправка транзакцій
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost:8080/transaction/list",
+                            contentType: "application/json",
+                            data: JSON.stringify(transactions),
+                            success: function(response) {
+                                console.log("Group transactions saved successfully:", response);
+                                alert("Транзакції для гуртка збережено успішно!");
+                                $("#group-attendance-modal").hide();
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error saving group transactions:", error);
+                                alert("Помилка при збереженні транзакцій для гуртка.");
+                            }
+                        });
                     },
                     error: function(xhr, status, error) {
                         console.error("Error:", error);
@@ -289,9 +318,13 @@
                                     };
                                 } else {
                                     // Гурток
+                                    // Додаємо інформацію про вартість гуртка, якщо вона є
+                                    const priceInfo = item.price ? `Вартість: ${Math.abs(item.price)} грн` : '';
+                                    
                                     lessonDiv.innerHTML = `
                                         <div class="lesson-title">${item.group}</div>
                                         <div class="lesson-details">Гурток: ${item.startTime.substring(0, 5)} - ${item.endTime.substring(0, 5)}</div>
+                                        <div class="lesson-details">${priceInfo}</div>
                                     `;
                                     
                                     // Додаємо обробник кліку для відмітки відвідування гуртка
@@ -309,7 +342,7 @@
                                         $("#group-date-select").html(dateOptions);
                                         
                                         // Припускаємо, що API для отримання учасників гуртка має такий вигляд
-                                        $.getJSON(`http://localhost:8080/group-member/group=${item.groupId}`, function(members) {
+                                        $.getJSON(`http://localhost:8080/view/group/group=${item.groupId}`, function(members) {
                                             let memberList = members.map(member => 
                                                 `<li><input type="checkbox" value="${member.id}"> ${member.name}</li>`
                                             ).join("");

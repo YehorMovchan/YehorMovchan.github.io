@@ -507,3 +507,23 @@ label>input{
     font-weight: bold;
     margin: 5px;
 }
+
+.class-lesson {
+    background-color: #e3f2fd;
+}
+.group-lesson {
+    background-color: #e8f5e9;
+}
+.lesson-details {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #666;
+}
+.lesson-cell {
+    vertical-align: top;
+    min-height: 60px;
+    padding: 5px !important;
+}
+.lesson-title {
+    font-weight: bold;
+}
