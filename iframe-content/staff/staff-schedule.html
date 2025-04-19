@@ -344,7 +344,7 @@
                                         // Припускаємо, що API для отримання учасників гуртка має такий вигляд
                                         $.getJSON(`http://localhost:8080/view/group/group=${item.groupId}`, function(members) {
                                             let memberList = members.map(member => 
-                                                `<li><input type="checkbox" value="${member.id}"> ${member.name}</li>`
+                                                `<li><input type="checkbox" value="${member.kidId}"> ${member.kidName}</li>`
                                             ).join("");
                                             $("#group-member-list").html(memberList);
                                         }).fail(function() {
