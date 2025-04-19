@@ -9,27 +9,24 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://yehormovchan.github.io/static/script.js"></script>
     <style>
-        .groups-table {
-            margin-top: 30px;
-            width: 100%;
-            border-collapse: collapse;
+        .class-lesson {
+            background-color: #e3f2fd;
         }
-        .groups-table th, .groups-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
+        .group-lesson {
+            background-color: #e8f5e9;
         }
-        .groups-table th {
-            background-color: #f2f2f2;
+        .lesson-details {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #666;
         }
-        .groups-table caption {
+        .lesson-cell {
+            vertical-align: top;
+            min-height: 60px;
+            padding: 5px !important;
+        }
+        .lesson-title {
             font-weight: bold;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-        .day-column {
-            font-weight: bold;
-            background-color: #f8f8f8;
         }
     </style>
 </head>
@@ -49,22 +46,6 @@
         </tbody>
     </table>
 
-    <!-- Нова таблиця для розкладу груп -->
-    <table class="groups-table">
-        <caption>Розклад груп</caption>
-        <thead>
-            <tr>
-                <th>День тижня</th>
-                <th>Група</th>
-                <th>Час початку</th>
-                <th>Час закінчення</th>
-                <th>Дії</th>
-            </tr>
-        </thead>
-        <tbody id="groups-schedule-body">
-        </tbody>
-    </table>
-
     <div id="attendance-modal" class="modal hidden">
         <div class="wrapper edit-wrapper">
             <h2 id="lesson-info"></h2>
@@ -77,14 +58,25 @@
         </div>
     </div>
 
+    <div id="group-attendance-modal" class="modal hidden">
+        <div class="wrapper edit-wrapper">
+            <h2 id="group-info"></h2>
+            <label for="group-date-select">Оберіть дату:</label>
+            <select id="group-date-select"></select>
+            <h3>Присутні учасники:</h3>
+            <ul id="group-member-list"></ul>
+            <button id="save-group-attendance">Зберегти</button> <br>
+            <button id="close-group-attendance">Закрити</button>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
-            // Існуючий код
+            // Модальне вікно для уроків
             $("#close-attendance").on("click", function() {
                 $("#attendance-modal").fadeOut();
             });
             $("#save-attendance").on("click", ()=> {
-                
                 let selectedDate = $("#date-select").val();
                 let presentStudents = $("#student-list input:checked").map(function() {
                     return $(this).val();
@@ -120,7 +112,6 @@
                             }
                         });
                         $("#attendance-modal").hide();
-
                     },
                     error: function(xhr, status, error) {
                         console.error("Error:", error);
@@ -128,6 +119,40 @@
                     }
                 });
             });
+
+            // Модальне вікно для гуртків
+            $("#close-group-attendance").on("click", function() {
+                $("#group-attendance-modal").fadeOut();
+            });
+            $("#save-group-attendance").on("click", function() {
+                let selectedDate = $("#group-date-select").val();
+                let presentMembers = $("#group-member-list input:checked").map(function() {
+                    return $(this).val();
+                }).get();
+                let groupId = groupData.groupId;
+                
+                let postData = [];
+                presentMembers.forEach(memberId => {
+                    postData.push({ date: selectedDate, kid: memberId, groupId: groupId });
+                });
+                
+                // TODO: Replace with the actual API endpoint for group attendance
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/attendance/group",
+                    contentType: "application/json",
+                    data: JSON.stringify(postData),
+                    success: function(response) {
+                        alert("Відмітку відвідування гуртка збережено успішно!");
+                        $("#group-attendance-modal").hide();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                        alert("Сталася помилка при збереженні відмітки відвідування гуртка.");
+                    }
+                });
+            });
+
             let lessonPrice;
             $.getJSON(
                 `http://localhost:8080/lesson-price`,
@@ -135,8 +160,10 @@
                     lessonPrice = data.price;
                 }
             )
+            
             let urlParams = new URLSearchParams(window.location.search);
             let teacherId = urlParams.get("id");
+            
             if (!teacherId) {
                 getUser().then((user) => {
                     if (!user) {
@@ -144,132 +171,167 @@
                         return;
                     }
                     teacherId = user.staff;
-                    fillInfo(teacherId);
-                    loadGroupsSchedule(teacherId); // Завантаження розкладу груп
+                    loadCombinedSchedule(teacherId);
                 }, (error) => {
                     console.error("Error fetching user data:", error);
                 });
                 return;
+            } else {
+                loadCombinedSchedule(teacherId);
             }
-            else{
-                fillInfo(teacherId);
-                loadGroupsSchedule(teacherId); // Завантаження розкладу груп
-            }
+            
             var lessonData;
-
-            function fillInfo(teacherId){
-                $.getJSON(`http://localhost:8080/view/schedule/teacher=${teacherId}`, function(data) {
-                    let monday = data.filter(item => item.dayOfWeek === 1);
-                    let tuesday = data.filter(item => item.dayOfWeek === 2);
-                    let wednesday = data.filter(item => item.dayOfWeek === 3);
-                    let thursday = data.filter(item => item.dayOfWeek === 4);
-                    let friday = data.filter(item => item.dayOfWeek === 5);
-
-                    let schedule = [monday, tuesday, wednesday, thursday, friday];
-
-                    let maxRows = 8;
-
-                    for (let i = 0, time = 9; i < maxRows; i++, time++) {
-                        let tr = document.createElement("tr");
-                        tr.appendChild(document.createElement("td")).innerText = `${i + 1} (${time}:00 - ${time}:45)`;
-                        let td;
-                        for (let j = 0; j < schedule.length; j++) {
-                            td = document.createElement("td");
-                            td.className = "lesson-cell";
-                            if(schedule[j][i] !== undefined) {
-                                td.dataset.info =JSON.stringify(schedule[j][i]);
-                                td.innerText=  `${schedule[j][i].subjectName} (${schedule[j][i].classField})`;
-                                td.style.cursor = "pointer";
-                                td.onclick = ()=>{
-                                    let lesson = schedule[j][i];
-                                    if (!lesson) return;
-                                    lessonData = lesson;
-                                    $("#lesson-info").html(`${lesson.subjectName}  (${lesson.classField})`);
-
-                                    
-                                    let dateOptions = "";
-                                    let today = new Date();
-                                    for (let k = 0; k < 5; k++) {
-                                        let date = new Date();
-                                        date.setDate(today.getDate() - (today.getDay() - lesson.dayOfWeek) - (k * 7));
-                                        dateOptions += `<option value="${date.toISOString().split('T')[0]}">${date.toLocaleDateString()}</option>`;
-                                    }
-                                    $("#date-select").html(dateOptions);
-
-
-                                    $.getJSON(`http://localhost:8080/kid/grade=${lesson.classField}`, function(students) {
-                                        let studentList = students.map(student => `<li><input type="checkbox" value="${student.id}"> ${student.name}</li>`).join("");
-                                        $("#student-list").html(studentList);
-                                    });
-                                    
-                                    $("#attendance-modal").show();
-                                }
-                                tr.appendChild(td);
-                            }
-
+            var groupData;
+            
+            // Функція для конвертації часу з формату "11:00:00" в індекс рядка
+            function timeToRowIndex(time) {
+                const hour = parseInt(time.split(':')[0]);
+                return hour - 9; // 9:00 -> індекс 0, 10:00 -> індекс 1, ...
+            }
+            
+            // Нова функція для завантаження і об'єднання розкладів
+            function loadCombinedSchedule(teacherId) {
+                // Створюємо структуру даних для зберігання об'єднаного розкладу
+                let combinedSchedule = Array(5).fill().map(() => Array(12).fill().map(() => []));
+                
+                // Спочатку завантажуємо розклад уроків
+                $.getJSON(`http://localhost:8080/view/schedule/teacher=${teacherId}`, function(lessonData) {
+                    // Заповнюємо розклад уроками
+                    lessonData.forEach(lesson => {
+                        const dayIndex = lesson.dayOfWeek - 1; // 1-based to 0-based
+                        // Припускаємо, що уроки починаються з 9:00, перший урок має номер 1
+                        const hourIndex = parseInt(lesson.lessonNumber) - 1;
+                        
+                        if (dayIndex >= 0 && dayIndex < 5 && hourIndex >= 0 && hourIndex < 12) {
+                            lesson.type = 'class'; // додаємо тип, щоб відрізняти від гуртків
+                            combinedSchedule[dayIndex][hourIndex].push(lesson);
                         }
-                        $("#schedule-body").append(tr);
-                    }
-                   
+                    });
+                    
+                    // Тепер завантажуємо розклад гуртків
+                    $.getJSON(`http://localhost:8080/view/groups-schedule/leader=${teacherId}`, function(groupsData) {
+                        // Додаємо гуртки до об'єднаного розкладу
+                        groupsData.forEach(group => {
+                            const dayIndex = group.dayOfWeek - 1; // 1-based to 0-based
+                            // Конвертуємо час початку в індекс рядка
+                            const startTime = group.startTime;
+                            const hourIndex = timeToRowIndex(startTime);
+                            
+                            if (dayIndex >= 0 && dayIndex < 5 && hourIndex >= 0 && hourIndex < 12) {
+                                group.type = 'group'; // додаємо тип, щоб відрізняти від уроків
+                                combinedSchedule[dayIndex][hourIndex].push(group);
+                            }
+                        });
+                        
+                        // Відображаємо об'єднаний розклад
+                        renderCombinedSchedule(combinedSchedule);
+                    }).fail(function(error) {
+                        console.error("Error loading groups schedule:", error);
+                        // Якщо не вдалося завантажити гуртки, все одно відображаємо уроки
+                        renderCombinedSchedule(combinedSchedule);
+                    });
+                }).fail(function(error) {
+                    console.error("Error loading lessons schedule:", error);
+                    $("#schedule-body").html("<tr><td colspan='6'>Помилка завантаження розкладу</td></tr>");
                 });
             }
-
-            // Нова функція для завантаження та відображення розкладу груп
-            function loadGroupsSchedule(teacherId) {
-                $.getJSON(`http://localhost:8080/view/groups-schedule/leader=${teacherId}`, function(data) {
-                    // Очищаємо таблицю перед заповненням
-                    $("#groups-schedule-body").empty();
+            
+            // Функція для відображення об'єднаного розкладу
+            function renderCombinedSchedule(schedule) {
+                $("#schedule-body").empty();
+                
+                // Створюємо рядки розкладу
+                for (let i = 0, time = 9; i < 12; i++, time++) {
+                    let tr = document.createElement("tr");
+                    tr.appendChild(document.createElement("td")).innerText = `${i + 1} (${time}:00 - ${time}:45)`;
                     
-                    // Маппінг для днів тижня
-                    const daysOfWeek = {
-                        1: "Понеділок",
-                        2: "Вівторок",
-                        3: "Середа",
-                        4: "Четвер",
-                        5: "П'ятниця",
-                        6: "Субота",
-                        7: "Неділя"
-                    };
-                    
-                    // Сортуємо дані за днем тижня та часом початку
-                    data.sort((a, b) => {
-                        if (a.dayOfWeek !== b.dayOfWeek) {
-                            return a.dayOfWeek - b.dayOfWeek;
+                    // Додаємо комірки для кожного дня тижня
+                    for (let j = 0; j < 5; j++) {
+                        let td = document.createElement("td");
+                        td.className = "lesson-cell";
+                        
+                        // Перевіряємо, чи є заняття на цей час і день
+                        if (schedule[j][i] && schedule[j][i].length > 0) {
+                            schedule[j][i].forEach(item => {
+                                // Створюємо елемент для заняття
+                                let lessonDiv = document.createElement("div");
+                                lessonDiv.className = item.type === 'class' ? 'class-lesson' : 'group-lesson';
+                                
+                                if (item.type === 'class') {
+                                    // Заняття (урок)
+                                    lessonDiv.innerHTML = `
+                                        <div class="lesson-title">${item.subjectName} (${item.classField})</div>
+                                        <div class="lesson-details">Урок</div>
+                                    `;
+                                    
+                                    // Додаємо обробник кліку для відмітки відвідування
+                                    lessonDiv.onclick = function() {
+                                        lessonData = item;
+                                        $("#lesson-info").html(`${item.subjectName} (${item.classField})`);
+                                        
+                                        let dateOptions = "";
+                                        let today = new Date();
+                                        for (let k = 0; k < 5; k++) {
+                                            let date = new Date();
+                                            date.setDate(today.getDate() - (today.getDay() - item.dayOfWeek) - (k * 7));
+                                            dateOptions += `<option value="${date.toISOString().split('T')[0]}">${date.toLocaleDateString()}</option>`;
+                                        }
+                                        $("#date-select").html(dateOptions);
+                                        
+                                        $.getJSON(`http://localhost:8080/kid/grade=${item.classField}`, function(students) {
+                                            let studentList = students.map(student => 
+                                                `<li><input type="checkbox" value="${student.id}"> ${student.name}</li>`
+                                            ).join("");
+                                            $("#student-list").html(studentList);
+                                        });
+                                        
+                                        $("#attendance-modal").show();
+                                    };
+                                } else {
+                                    // Гурток
+                                    lessonDiv.innerHTML = `
+                                        <div class="lesson-title">${item.group}</div>
+                                        <div class="lesson-details">Гурток: ${item.startTime.substring(0, 5)} - ${item.endTime.substring(0, 5)}</div>
+                                    `;
+                                    
+                                    // Додаємо обробник кліку для відмітки відвідування гуртка
+                                    lessonDiv.onclick = function() {
+                                        groupData = item;
+                                        $("#group-info").html(`Гурток: ${item.group}`);
+                                        
+                                        let dateOptions = "";
+                                        let today = new Date();
+                                        for (let k = 0; k < 5; k++) {
+                                            let date = new Date();
+                                            date.setDate(today.getDate() - (today.getDay() - item.dayOfWeek) - (k * 7));
+                                            dateOptions += `<option value="${date.toISOString().split('T')[0]}">${date.toLocaleDateString()}</option>`;
+                                        }
+                                        $("#group-date-select").html(dateOptions);
+                                        
+                                        // Припускаємо, що API для отримання учасників гуртка має такий вигляд
+                                        $.getJSON(`http://localhost:8080/group-member/group=${item.groupId}`, function(members) {
+                                            let memberList = members.map(member => 
+                                                `<li><input type="checkbox" value="${member.id}"> ${member.name}</li>`
+                                            ).join("");
+                                            $("#group-member-list").html(memberList);
+                                        }).fail(function() {
+                                            // Якщо API не існує, показуємо заглушку
+                                            $("#group-member-list").html("<li>Не вдалося завантажити список учасників</li>");
+                                        });
+                                        
+                                        $("#group-attendance-modal").show();
+                                    };
+                                }
+                                
+                                td.appendChild(lessonDiv);
+                            });
                         }
-                        return a.startTime.localeCompare(b.startTime);
-                    });
+                        
+                        tr.appendChild(td);
+                    }
                     
-                    // Заповнюємо таблицю даними
-                    data.forEach(item => {
-                        let row = `
-                            <tr>
-                                <td class="day-column">${daysOfWeek[item.dayOfWeek]}</td>
-                                <td>${item.group}</td>
-                                <td>${item.startTime.substring(0, 5)}</td>
-                                <td>${item.endTime.substring(0, 5)}</td>
-                                <td>
-                                    <button class="attendance-btn" data-group-id="${item.groupId}">Відмітка відвідування</button>
-                                </td>
-                            </tr>
-                        `;
-                        $("#groups-schedule-body").append(row);
-                    });
-                    
-                    // Додаємо обробник подій для кнопок відмітки відвідування
-                    $(".attendance-btn").on("click", function() {
-                        const groupId = $(this).data("group-id");
-                        // Тут можна додати логіку для відкриття модального вікна відмітки відвідування для групи
-                        alert("Відмітка відвідування для групи ID: " + groupId);
-                        // TODO: Розробити функціонал відмітки відвідування груп
-                    });
-                }).fail(function(jqXHR, textStatus, errorThrown) {
-                    console.error("Помилка при завантаженні розкладу груп:", errorThrown);
-                    $("#groups-schedule-body").html(`
-                        <tr>
-                            <td colspan="5">Помилка при завантаженні розкладу груп</td>
-                        </tr>
-                    `);
-                });
+                    $("#schedule-body").append(tr);
+                }
             }
         });
     </script>
