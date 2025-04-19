@@ -133,7 +133,7 @@
                 
                 let postData = [];
                 presentMembers.forEach(memberId => {
-                    postData.push({ date: selectedDate, kid: memberId, group: groupId });
+                    postData.push({ date: selectedDate, kid: memberId, _group: groupId });
                 });
                 
                 // API запит для збереження відвідування гуртка
