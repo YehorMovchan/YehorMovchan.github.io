@@ -63,6 +63,10 @@
             if(!role){
                 $("a").hide()
                 iframe.src = "";
+                location.hash = "#";
+                $("#sign-in-button").show();
+                $("#username").hide();
+                $("#sign-out").hide();
             }
             else{
                 $.getJSON("https://yehormovchan.github.io/assets/permits.json", (data)=>{
@@ -125,6 +129,9 @@
             localStorage.removeItem('token');
             iframe.src = "";
             $("a").hide();
+            $("#sign-in-button").show();
+            $("#username").hide();
+            $("#sign-out").hide();
         })
     })
     function changePage(el){
