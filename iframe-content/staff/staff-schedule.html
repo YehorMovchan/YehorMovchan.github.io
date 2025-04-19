@@ -8,6 +8,30 @@
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://yehormovchan.github.io/static/script.js"></script>
+    <style>
+        .groups-table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .groups-table th, .groups-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .groups-table th {
+            background-color: #f2f2f2;
+        }
+        .groups-table caption {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .day-column {
+            font-weight: bold;
+            background-color: #f8f8f8;
+        }
+    </style>
 </head>
 <body>
     <table>
@@ -25,6 +49,22 @@
         </tbody>
     </table>
 
+    <!-- Нова таблиця для розкладу груп -->
+    <table class="groups-table">
+        <caption>Розклад груп</caption>
+        <thead>
+            <tr>
+                <th>День тижня</th>
+                <th>Група</th>
+                <th>Час початку</th>
+                <th>Час закінчення</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody id="groups-schedule-body">
+        </tbody>
+    </table>
+
     <div id="attendance-modal" class="modal hidden">
         <div class="wrapper edit-wrapper">
             <h2 id="lesson-info"></h2>
@@ -39,7 +79,7 @@
 
     <script>
         $(document).ready(function() {
-
+            // Існуючий код
             $("#close-attendance").on("click", function() {
                 $("#attendance-modal").fadeOut();
             });
@@ -105,6 +145,7 @@
                     }
                     teacherId = user.staff;
                     fillInfo(teacherId);
+                    loadGroupsSchedule(teacherId); // Завантаження розкладу груп
                 }, (error) => {
                     console.error("Error fetching user data:", error);
                 });
@@ -112,6 +153,7 @@
             }
             else{
                 fillInfo(teacherId);
+                loadGroupsSchedule(teacherId); // Завантаження розкладу груп
             }
             var lessonData;
 
@@ -170,13 +212,66 @@
                     }
                    
                 });
-
             }
 
-            
-        
+            // Нова функція для завантаження та відображення розкладу груп
+            function loadGroupsSchedule(teacherId) {
+                $.getJSON(`http://localhost:8080/view/groups-schedule/leader=${teacherId}`, function(data) {
+                    // Очищаємо таблицю перед заповненням
+                    $("#groups-schedule-body").empty();
+                    
+                    // Маппінг для днів тижня
+                    const daysOfWeek = {
+                        1: "Понеділок",
+                        2: "Вівторок",
+                        3: "Середа",
+                        4: "Четвер",
+                        5: "П'ятниця",
+                        6: "Субота",
+                        7: "Неділя"
+                    };
+                    
+                    // Сортуємо дані за днем тижня та часом початку
+                    data.sort((a, b) => {
+                        if (a.dayOfWeek !== b.dayOfWeek) {
+                            return a.dayOfWeek - b.dayOfWeek;
+                        }
+                        return a.startTime.localeCompare(b.startTime);
+                    });
+                    
+                    // Заповнюємо таблицю даними
+                    data.forEach(item => {
+                        let row = `
+                            <tr>
+                                <td class="day-column">${daysOfWeek[item.dayOfWeek]}</td>
+                                <td>${item.group}</td>
+                                <td>${item.startTime.substring(0, 5)}</td>
+                                <td>${item.endTime.substring(0, 5)}</td>
+                                <td>
+                                    <button class="attendance-btn" data-group-id="${item.groupId}">Відмітка відвідування</button>
+                                </td>
+                            </tr>
+                        `;
+                        $("#groups-schedule-body").append(row);
+                    });
+                    
+                    // Додаємо обробник подій для кнопок відмітки відвідування
+                    $(".attendance-btn").on("click", function() {
+                        const groupId = $(this).data("group-id");
+                        // Тут можна додати логіку для відкриття модального вікна відмітки відвідування для групи
+                        alert("Відмітка відвідування для групи ID: " + groupId);
+                        // TODO: Розробити функціонал відмітки відвідування груп
+                    });
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error("Помилка при завантаженні розкладу груп:", errorThrown);
+                    $("#groups-schedule-body").html(`
+                        <tr>
+                            <td colspan="5">Помилка при завантаженні розкладу груп</td>
+                        </tr>
+                    `);
+                });
+            }
         });
-
     </script>
 </body>
 </html>
