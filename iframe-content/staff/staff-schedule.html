@@ -87,8 +87,10 @@
                     postData.push({ date: selectedDate, kid: studentId, lesson: lessonId });
                 })
                 let transactions = [];
+                let nutritionTransactions = [];
                 presentStudents.forEach(studentId => {
                     transactions.push({ kid: studentId, date: selectedDate, sum: lessonPrice, type: 4 });
+                    nutritionTransactions.push({ kid: studentId, date: selectedDate, sum: 0, type: 3 });
                 });
                 
                 $.ajax({
@@ -106,12 +108,26 @@
                             success: function(response) {
                                 console.log("Transactions saved successfully:", response);
                                 alert("Транзакції збережено успішно!");
+                                $.ajax({
+                                    type: "POST",
+                                    url: "http://localhost:8080/transaction/nutrition-list",
+                                    contentType: "application/json",
+                                    data: JSON.stringify(nutritionTransactions),
+                                    success: function(response) {
+                                        console.log("Nutrition transactions saved successfully:", response);
+                                        alert("Транзакції для харчування збережено успішно!");
+                                        $("#attendance-modal").hide();
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error("Error saving nutrition transactions:", error);
+                                        alert("Помилка при збереженні транзакцій для харчування.");
+                                    }
+                                });
                             },
                             error: function(xhr, status, error) {
                                 console.error("Error saving transactions:", error);
                             }
                         });
-                        $("#attendance-modal").hide();
                     },
                     error: function(xhr, status, error) {
                         console.error("Error:", error);
@@ -147,6 +163,7 @@
                         
                         // Створення транзакцій після успішної відмітки відвідування
                         let transactions = [];
+                        let nutritionTransactions = [];
                         presentMembers.forEach(memberId => {
                             // Використовуємо від'ємне значення вартості гуртка для транзакції
                             // і встановлюємо type = 5, як вимагається
@@ -156,6 +173,12 @@
                                 sum: -Math.abs(groupData.price), // Гарантуємо від'ємне значення
                                 type: 5 
                             });
+                            nutritionTransactions.push({
+                                kid: memberId, 
+                                date: selectedDate, 
+                                sum: 0, // Гарантуємо позитивне значення
+                                type: 3 
+                            })
                         });
                         
                         // Відправка транзакцій
@@ -167,6 +190,20 @@
                             success: function(response) {
                                 console.log("Group transactions saved successfully:", response);
                                 alert("Транзакції для гуртка збережено успішно!");
+                                $.ajax({
+                                    type: "POST",
+                                    url: "http://localhost:8080/transaction/nutrition-list",
+                                    contentType: "application/json",
+                                    data: JSON.stringify(nutritionTransactions),
+                                    success: function(response) {
+                                        console.log("Nutrition transactions saved successfully:", response);
+                                        alert("Транзакції для харчування збережено успішно!");
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error("Error saving nutrition transactions:", error);
+                                        alert("Помилка при збереженні транзакцій для харчування.");
+                                    }
+                                });
                                 $("#group-attendance-modal").hide();
                             },
                             error: function(xhr, status, error) {
