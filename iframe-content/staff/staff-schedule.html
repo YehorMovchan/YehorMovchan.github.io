@@ -89,8 +89,8 @@
                 let transactions = [];
                 let nutritionTransactions = [];
                 presentStudents.forEach(studentId => {
-                    transactions.push({ kid: studentId, date: selectedDate, sum: lessonPrice, type: 4 });
-                    nutritionTransactions.push({ kid: studentId, date: selectedDate, sum: 0, type: 3 });
+                    transactions.push({ kid: studentId, date: selectedDate, sum: lessonPrice, type: 4, idOfItem: lessonId });
+                    nutritionTransactions.push({ kid: studentId, date: selectedDate, sum: 0, type: 3, idOfItem: 0 });
                 });
                 
                 $.ajax({
@@ -171,13 +171,15 @@
                                 kid: memberId, 
                                 date: selectedDate, 
                                 sum: -Math.abs(groupData.price), // Гарантуємо від'ємне значення
-                                type: 5 
+                                type: 5,
+                                idOfItem: groupId 
                             });
                             nutritionTransactions.push({
                                 kid: memberId, 
                                 date: selectedDate, 
                                 sum: 0, // Гарантуємо позитивне значення
-                                type: 3 
+                                type: 3,
+                                idOfItem: 0 // ID харчування, якщо потрібно
                             })
                         });
                         

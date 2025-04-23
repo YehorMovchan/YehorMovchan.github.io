@@ -61,9 +61,11 @@
                         <tr>
                             <td>${transaction.date}</td>
                             <td>${transaction.transactionTypeName}</td>
+                            <td>Оплата за: ${transaction.groupName || ''}</td>
                             <td>${transaction.sum} грн</td>
                             <td>${transaction.receipt ? '<a href="' + transaction.receipt + '" target="_blank">Квитанція</a>' : 'Немає'}</td>
-                        </tr>
+                        
+                            </tr>
                     `);
                 });
             }
@@ -86,6 +88,7 @@
                 <tr>
                     <th>Дата</th>
                     <th>Тип транзакції</th>
+                    <th>Додаткова інформація</th>
                     <th>Сума</th>
                     <th>Квитанція</th>
                 </tr>
