@@ -57,7 +57,7 @@
                 let tableBody = $("#transactions-body");
                 tableBody.empty();
                 data.forEach(transaction => {
-                    let additionalInfo = transaction.additionalInfo ? `Оплата за: ${transaction.additionalInfo}` : 'Немає';
+                    let additionalInfo = transaction.groupName ? `Оплата за: ${transaction.groupName}` : 'Немає';
                     tableBody.append(`
                         <tr>
                             <td>${transaction.date}</td>
