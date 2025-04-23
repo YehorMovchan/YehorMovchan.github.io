@@ -145,7 +145,7 @@
                 let presentMembers = $("#group-member-list input:checked").map(function() {
                     return $(this).val();
                 }).get();
-                let groupId = groupData.groupId;
+                let groupId = groupData.id;
                 
                 let postData = [];
                 presentMembers.forEach(memberId => {
