@@ -126,7 +126,7 @@
                     });
                     
                     // Тепер завантажуємо розклад гуртків
-                    $.getJSON(`http://localhost:8080/view/groups-schedule/kid=${kidId}`, function(groupsData) {
+                    $.getJSON(`http://localhost:8080/view/view/groups-kid-schedule//kid=${kidId}`, function(groupsData) {
                         // Додаємо гуртки до об'єднаного розкладу
                         groupsData.forEach(group => {
                             const dayIndex = group.dayOfWeek - 1; // 1-based to 0-based
