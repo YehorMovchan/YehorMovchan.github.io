@@ -179,18 +179,15 @@
                                     lessonDiv.innerHTML = `
                                         <div class="lesson-title">${item.subjectName}</div>
                                         <div class="lesson-details">Вчитель: ${item.teacherName || 'Не вказано'}</div>
-                                        <div class="lesson-details">Кабінет: ${item.classroom || 'Не вказано'}</div>
                                     `;
                                 } else {
                                     // Гурток
                                     // Додаємо інформацію про вартість гуртка, якщо вона є
-                                    const priceInfo = item.price ? `Вартість: ${Math.abs(item.price)} грн` : '';
                                     
                                     lessonDiv.innerHTML = `
-                                        <div class="lesson-title">${item.group}</div>
-                                        <div class="lesson-details">Керівник: ${item.leader || 'Не вказано'}</div>
+                                        <div class="lesson-title">${item.groupName}</div>
+                                        <div class="lesson-details">Керівник: ${item.leaderName || 'Не вказано'}</div>
                                         <div class="lesson-details">Час: ${item.startTime.substring(0, 5)} - ${item.endTime.substring(0, 5)}</div>
-                                        <div class="lesson-details">${priceInfo}</div>
                                     `;
                                 }
                                 
