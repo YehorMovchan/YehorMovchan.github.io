@@ -3,12 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Розклад класу</title>
+    <title>Розклад учня</title>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://yehormovchan.github.io/static/script.js"></script>
+    <style>
+        .class-lesson {
+            background-color: #e3f2fd;
+            border-radius: 5px;
+            padding: 8px;
+            margin-bottom: 5px;
+        }
+        .group-lesson {
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            padding: 8px;
+            margin-bottom: 5px;
+        }
+        .lesson-details {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .lesson-cell {
+            vertical-align: top;
+            min-height: 60px;
+            padding: 5px !important;
+        }
+        .lesson-title {
+            font-weight: bold;
+        }
+        .schedule-title {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .kid-info {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+    </style>
 </head>
 <body>
+    <h1 class="schedule-title">Розклад учня</h1>
+    <div class="kid-info" id="kid-info">Завантаження...</div>
+    
     <table>
         <thead>
             <tr>
@@ -17,10 +57,13 @@
                 <th>Вівторок</th>
                 <th>Середа</th>
                 <th>Четвер</th>
-                <th>П’ятниця</th>
+                <th>П'ятниця</th>
             </tr>
         </thead>
         <tbody id="schedule-body">
+            <tr>
+                <td colspan="6">Завантаження розкладу...</td>
+            </tr>
         </tbody>
     </table>
 
@@ -28,36 +71,155 @@
         $(document).ready(function() {
             let urlParams = new URLSearchParams(window.location.search);
             let kidId = urlParams.get("id");
-
-            $.getJSON(`http://localhost:8080/view/schedule/kid=${kidId}`, function(data) {
-                let schedule = {};
-                for (let i = 1; i <= 5; i++) {
-                    schedule[i] = [];
-                }
-
-                data.forEach(item => {
-                    schedule[item.dayOfWeek].push({
-                        lessonNumber: item.lessonNumber,
-                        subject: item.subjectName,
-                        teacher: item.teacherName
-                    });
-                });
-
-                let maxLessons = Math.max(...Object.values(schedule).map(day => day.length));
-                let tableContent = "";
-                
-                for (let i = 0; i < maxLessons; i++) {
-                    tableContent += "<tr>";
-                    tableContent += `<td>${i + 1}</td>`;
-                    for (let day = 1; day <= 5; day++) {
-                        let lesson = schedule[day][i];
-                        tableContent += `<td>${lesson ? lesson.subject + "<br><small>" + lesson.teacher + "</small>" : "-"}</td>`;
+            
+            if (!kidId) {
+                getUser().then((user) => {
+                    if (!user) {
+                        window.location.href = "https://yehormovchan.github.io/";
+                        return;
                     }
-                    tableContent += "</tr>";
+                    kidId = user.kid;
+                    loadKidInfo(kidId);
+                    loadCombinedSchedule(kidId);
+                }, (error) => {
+                    console.error("Error fetching user data:", error);
+                });
+                return;
+            } else {
+                loadKidInfo(kidId);
+                loadCombinedSchedule(kidId);
+            }
+            
+            // Функція для завантаження інформації про учня
+            function loadKidInfo(kidId) {
+                $.getJSON(`http://localhost:8080/kid/${kidId}`, function(kidData) {
+                    $("#kid-info").text(`${kidData.name}, Клас: ${kidData.grade}`);
+                }).fail(function(error) {
+                    console.error("Error loading kid info:", error);
+                    $("#kid-info").text("Не вдалося завантажити інформацію про учня");
+                });
+            }
+            
+            // Функція для конвертації часу з формату "11:00:00" в індекс рядка
+            function timeToRowIndex(time) {
+                const hour = parseInt(time.split(':')[0]);
+                return hour - 9; // 9:00 -> індекс 0, 10:00 -> індекс 1, ...
+            }
+            
+            // Функція для завантаження і об'єднання розкладів
+            function loadCombinedSchedule(kidId) {
+                // Створюємо структуру даних для зберігання об'єднаного розкладу
+                let combinedSchedule = Array(5).fill().map(() => Array(12).fill().map(() => []));
+                
+                // Спочатку завантажуємо розклад уроків
+                $.getJSON(`http://localhost:8080/view/schedule/kid=${kidId}`, function(lessonData) {
+                    // Заповнюємо розклад уроками
+                    lessonData.forEach(lesson => {
+                        const dayIndex = lesson.dayOfWeek - 1; // 1-based to 0-based
+                        // Припускаємо, що уроки починаються з 9:00, перший урок має номер 1
+                        const hourIndex = parseInt(lesson.lessonNumber) - 1;
+                        
+                        if (dayIndex >= 0 && dayIndex < 5 && hourIndex >= 0 && hourIndex < 12) {
+                            lesson.type = 'class'; // додаємо тип, щоб відрізняти від гуртків
+                            combinedSchedule[dayIndex][hourIndex].push(lesson);
+                        }
+                    });
+                    
+                    // Тепер завантажуємо розклад гуртків
+                    $.getJSON(`http://localhost:8080/view/groups-schedule/kid=${kidId}`, function(groupsData) {
+                        // Додаємо гуртки до об'єднаного розкладу
+                        groupsData.forEach(group => {
+                            const dayIndex = group.dayOfWeek - 1; // 1-based to 0-based
+                            // Конвертуємо час початку в індекс рядка
+                            const startTime = group.startTime;
+                            const hourIndex = timeToRowIndex(startTime);
+                            
+                            if (dayIndex >= 0 && dayIndex < 5 && hourIndex >= 0 && hourIndex < 12) {
+                                group.type = 'group'; // додаємо тип, щоб відрізняти від уроків
+                                combinedSchedule[dayIndex][hourIndex].push(group);
+                            }
+                        });
+                        
+                        // Відображаємо об'єднаний розклад
+                        renderCombinedSchedule(combinedSchedule);
+                    }).fail(function(error) {
+                        console.error("Error loading groups schedule:", error);
+                        // Якщо не вдалося завантажити гуртки, все одно відображаємо уроки
+                        renderCombinedSchedule(combinedSchedule);
+                    });
+                }).fail(function(error) {
+                    console.error("Error loading lessons schedule:", error);
+                    $("#schedule-body").html("<tr><td colspan='6'>Помилка завантаження розкладу</td></tr>");
+                });
+            }
+            
+            // Функція для відображення об'єднаного розкладу
+            function renderCombinedSchedule(schedule) {
+                $("#schedule-body").empty();
+                
+                // Створюємо рядки розкладу
+                for (let i = 0, time = 9; i < 12; i++, time++) {
+                    let tr = document.createElement("tr");
+                    tr.appendChild(document.createElement("td")).innerText = `${i + 1} (${time}:00 - ${time}:45)`;
+                    
+                    // Додаємо комірки для кожного дня тижня
+                    for (let j = 0; j < 5; j++) {
+                        let td = document.createElement("td");
+                        td.className = "lesson-cell";
+                        
+                        // Перевіряємо, чи є заняття на цей час і день
+                        if (schedule[j][i] && schedule[j][i].length > 0) {
+                            schedule[j][i].forEach(item => {
+                                // Створюємо елемент для заняття
+                                let lessonDiv = document.createElement("div");
+                                lessonDiv.className = item.type === 'class' ? 'class-lesson' : 'group-lesson';
+                                
+                                if (item.type === 'class') {
+                                    // Заняття (урок)
+                                    lessonDiv.innerHTML = `
+                                        <div class="lesson-title">${item.subjectName}</div>
+                                        <div class="lesson-details">Вчитель: ${item.teacherName || 'Не вказано'}</div>
+                                        <div class="lesson-details">Кабінет: ${item.classroom || 'Не вказано'}</div>
+                                    `;
+                                } else {
+                                    // Гурток
+                                    // Додаємо інформацію про вартість гуртка, якщо вона є
+                                    const priceInfo = item.price ? `Вартість: ${Math.abs(item.price)} грн` : '';
+                                    
+                                    lessonDiv.innerHTML = `
+                                        <div class="lesson-title">${item.group}</div>
+                                        <div class="lesson-details">Керівник: ${item.leader || 'Не вказано'}</div>
+                                        <div class="lesson-details">Час: ${item.startTime.substring(0, 5)} - ${item.endTime.substring(0, 5)}</div>
+                                        <div class="lesson-details">${priceInfo}</div>
+                                    `;
+                                }
+                                
+                                td.appendChild(lessonDiv);
+                            });
+                        }
+                        
+                        tr.appendChild(td);
+                    }
+                    
+                    $("#schedule-body").append(tr);
                 }
                 
-                $("#schedule-body").html(tableContent);
-            });
+                // Перевіряємо, чи є взагалі якісь заняття в розкладі
+                let hasLessons = false;
+                for (let i = 0; i < schedule.length; i++) {
+                    for (let j = 0; j < schedule[i].length; j++) {
+                        if (schedule[i][j].length > 0) {
+                            hasLessons = true;
+                            break;
+                        }
+                    }
+                    if (hasLessons) break;
+                }
+                
+                if (!hasLessons) {
+                    $("#schedule-body").html("<tr><td colspan='6'>Розклад порожній</td></tr>");
+                }
+            }
         });
     </script>
 </body>
