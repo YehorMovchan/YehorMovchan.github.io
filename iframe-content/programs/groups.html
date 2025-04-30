@@ -33,7 +33,7 @@
                     let groupList = "";
                     data.forEach(group => {
                         currentPrograms.add(group.groupId);
-                        groupList += `<li>${group.groupName} <button id="delete-group" data-id=${data.id}>Видалити</button> </li>`;
+                        groupList += `<li>${group.groupName} <button id="delete-group" data-id=${group.id}>Видалити</button> </li>`;
                     });
                     $("#program-groups").html(groupList);
                     loadgroups();
