@@ -538,4 +538,6 @@ label>input{
     border-radius: 10px;
     display: inline-block;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    width: max-content;
+    margin-top: 20px;
 }
