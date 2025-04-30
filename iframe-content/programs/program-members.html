@@ -50,7 +50,7 @@
 
             function loadProgramMembers() {
                 $.getJSON(`http://localhost:8080/view/program/program=${programId}`, function(data) {
-                    $(".kid-program-new").text(data[0].programName);
+                    $(".kid-program-new").text(data[0].programName || "");
                     currentMemberIds.clear();
                     let membersList = "";
                     data.forEach(member => {
