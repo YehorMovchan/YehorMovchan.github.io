@@ -26,14 +26,14 @@
             const programId = urlParams.get("id");
             let currentPrograms = new Set();
 
-            function loadProgramMembers() {
+            function loadProgramGroups() {
                 $.getJSON(`http://localhost:8080/view/program-groups/program=${programId}`, function(data) {
                     $(".group-program-new").text(data[0].programName);
                     currentPrograms.clear();
-                    let membersList = "";
-                    data.forEach(member => {
-                        currentPrograms.add(member.groupId);
-                        membersList += `<li>${member.groupName} </li>`;
+                    let groupList = "";
+                    data.forEach(group => {
+                        currentPrograms.add(group.groupId);
+                        groupList += `<li>${group.groupName} </li>`;
                     });
                     $("#program-groups").html(membersList);
                     loadgroups();
@@ -57,33 +57,28 @@
 
             $("#add-group").on("click", () => {
                 const groupId = $("#group-select").val();
-                $.getJSON(`http://localhost:8080/view/program/group=${groupId}`, (data)=>{
-                    $(".group-program-old").text(data.programName);
-                    $("#add-group-confirm-modal").fadeIn();
-                })
+                const data = {
+                    program: programId,
+                    group: groupId
+                };
+                $.ajax({
+                    url: "http://localhost:8080/program-groups",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function() {
+                        loadProgramGroups();
+                    },
+                    error: function() {
+                        alert("Error adding group to program.");
+                    }
+                });
             });
 
         
 
-            $("#add-group-confirm-button").click(function() {
-                const groupId = $("#group-select").val();
-                let newProgram = {
-                    program: programId,
-                    group: groupId,
-                    to: new Date().toISOString(),
-                    reasonOfChange: $("#reason-of-change-edit-input").val()
-                }
-                $.ajax({
-                    url: `http://localhost:8080/program/${groupId}`,
-                    contentType: "application/json",
-                    data: JSON.stringify(newProgram),
-                    type: "POST",
-                    success: loadProgramMembers
-                });
-                $("#add-group-confirm-modal").fadeOut();
-            });
 
-            loadProgramMembers();
+            loadProgramGroups();
         });
     </script>
 </body>
