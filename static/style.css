@@ -532,8 +532,6 @@ label>input{
 .summary>.total-sum{
     font-weight: bold;
     font-size: 1.2em;
-    color: #d32f2f;
-    background-color: #ffd0d0; /* світло-рожевий фон */
     padding: 10px 20px;
     border-radius: 10px;
     display: inline-block;
