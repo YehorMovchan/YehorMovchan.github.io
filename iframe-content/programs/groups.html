@@ -29,10 +29,10 @@
             function loadProgramMembers() {
                 $.getJSON(`http://localhost:8080/view/program-groups/program=${programId}`, function(data) {
                     $(".group-program-new").text(data[0].programName);
-                    currentMemberIds.clear();
+                    currentPrograms.clear();
                     let membersList = "";
                     data.forEach(member => {
-                        currentMemberIds.add(member.groupId);
+                        currentPrograms.add(member.groupId);
                         membersList += `<li>${member.groupName} </li>`;
                     });
                     $("#program-members").html(membersList);
@@ -44,7 +44,7 @@
                 $.getJSON("http://localhost:8080/groups-type", function(data) {
                     let options = "";
                     data.forEach(group => {
-                        if (!currentMemberIds.has(group.id)) {
+                        if (!currentPrograms.has(group.id)) {
                             options += `<option value="${group.id}">${group.name}</option>`;
                         }
                     });
