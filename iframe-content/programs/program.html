@@ -34,6 +34,11 @@
     </div>
 
     <div class="accordion-block">
+        <div class="accordion-header">Гуртки, що входять до програми</div>
+        <iframe id="program-groups" src="" frameborder="0" class="addition-block"></iframe>
+    </div>
+    
+    <div class="accordion-block">
         <div class="accordion-header">Діти, які вчаться на цій програмі</div>
         <iframe id="program-members" src="" frameborder="0" class="addition-block"></iframe>
     </div>
@@ -71,6 +76,7 @@
             let oldPrice;
             let priceId;
             $("#program-members").attr("src", `https://yehormovchan.github.io/iframe-content/programs/program-members.html?id=${programId}`);
+            $("#program-groups").attr("src", `https://yehormovchan.github.io/iframe-content/programs/groups.html?id=${programId}`);
             $("#edit-program-button").click(()=>{
                 $("#edit-program-modal").fadeIn();
             });
