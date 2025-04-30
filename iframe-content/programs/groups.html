@@ -59,7 +59,7 @@
                 const groupId = $("#group-select").val();
                 const data = {
                     program: programId,
-                    group: groupId
+                    _group: groupId
                 };
                 $.ajax({
                     url: "http://localhost:8080/program-groups",
