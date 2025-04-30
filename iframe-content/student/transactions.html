@@ -38,6 +38,12 @@
                 }).fail(()=>{
                     $(".request-error").show();
                 });;
+                $.getJSON(`http://localhost:8080/transaction/sum/${kidId}`, function(data) {
+                    let totalSum = data;
+                    $("#total-sum").text(`Баланс: ${totalSum} грн`);
+                }).fail(()=>{
+                    $(".request-error").show();
+                });
             }
 
             function loadTransactionTypes() {
@@ -83,6 +89,9 @@
             </div>
             <select id="transaction-type"></select>
             <button id="filter-btn">Фільтрувати</button>
+        </div>
+        <div class="summary">
+            <span id="total-sum">Баланс: 0 грн</span>
         </div>
         <table>
             <thead>
