@@ -100,33 +100,20 @@
                     data: JSON.stringify(postData),
                     success: function(response) {
                         alert("Відмітку збережено успішно!");
-                        $.ajax({
-                            type: "POST",
-                            url: "http://localhost:8080/transaction/lessons-list",       
-                            contentType: "application/json",
-                            data: JSON.stringify(transactions),
-                            success: function(response) {
-                                console.log("Transactions saved successfully:", response);
-                                alert("Транзакції збережено успішно!");
-                                $.ajax({
-                                    type: "POST",
-                                    url: "http://localhost:8080/transaction/nutrition-list",
-                                    contentType: "application/json",
-                                    data: JSON.stringify(nutritionTransactions),
-                                    success: function(response) {
-                                        console.log("Nutrition transactions saved successfully:", response);
-                                        alert("Транзакції для харчування збережено успішно!");
-                                        $("#attendance-modal").hide();
-                                    },
-                                    error: function(xhr, status, error) {
-                                        console.error("Error saving nutrition transactions:", error);
-                                        alert("Помилка при збереженні транзакцій для харчування.");
-                                    }
-                                });
-                            },
-                            error: function(xhr, status, error) {
-                                console.error("Error saving transactions:", error);
-                            }
+                            $.ajax({
+                                type: "POST",
+                                url: "http://localhost:8080/transaction/nutrition-list",
+                                contentType: "application/json",
+                                data: JSON.stringify(nutritionTransactions),
+                                success: function(response) {
+                                    console.log("Nutrition transactions saved successfully:", response);
+                                    alert("Транзакції для харчування збережено успішно!");
+                                    $("#attendance-modal").hide();
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error("Error saving nutrition transactions:", error);
+                                    alert("Помилка при збереженні транзакцій для харчування.");
+                                }
                         });
                     },
                     error: function(xhr, status, error) {
@@ -221,13 +208,6 @@
                 });
             });
 
-            let lessonPrice;
-            $.getJSON(
-                `http://localhost:8080/lesson-price`,
-                (data) => {
-                    lessonPrice = data.price;
-                }
-            )
             
             let urlParams = new URLSearchParams(window.location.search);
             let teacherId = urlParams.get("id");
