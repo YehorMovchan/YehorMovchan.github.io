@@ -28,7 +28,6 @@
 
             function loadProgramGroups() {
                 $.getJSON(`http://localhost:8080/view/program-groups/program=${programId}`, function(data) {
-                    $(".group-program-new").text(data[0].programName);
                     currentPrograms.clear();
                     let groupList = "";
                     data.forEach(group => {
