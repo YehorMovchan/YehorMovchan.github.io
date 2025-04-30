@@ -41,7 +41,7 @@
                 $.getJSON(`http://localhost:8080/transaction/sum/${kidId}`, function(data) {
                     let totalSum = data;
                     $("#total-sum").text(`Баланс: ${totalSum} грн`);
-                    if(sum>0) {
+                    if(totalSum) {
                         $("#total-sum").css("color", "#388e3c");
                         $("#total-sum").css("background-color", "#d4edda");
                     } else {
