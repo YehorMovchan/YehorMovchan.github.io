@@ -41,6 +41,13 @@
                 $.getJSON(`http://localhost:8080/transaction/sum/${kidId}`, function(data) {
                     let totalSum = data;
                     $("#total-sum").text(`Баланс: ${totalSum} грн`);
+                    if(sum>0) {
+                        $("#total-sum").css("color", "#388e3c");
+                        $("#total-sum").css("background-color", "#d4edda");
+                    } else {
+                        $("#total-sum").css("color", "#d32f2f");
+                        $("#total-sum").css("background-color", "#f8d7da");
+                    }
                 }).fail(()=>{
                     $(".request-error").show();
                 });
@@ -91,7 +98,7 @@
             <button id="filter-btn">Фільтрувати</button>
         </div>
         <div class="summary">
-            <span id="total-sum">Баланс: 0 грн</span>
+            <span id="total-sum" class="total-sum">Баланс: 0 грн</span>
         </div>
         <table>
             <thead>
