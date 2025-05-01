@@ -30,6 +30,8 @@
                     $("#kid-name").text(kid.name);
                     $("#kid-grade").text(kid.grade);
                     $("#kid-birthday").text(kid.birthday || 'Немає даних');
+                    $("#student").prop("checked", kid.student);
+                    $("#student-label").text(kid.student ? "Так" : "Ні");
 
                     $("#edit-kid-name").val(kid.name);
                     $("#edit-kid-grade").val(kid.grade);
@@ -91,6 +93,7 @@
                     id: kidId,
                     name: $("#edit-kid-name").val(),
                     grade: $("#edit-kid-grade").val(),
+                    student: $("#edit-kid-student").prop("checked"),
                     birthday: $("#edit-kid-birthday").val(),
                     birthCertificate: null,
                     mother: null,
@@ -305,8 +308,14 @@
                 select.val(kidId);
             })
 
+
         });
         
+
+        $("#edit-kid-student").change(function() {
+            let isChecked = $(this).is(":checked");
+            $("#student-label").text(isChecked ? "Так" : "Ні");
+        });
 
 
     </script>
@@ -323,6 +332,7 @@
             <div class="loader general-loader"></div>
             <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
             <span><strong>Клас:</strong> <span id="kid-grade"></span></span>
+            <span>Навчається в школі: <label id="student-label"><input type="checkbox" id="student" disabled> </label></span><br>
             <span><strong>Дата народження:</strong> <span id="kid-birthday"></span></span>
             <span><strong id="birth-certificate" class="clickable"></strong></span>
             <div class="modal hidden" id="birth-certificate-modal">
@@ -352,6 +362,10 @@
             <button id="edit-program">Редагувати програму навчання</button>
             <button id="view-program-history">Історія змін</button>
         </div>
+        <div class="student">
+            
+            <button id="edit-student-field">Редагувати</button>
+        </div>
     </div>
 
     <div class="modal hidden" id="create-transaction">
@@ -372,6 +386,7 @@
                 <h2>Редагування учня</h2>
                 <label>Ім'я: <input type="text" id="edit-kid-name"></label><br>
                 <label>Клас: <input type="number" id="edit-kid-grade"></label><br>
+                <label>Навчається в школі: <label id="student-label"><input type="checkbox" id="edit-kid-student"></label></label><br>
                 <label>Дата народження: <input type="date" id="edit-kid-birthday"></label><br>
                 <label>Свідоцтво про народження <input type="file" id="upload-certificate" accept="image/*"> </label> <br>
                 <button id="save-kid">Зберегти</button><br>
