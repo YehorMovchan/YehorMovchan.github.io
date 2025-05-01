@@ -36,6 +36,7 @@
         <div class="wrapper edit-wrapper">
             <label>Ім'я учня: <input type="text" id="add-kid-name"></label><br>
             <label>Клас: <input number="text" min="1" max="11" id="add-kid-grade"></label><br>
+            <label>Навчається в школі: <label id="student-label"><input type="checkbox" id="add-kid-student"></label></label><br>
             <label>Дата народження: <input type="date" id="add-kid-birthday"></label><br>
             <label>Свідоцтво про народження: <input type="file" id="add-kid-birth-certificate"></label><br>
 
@@ -201,6 +202,7 @@
         const kid = {
             name: $("#add-kid-name").val(),
             grade: $("#add-kid-grade").val(),
+            student: $("#add-kid-student").is(":checked"),
             birthday: $("#add-kid-birthday").val(),
             mother: $("#mother-select").val(),
             father: $("#father-select").val(),

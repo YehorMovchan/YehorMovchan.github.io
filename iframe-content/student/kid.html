@@ -312,12 +312,6 @@
         });
         
 
-        $("#edit-kid-student").change(function() {
-            let isChecked = $(this).is(":checked");
-            $("#edit-student-span").text(isChecked ? "Так" : "Ні");
-        });
-
-
     </script>
 
 
@@ -363,10 +357,6 @@
             <button id="edit-program">Редагувати програму навчання</button>
             <button id="view-program-history">Історія змін</button>
         </div>
-        <div class="student">
-            
-            <button id="edit-student-field">Редагувати</button>
-        </div>
     </div>
 
     <div class="modal hidden" id="create-transaction">
@@ -387,7 +377,7 @@
                 <h2>Редагування учня</h2>
                 <label>Ім'я: <input type="text" id="edit-kid-name"></label><br>
                 <label>Клас: <input type="number" id="edit-kid-grade"></label><br>
-                <label>Навчається в школі: <label id="student-label"><input type="checkbox" id="edit-kid-student"></label><span id="edit-student-span"></span></label><br>
+                <label>Навчається в школі: <label id="student-label"><input type="checkbox" id="edit-kid-student"></label></label><br>
                 <label>Дата народження: <input type="date" id="edit-kid-birthday"></label><br>
                 <label>Свідоцтво про народження <input type="file" id="upload-certificate" accept="image/*"> </label> <br>
                 <button id="save-kid">Зберегти</button><br>
