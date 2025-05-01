@@ -31,7 +31,7 @@
                     $("#kid-grade").text(kid.grade);
                     $("#kid-birthday").text(kid.birthday || 'Немає даних');
                     $("#student").prop("checked", kid.student);
-                    $("#student-label").text(kid.student ? "Так" : "Ні");
+                    $("#student-span").text(kid.student ? "Так" : "Ні");
 
                     $("#edit-kid-name").val(kid.name);
                     $("#edit-kid-grade").val(kid.grade);
@@ -314,7 +314,7 @@
 
         $("#edit-kid-student").change(function() {
             let isChecked = $(this).is(":checked");
-            $("#student-label").text(isChecked ? "Так" : "Ні");
+            $("#edit-student-span").text(isChecked ? "Так" : "Ні");
         });
 
 
@@ -332,7 +332,8 @@
             <div class="loader general-loader"></div>
             <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
             <span><strong>Клас:</strong> <span id="kid-grade"></span></span>
-            <span>Навчається в школі: <label id="student-label"><input type="checkbox" id="student" disabled> </label></span><br>
+            <span><strong>Навчається в школі:</strong> 
+                <label id="student-label"><input type="checkbox" id="student" disabled><span id="student-span"></span> </label></span>
             <span><strong>Дата народження:</strong> <span id="kid-birthday"></span></span>
             <span><strong id="birth-certificate" class="clickable"></strong></span>
             <div class="modal hidden" id="birth-certificate-modal">
@@ -386,7 +387,7 @@
                 <h2>Редагування учня</h2>
                 <label>Ім'я: <input type="text" id="edit-kid-name"></label><br>
                 <label>Клас: <input type="number" id="edit-kid-grade"></label><br>
-                <label>Навчається в школі: <label id="student-label"><input type="checkbox" id="edit-kid-student"></label></label><br>
+                <label>Навчається в школі: <label id="student-label"><input type="checkbox" id="edit-kid-student"></label><span id="edit-student-span"></span></label><br>
                 <label>Дата народження: <input type="date" id="edit-kid-birthday"></label><br>
                 <label>Свідоцтво про народження <input type="file" id="upload-certificate" accept="image/*"> </label> <br>
                 <button id="save-kid">Зберегти</button><br>
