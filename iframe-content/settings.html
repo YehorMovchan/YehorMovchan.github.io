@@ -8,12 +8,18 @@
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
     <script src="https://yehormovchan.github.io/static/script.js"></script>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
+    <style>
+        
+    </style>
 </head>
 <body>
    <div class="headline"><h1>Налаштування</h1></div>
 
    <div class="settings-item">
         <h3>Предмети</h3>
+        <div class="add-button-container">
+            <button class="add-button" onclick="$('#add-entity-modal').fadeIn()">+ Додати</button>
+        </div>
         <div id="subject-list" class="item-list"></div>
    </div>
 </body>
@@ -27,10 +33,12 @@
             success:(data)=>{
                 let container = $("#subject-list");
             
-                data.forEach(program => {
+                data.forEach(subject => {
                     container.append(`
                         <li>
-                            <span><strong>${subject.name} </strong></span>
+                            <span><strong>${subject.name} </strong>    <div class="delete-button-container">
+        <button class="delete-button" onclick="$('#delete-entity-modal').fadeIn()">Видалити учня</button>
+    </div> </span>
                         </li>
                     `);
                 })
