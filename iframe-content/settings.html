@@ -258,12 +258,8 @@
                 contentType: 'application/json',
                 data: JSON.stringify({ name: subjectName }),
                 success: (newSubject) => {
-                    $("#new-subject").val("");
-                    allSubjects.push(newSubject);
-                    
-                    // Перехід на останню сторінку після додавання
                     currentPage = Math.ceil(allSubjects.length / itemsPerPage);
-                    renderSubjects();
+                    loadSubjects();
                 },
                 error: (err) => {
                     console.error("Помилка додавання предмету:", err);
