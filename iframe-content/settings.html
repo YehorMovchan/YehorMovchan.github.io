@@ -209,7 +209,7 @@
                 <textarea id="reason-of-change" rows="3"></textarea>
             </div>
         </div>
-        <button id="update-lesson-price">Зберегти зміни</button>
+        <button id="edit-lesson-price">Зберегти зміни</button>
         <button onclick="$('#edit-lesson-price-modal').fadeOut()">Закрити</button>
     </div>
 
@@ -475,7 +475,7 @@
         }
         
         // Оновлення вартості харчування
-        $("#update-nutrition-price").click(function() {
+        $("#edit-nutrition-price").click(function() {
             const breakfast = parseInt($("#breakfast-price").val());
             const lunch = parseInt($("#lunch-price").val());
             const dinner = parseInt($("#dinner-price").val());
@@ -560,7 +560,7 @@
         }
         
         // Оновлення вартості навчання
-        $("#update-lesson-price").click(function() {
+        $("#edit-lesson-price").click(function() {
             const price = parseInt($("#lesson-price").val());
             const reason = $("#reason-of-change").val().trim();
             
