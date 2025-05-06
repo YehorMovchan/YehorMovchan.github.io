@@ -192,7 +192,7 @@
                 </div>
             </div>
             <div class="buttons-block">
-                <button id="edit-lesson-price">Редагувати ціну харчування</button>
+                <button id="edit-lesson-price">Редагувати ціну уроків</button>
             </div>
         </div>
     </div>
@@ -260,7 +260,7 @@
             $("#edit-nutrition-price-modal").show();
         });
         $("#edit-lesson-price").click(function() {
-            $("#edit-lesson-price-modal").hide();
+            $("#edit-lesson-price-modal").show();
         });
         
         // Завантаження предметів
@@ -491,8 +491,8 @@
                 breakfast: breakfast,
                 lunch: lunch,
                 dinner: dinner,
-                from: null,
-                to: today
+                from: today,
+                to: null
             };
             
             $.ajax({
