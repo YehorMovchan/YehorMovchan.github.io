@@ -1,5 +1,5 @@
 {
     "STUDENT":["schedule"],
     "TEACHER":["kid-list", "personal-account", "staff-schedule"],
-    "ADMIN":["kid-list", "staff-list", "schedule", "groups-list", "programs-list"]
+    "ADMIN":["kid-list", "staff-list", "schedule", "groups-list", "programs-list", "settings"]
 }
