@@ -9,42 +9,278 @@
     <script src="https://yehormovchan.github.io/static/script.js"></script>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
     <style>
+        .subject-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
         
+        .item-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .item-list li:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .delete-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .delete-btn:hover {
+            background-color: #ff0000;
+        }
+        
+        .add-form {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .add-form input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        .add-form button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .add-form button:hover {
+            background-color: #45a049;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .pagination button {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        
+        .pagination button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .no-subjects {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+        }
     </style>
 </head>
 <body>
    <div class="headline"><h1>Налаштування</h1></div>
-
-   <div class="headline">
+   <div class="settings-item">
         <h3>Предмети</h3>
-        <button class="add-button" onclick="$('#add-entity-modal').fadeIn()">+ Додати</button>
-    </div>
-    <div id="subject-list" class="item-list"></div>
+        <div class="subject-container">
+            <div id="subject-list" class="item-list"></div>
+            <div id="pagination" class="pagination"></div>
+        </div>
+        
+        <div class="add-form">
+            <input type="text" id="new-subject" placeholder="Назва нового предмету">
+            <button id="add-subject">Додати</button>
+        </div>
+   </div>
 </body>
-
 <script>
     $(document).ready(function() {
+        let allSubjects = [];
+        const itemsPerPage = 10;
+        let currentPage = 1;
+        
+        // Завантаження предметів
+        function loadSubjects() {
             $.ajax({
-            url: "http://localhost:8080/subject",
-            method: 'get',
-            dataType: 'json',
-            success:(data)=>{
-                let container = $("#subject-list");
+                url: "http://localhost:8080/subject",
+                method: 'get',
+                dataType: 'json',
+                success: (data) => {
+                    allSubjects = data;
+                    renderSubjects();
+                },
+                error: (err) => {
+                    console.error("Помилка завантаження предметів:", err);
+                    $("#subject-list").html("<div class='no-subjects'>Помилка завантаження предметів</div>");
+                }
+            });
+        }
+        
+        // Відображення предметів з пагінацією
+        function renderSubjects() {
+            const container = $("#subject-list");
+            container.empty();
             
-                data.forEach(subject => {
-                    container.append(`
-                        <li>
-                            <span>
-                                <strong>${subject.name} </strong>  
-                                <button class="delete-button" onclick="$('#delete-entity-modal').fadeIn()">Видалити учня</button>
-                            </span>
-                        </li>
-                    `);
-                })
+            if (allSubjects.length === 0) {
+                container.html("<div class='no-subjects'>Немає доданих предметів</div>");
+                $("#pagination").empty();
+                return;
             }
-            })
-    })
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, allSubjects.length);
+            const pageSubjects = allSubjects.slice(startIndex, endIndex);
+            
+            pageSubjects.forEach(subject => {
+                container.append(`
+                    <li data-id="${subject.id}">
+                        <span><strong>${subject.name}</strong></span>
+                        <button class="delete-btn" data-id="${subject.id}">Видалити</button>
+                    </li>
+                `);
+            });
+            
+            renderPagination();
+            
+            // Обробник видалення предмету
+            $(".delete-btn").click(function() {
+                const subjectId = $(this).data("id");
+                deleteSubject(subjectId);
+            });
+        }
+        
+        // Відображення пагінації
+        function renderPagination() {
+            const container = $("#pagination");
+            container.empty();
+            
+            const totalPages = Math.ceil(allSubjects.length / itemsPerPage);
+            
+            if (totalPages <= 1) {
+                return;
+            }
+            
+            // Кнопка "Попередня"
+            if (currentPage > 1) {
+                container.append(`<button class="prev-page">«</button>`);
+            }
+            
+            // Номери сторінок
+            for (let i = 1; i <= totalPages; i++) {
+                if (
+                    i === 1 || 
+                    i === totalPages || 
+                    (i >= currentPage - 1 && i <= currentPage + 1)
+                ) {
+                    container.append(`<button class="page-num ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`);
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    container.append(`<span>...</span>`);
+                }
+            }
+            
+            // Кнопка "Наступна"
+            if (currentPage < totalPages) {
+                container.append(`<button class="next-page">»</button>`);
+            }
+            
+            // Обробники кліків по пагінації
+            $(".page-num").click(function() {
+                currentPage = parseInt($(this).data("page"));
+                renderSubjects();
+            });
+            
+            $(".prev-page").click(function() {
+                currentPage--;
+                renderSubjects();
+            });
+            
+            $(".next-page").click(function() {
+                currentPage++;
+                renderSubjects();
+            });
+        }
+        
+        // Видалення предмету
+        function deleteSubject(id) {
+            if (confirm("Ви впевнені, що хочете видалити цей предмет?")) {
+                $.ajax({
+                    url: `http://localhost:8080/subject/${id}`,
+                    method: 'delete',
+                    success: () => {
+                        allSubjects = allSubjects.filter(subject => subject.id !== id);
+                        
+                        // Переконуємося, що поточна сторінка існує після видалення
+                        const totalPages = Math.ceil(allSubjects.length / itemsPerPage);
+                        if (currentPage > totalPages && totalPages > 0) {
+                            currentPage = totalPages;
+                        }
+                        
+                        renderSubjects();
+                    },
+                    error: (err) => {
+                        console.error("Помилка видалення предмету:", err);
+                        alert("Не вдалося видалити предмет. Спробуйте пізніше.");
+                    }
+                });
+            }
+        }
+        
+        // Додавання нового предмету
+        $("#add-subject").click(function() {
+            const subjectName = $("#new-subject").val().trim();
+            
+            if (!subjectName) {
+                alert("Введіть назву предмету");
+                return;
+            }
+            
+            $.ajax({
+                url: "http://localhost:8080/subject",
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({ name: subjectName }),
+                success: (newSubject) => {
+                    $("#new-subject").val("");
+                    allSubjects.push(newSubject);
+                    
+                    // Перехід на останню сторінку після додавання
+                    currentPage = Math.ceil(allSubjects.length / itemsPerPage);
+                    renderSubjects();
+                },
+                error: (err) => {
+                    console.error("Помилка додавання предмету:", err);
+                    alert("Не вдалося додати предмет. Спробуйте пізніше.");
+                }
+            });
+        });
+        
+        // Додавання предмету при натисканні Enter
+        $("#new-subject").keypress(function(e) {
+            if (e.which === 13) {
+                $("#add-subject").click();
+            }
+        });
+        
+        // Початкове завантаження
+        loadSubjects();
+    });
 </script>
-
-
 </html>
