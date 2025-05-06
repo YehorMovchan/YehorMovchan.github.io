@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
 </head>
 <body>
-   <div class="headline">Налаштування</div>
+   <div class="headline"><h1>Налаштування</h1></div>
 
    <div class="settings-item">
         <h3>Предмети</h3>
@@ -19,6 +19,24 @@
 </body>
 
 <script>
+    $(document).ready(function() {
+            $.ajax({
+            url: "http://localhost:8080/subject",
+            method: 'get',
+            dataType: 'json',
+            success:(data)=>{
+                let container = $("#subject-list");
+            
+                data.forEach(program => {
+                    container.append(`
+                        <li>
+                            <span><strong>${subject.name} </strong></span>
+                        </li>
+                    `);
+                })
+            }
+            })
+    })
 </script>
 
 
