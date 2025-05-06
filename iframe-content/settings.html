@@ -36,9 +36,10 @@
                 data.forEach(subject => {
                     container.append(`
                         <li>
-                            <span><strong>${subject.name} </strong>    <div class="delete-button-container">
-        <button class="delete-button" onclick="$('#delete-entity-modal').fadeIn()">Видалити учня</button>
-    </div> </span>
+                            <span>
+                                <strong>${subject.name} </strong>  
+                                <button class="delete-button" onclick="$('#delete-entity-modal').fadeIn()">Видалити учня</button>
+                            </span>
                         </li>
                     `);
                 })
