@@ -239,6 +239,21 @@
         let allSubjects = [];
         const itemsPerPage = 10;
         let currentPage = 1;
+        let nutritionPrices = null;
+        let lessonPrice = null;
+        
+        // Форматування дати для відображення
+        function formatDate(dateStr) {
+            if (!dateStr) return "N/A";
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('uk-UA');
+        }
+        
+        // Отримання поточної дати у форматі ISO
+        function getCurrentDateISO() {
+            const today = new Date();
+            return today.toISOString().split('T')[0];
+        }
 
 
         $("#edit-nutrition-price").click(function() {
