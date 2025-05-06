@@ -9,13 +9,13 @@
     <script src="https://yehormovchan.github.io/static/script.js"></script>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
     <style>
-        .subject-container {
+        .subject-container, .nutrition-price-container, .lesson-price-container {
             max-height: 400px;
             overflow-y: auto;
             margin-bottom: 20px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            padding: 10px;
+            padding: 15px;
         }
         
         .item-list li {
@@ -43,20 +43,24 @@
             background-color: #ff0000;
         }
         
-        .add-form {
+        .add-form, .update-price-form {
             margin-top: 15px;
-            display: flex;
             gap: 10px;
         }
         
-        .add-form input {
+        .add-form {
+            display: flex;
+        }
+        
+        .add-form input, .price-inputs input, .price-inputs textarea {
             flex-grow: 1;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 3px;
+            margin-bottom: 10px;
         }
         
-        .add-form button {
+        .add-form button, .update-price-form button {
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -65,7 +69,7 @@
             cursor: pointer;
         }
         
-        .add-form button:hover {
+        .add-form button:hover, .update-price-form button:hover {
             background-color: #45a049;
         }
         
@@ -94,6 +98,60 @@
             text-align: center;
             color: #666;
         }
+        
+        .settings-item {
+            margin-bottom: 30px;
+        }
+        
+        .current-price {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            padding: 8px;
+            background: #fff;
+            border-radius: 3px;
+            border: 1px solid #eee;
+        }
+        
+        .price-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .price-date {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -110,12 +168,85 @@
             <button id="add-subject">Додати</button>
         </div>
    </div>
+   <div class="settings-item">
+    <h3>Вартість харчування</h3>
+        <div class="nutrition-price-container">
+            <div class="current-price">
+                <h4>Поточні ціни:</h4>
+                <div id="current-nutrition-prices">
+                   
+                </div>
+            </div>
+            <div class="buttons-block">
+                <button id="edit-nutrition-price">Редагувати ціну харчування</button>
+            </div>
+        </div>
+    </div>
+    <div class="settings-item">
+        <h3>Вартість навчання</h3>
+        <div class="lesson-price-container">
+            <div class="current-price">
+                <h4>Поточна вартість:</h4>
+                <div id="current-lesson-price">
+                    
+                </div>
+            </div>
+            <div class="buttons-block">
+                <button id="edit-lesson-price">Редагувати ціну харчування</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="edit-lesson-price-modal">
+        <h4>Оновити вартість:</h4>
+        <div class="price-inputs">
+            <div class="input-group">
+                <label for="lesson-price">Ціна (грн):</label>
+                <input type="number" id="lesson-price" min="0">
+            </div>
+            <div class="input-group full-width">
+                <label for="reason-of-change">Причина зміни:</label>
+                <textarea id="reason-of-change" rows="3"></textarea>
+            </div>
+        </div>
+        <button id="update-lesson-price">Зберегти зміни</button>
+        <button onclick="$('#edit-lesson-price-modal').fadeOut()">Закрити</button>
+    </div>
+
+
+    <div class="modal hidden" id="edit-nutrition-price-modal"> 
+        <h4>Оновити ціни:</h4>
+        <div class="price-inputs">
+            <div class="input-group">
+                <label for="breakfast-price">Сніданок (грн):</label>
+                <input type="number" id="breakfast-price" min="0">
+            </div>
+            <div class="input-group">
+                <label for="lunch-price">Обід (грн):</label>
+                <input type="number" id="lunch-price" min="0">
+            </div>
+            <div class="input-group">
+                <label for="dinner-price">Вечеря (грн):</label>
+                <input type="number" id="dinner-price" min="0">
+            </div>
+        </div>
+        <button id="edit-nutrition-price">Зберегти зміни</button>
+        <button onclick="$('#edit-nutrition-price-modal').fadeOut()">Закрити</button>
+    </div>
 </body>
 <script>
     $(document).ready(function() {
         let allSubjects = [];
         const itemsPerPage = 10;
         let currentPage = 1;
+
+
+        $("#edit-nutrition-price").click(function() {
+            $("#edit-nutrition-price-modal").show();
+        });
+        $("#edit-lesson-price").click(function() {
+            $("#edit-lesson-price-modal").hide();
+        });
         
         // Завантаження предметів
         function loadSubjects() {
@@ -275,8 +406,191 @@
             }
         });
         
-        // Початкове завантаження
+
+        function loadNutritionPrices() {
+            $.ajax({
+                url: "http://localhost:8080/nutrition-price",
+                method: 'get',
+                dataType: 'json',
+                success: (data) => {
+                    nutritionPrices = data;
+                    renderNutritionPrices();
+                    
+                    // Заповнюємо поля форми поточними цінами
+                    if (nutritionPrices) {
+                        $("#breakfast-price").val(nutritionPrices.breakfast);
+                        $("#lunch-price").val(nutritionPrices.lunch);
+                        $("#dinner-price").val(nutritionPrices.dinner);
+                    }
+                },
+                error: (err) => {
+                    console.error("Помилка завантаження вартості харчування:", err);
+                    $("#current-nutrition-prices").html("<p>Помилка завантаження даних</p>");
+                }
+            });
+        }
+        
+        // Відображення поточної вартості харчування
+        function renderNutritionPrices() {
+            const container = $("#current-nutrition-prices");
+            container.empty();
+            
+            if (!nutritionPrices) {
+                container.html("<p>Інформація відсутня</p>");
+                return;
+            }
+            
+            container.html(`
+                <div class="price-item">
+                    <div>Сніданок</div>
+                    <div><strong>${nutritionPrices.breakfast} грн</strong></div>
+                </div>
+                <div class="price-item">
+                    <div>Обід</div>
+                    <div><strong>${nutritionPrices.lunch} грн</strong></div>
+                </div>
+                <div class="price-item">
+                    <div>Вечеря</div>
+                    <div><strong>${nutritionPrices.dinner} грн</strong></div>
+                </div>
+                <div class="price-date">
+                    Актуально з: ${formatDate(nutritionPrices.from)}
+                </div>
+            `);
+        }
+        
+        // Оновлення вартості харчування
+        $("#update-nutrition-price").click(function() {
+            const breakfast = parseInt($("#breakfast-price").val());
+            const lunch = parseInt($("#lunch-price").val());
+            const dinner = parseInt($("#dinner-price").val());
+            
+            if (isNaN(breakfast) || isNaN(lunch) || isNaN(dinner)) {
+                alert("Введіть коректні ціни для всіх типів харчування");
+                return;
+            }
+            
+            const today = getCurrentDateISO();
+            
+            const requestData = {
+                breakfast: breakfast,
+                lunch: lunch,
+                dinner: dinner,
+                from: null,
+                to: today
+            };
+            
+            $.ajax({
+                url: "http://localhost:8080/nutrition-price",
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: (response) => {
+                    nutritionPrices = response;
+                    renderNutritionPrices();
+                    alert("Вартість харчування успішно оновлено!");
+                },
+                error: (err) => {
+                    console.error("Помилка оновлення вартості харчування:", err);
+                    alert("Не вдалося оновити вартість. Спробуйте пізніше.");
+                }
+            });
+        });
+
+        function loadLessonPrice() {
+            $.ajax({
+                url: "http://localhost:8080/lesson-price",
+                method: 'get',
+                dataType: 'json',
+                success: (data) => {
+                    lessonPrice = data;
+                    renderLessonPrice();
+                    
+                    // Заповнюємо поле форми поточною ціною
+                    if (lessonPrice) {
+                        $("#lesson-price").val(lessonPrice.price);
+                    }
+                },
+                error: (err) => {
+                    console.error("Помилка завантаження вартості навчання:", err);
+                    $("#current-lesson-price").html("<p>Помилка завантаження даних</p>");
+                }
+            });
+        }
+        
+        // Відображення поточної вартості навчання
+        function renderLessonPrice() {
+            const container = $("#current-lesson-price");
+            container.empty();
+            
+            if (!lessonPrice) {
+                container.html("<p>Інформація відсутня</p>");
+                return;
+            }
+            
+            container.html(`
+                <div class="price-item">
+                    <div>Вартість за урок</div>
+                    <div><strong>${lessonPrice.price} грн</strong></div>
+                </div>
+                ${lessonPrice.reasonOfChange ? 
+                    `<div class="price-item">
+                        <div>Причина останньої зміни:</div>
+                        <div>${lessonPrice.reasonOfChange}</div>
+                    </div>` : ''}
+                <div class="price-date">
+                    Актуально з: ${formatDate(lessonPrice.from)}
+                </div>
+            `);
+        }
+        
+        // Оновлення вартості навчання
+        $("#update-lesson-price").click(function() {
+            const price = parseInt($("#lesson-price").val());
+            const reason = $("#reason-of-change").val().trim();
+            
+            if (isNaN(price)) {
+                alert("Введіть коректну вартість навчання");
+                return;
+            }
+            
+            if (!reason) {
+                alert("Введіть причину зміни вартості");
+                return;
+            }
+            
+            const today = getCurrentDateISO();
+            
+            const requestData = {
+                price: price,
+                from: null,
+                to: today,
+                reasonOfChange: reason
+            };
+            
+            $.ajax({
+                url: "http://localhost:8080/lesson-price",
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: (response) => {
+                    lessonPrice = response;
+                    renderLessonPrice();
+                    $("#reason-of-change").val("");
+                    alert("Вартість навчання успішно оновлено!");
+                },
+                error: (err) => {
+                    console.error("Помилка оновлення вартості навчання:", err);
+                    alert("Не вдалося оновити вартість. Спробуйте пізніше.");
+                }
+            });
+        });
+        
+        // ---------------- ПОЧАТКОВЕ ЗАВАНТАЖЕННЯ ----------------
+        
         loadSubjects();
+        loadNutritionPrices();
+        loadLessonPrice();
     });
 </script>
 </html>
