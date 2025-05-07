@@ -194,6 +194,114 @@
             max-height: 400px;
             overflow-y: auto;
         }
+        
+        /* Стилі для розділу користувачів */
+        .users-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #eee;
+        }
+        
+        .user-info {
+            flex-grow: 1;
+        }
+        
+        .user-info span {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .user-username {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .user-role {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .user-staff {
+            font-style: italic;
+            color: #555;
+        }
+        
+        .user-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .role-chips {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .role-chip {
+            background-color: #e0e0e0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+        
+        .role-chip.admin {
+            background-color: #ffcdd2;
+            color: #c62828;
+        }
+        
+        .role-chip.teacher {
+            background-color: #bbdefb;
+            color: #1565c0;
+        }
+        
+        /* Стилі для модального вікна додавання користувача */
+        .user-form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .user-form-container .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .select-container {
+            position: relative;
+        }
+        
+        .staff-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
@@ -238,6 +346,18 @@
                 <button id="edit-lesson-price">Редагувати ціну уроків</button>
                 <button id="view-lesson-history">Історія змін</button>
             </div>
+        </div>
+    </div>
+    
+    <div class="settings-item">
+        <h3>Користувачі системи</h3>
+        <div class="users-container">
+            <div id="users-list" class="item-list"></div>
+            <div id="users-pagination" class="pagination"></div>
+        </div>
+        
+        <div class="buttons-block">
+            <button id="add-user-btn">Додати користувача</button>
         </div>
     </div>
 
@@ -320,6 +440,44 @@
             </table>
         </div>
         <button onclick="$('#lesson-history-modal').fadeOut()">Закрити</button>
+    </div>
+    
+    <!-- Модальне вікно для додавання/редагування користувача -->
+    <div class="modal hidden" id="user-modal">
+        <h4>Додати нового користувача</h4>
+        <div class="user-form-container">
+            <div class="input-group">
+                <label for="username">Логін:</label>
+                <input type="text" id="username" placeholder="Введіть логін">
+            </div>
+            <div class="input-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" placeholder="Введіть пароль">
+            </div>
+            <div class="input-group full-width">
+                <label>Ролі:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="role-admin" value="ADMIN">
+                        <label for="role-admin">Адміністратор</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="role-teacher" value="TEACHER">
+                        <label for="role-teacher">Вчитель</label>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group full-width">
+                <label for="staff-select">Співробітник:</label>
+                <div class="select-container">
+                    <select id="staff-select" class="staff-select">
+                        <option value="">-- Виберіть співробітника --</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button id="save-user-btn">Зберегти</button>
+        <button onclick="$('#user-modal').fadeOut()">Закрити</button>
     </div>
 </body>
 <script>
@@ -800,11 +958,270 @@
             $("#lesson-history-modal").fadeIn();
         });
         
+        // Управління користувачами
+        let allUsers = [];
+        let allStaff = [];
+        let userCurrentPage = 1;
+        const userItemsPerPage = 5;
+        
+        // Завантаження користувачів
+        function loadUsers() {
+            $.ajax({
+                url: "http://localhost:8080/users",
+                method: 'get',
+                dataType: 'json',
+                success: (data) => {
+                    allUsers = data;
+                    renderUsers();
+                },
+                error: (err) => {
+                    console.error("Помилка завантаження користувачів:", err);
+                    $("#users-list").html("<div class='no-subjects'>Помилка завантаження користувачів</div>");
+                }
+            });
+        }
+        
+        // Завантаження співробітників для селекту
+        function loadStaff() {
+            $.ajax({
+                url: "http://localhost:8080/staff",
+                method: 'get',
+                dataType: 'json',
+                success: (data) => {
+                    allStaff = data;
+                    populateStaffSelect();
+                },
+                error: (err) => {
+                    console.error("Помилка завантаження співробітників:", err);
+                }
+            });
+        }
+        
+        // Заповнення селекту співробітників
+        function populateStaffSelect() {
+            const select = $("#staff-select");
+            select.find('option:not(:first)').remove();
+            
+            allStaff.forEach(staff => {
+                select.append(`<option value="${staff.id}">${staff.lastName} ${staff.firstName} ${staff.middleName || ''}</option>`);
+            });
+        }
+        
+        // Відображення користувачів з пагінацією
+        function renderUsers() {
+            const container = $("#users-list");
+            container.empty();
+            
+            if (allUsers.length === 0) {
+                container.html("<div class='no-subjects'>Немає доданих користувачів</div>");
+                $("#users-pagination").empty();
+                return;
+            }
+            
+            const startIndex = (userCurrentPage - 1) * userItemsPerPage;
+            const endIndex = Math.min(startIndex + userItemsPerPage, allUsers.length);
+            const pageUsers = allUsers.slice(startIndex, endIndex);
+            
+            pageUsers.forEach(user => {
+                // Отримання пов'язаного співробітника
+                let staffInfo = "";
+                if (user.staff) {
+                    const staffMember = allStaff.find(s => s.id === user.staff);
+                    if (staffMember) {
+                        staffInfo = `${staffMember.lastName} ${staffMember.firstName}`;
+                    }
+                }
+                
+                // Відображення ролей
+                let roleChips = '';
+                if (user.role && user.role.length > 0) {
+                    roleChips = '<div class="role-chips">';
+                    user.role.forEach(role => {
+                        const roleClass = role.toLowerCase();
+                        roleChips += `<span class="role-chip ${roleClass}">${role}</span>`;
+                    });
+                    roleChips += '</div>';
+                }
+                
+                container.append(`
+                    <div class="user-item" data-id="${user.id}">
+                        <div class="user-info">
+                            <span class="user-username">${user.username}</span>
+                            ${staffInfo ? `<span class="user-staff">Співробітник: ${staffInfo}</span>` : ''}
+                            ${roleChips}
+                        </div>
+                        <div class="user-controls">
+                            <button class="delete-user-btn delete-btn" data-id="${user.id}">Видалити</button>
+                        </div>
+                    </div>
+                `);
+            });
+            
+            renderUsersPagination();
+            
+            // Обробник видалення користувача
+            $(".delete-user-btn").click(function() {
+                const userId = $(this).data("id");
+                deleteUser(userId);
+            });
+        }
+        
+        // Відображення пагінації для користувачів
+        function renderUsersPagination() {
+            const container = $("#users-pagination");
+            container.empty();
+            
+            const totalPages = Math.ceil(allUsers.length / userItemsPerPage);
+            
+            if (totalPages <= 1) {
+                return;
+            }
+            
+            // Кнопка "Попередня"
+            if (userCurrentPage > 1) {
+                container.append(`<button class="prev-user-page">«</button>`);
+            }
+            
+            // Номери сторінок
+            for (let i = 1; i <= totalPages; i++) {
+                if (
+                    i === 1 || 
+                    i === totalPages || 
+                    (i >= userCurrentPage - 1 && i <= userCurrentPage + 1)
+                ) {
+                    container.append(`<button class="user-page-num ${i === userCurrentPage ? 'active' : ''}" data-page="${i}">${i}</button>`);
+                } else if (i === userCurrentPage - 2 || i === userCurrentPage + 2) {
+                    container.append(`<span>...</span>`);
+                }
+            }
+            
+            // Кнопка "Наступна"
+            if (userCurrentPage < totalPages) {
+                container.append(`<button class="next-user-page">»</button>`);
+            }
+            
+            // Обробники кліків по пагінації
+            $(".user-page-num").click(function() {
+                userCurrentPage = parseInt($(this).data("page"));
+                renderUsers();
+            });
+            
+            $(".prev-user-page").click(function() {
+                userCurrentPage--;
+                renderUsers();
+            });
+            
+            $(".next-user-page").click(function() {
+                userCurrentPage++;
+                renderUsers();
+            });
+        }
+        
+        // Видалення користувача
+        function deleteUser(id) {
+            if (confirm("Ви впевнені, що хочете видалити цього користувача?")) {
+                $.ajax({
+                    url: `http://localhost:8080/users/${id}`,
+                    method: 'delete',
+                    success: () => {
+                        allUsers = allUsers.filter(user => user.id !== id);
+                        
+                        // Переконуємося, що поточна сторінка існує після видалення
+                        const totalPages = Math.ceil(allUsers.length / userItemsPerPage);
+                        if (userCurrentPage > totalPages && totalPages > 0) {
+                            userCurrentPage = totalPages;
+                        }
+                        
+                        renderUsers();
+                    },
+                    error: (err) => {
+                        console.error("Помилка видалення користувача:", err);
+                        alert("Не вдалося видалити користувача. Спробуйте пізніше.");
+                    }
+                });
+            }
+        }
+        
+        // Додавання нового користувача
+        function addUser() {
+            const username = $("#username").val().trim();
+            const password = $("#password").val().trim();
+            const staffId = $("#staff-select").val();
+            
+            // Збираємо вибрані ролі
+            const roles = [];
+            if ($("#role-admin").is(":checked")) roles.push("ADMIN");
+            if ($("#role-teacher").is(":checked")) roles.push("TEACHER");
+            
+            if (!username || !password) {
+                alert("Введіть логін та пароль");
+                return;
+            }
+            
+            if (roles.length === 0) {
+                alert("Виберіть хоча б одну роль");
+                return;
+            }
+            
+            const userData = {
+                username: username,
+                password: password,
+                role: roles
+            };
+            
+            // Додаємо staff тільки якщо обрано
+            if (staffId) {
+                userData.staff = parseInt(staffId);
+            }
+            
+            $.ajax({
+                url: "http://localhost:8080/users",
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(userData),
+                success: (newUser) => {
+                    // Скидаємо форму
+                    $("#username").val("");
+                    $("#password").val("");
+                    $("#role-admin").prop("checked", false);
+                    $("#role-teacher").prop("checked", false);
+                    $("#staff-select").val("");
+                    
+                    // Закриваємо модальне вікно
+                    $("#user-modal").fadeOut();
+                    
+                    // Перезавантажуємо список користувачів
+                    loadUsers();
+                },
+                error: (err) => {
+                    console.error("Помилка додавання користувача:", err);
+                    alert("Не вдалося додати користувача. Спробуйте пізніше.");
+                }
+            });
+        }
+        
+        // Обробник кнопки додавання користувача
+        $("#add-user-btn").click(function() {
+            // Скидаємо форму перед відкриттям
+            $("#username").val("");
+            $("#password").val("");
+            $("#role-admin").prop("checked", false);
+            $("#role-teacher").prop("checked", false);
+            $("#staff-select").val("");
+            
+            $("#user-modal").fadeIn();
+        });
+        
+        // Обробник кнопки збереження користувача
+        $("#save-user-btn").click(addUser);
+        
         // ---------------- ПОЧАТКОВЕ ЗАВАНТАЖЕННЯ ----------------
         
         loadSubjects();
         loadNutritionPrices();
         loadLessonPrice();
+        loadUsers();
+        loadStaff();
     });
 </script>
 </html>
