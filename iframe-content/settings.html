@@ -1024,14 +1024,7 @@
             
             pageUsers.forEach(user => {
                 // Отримання пов'язаного співробітника
-                let staffInfo = "";
-                if (user.staff) {
-                    const staffMember = allStaff.find(s => s.id === user.staff);
-                    if (staffMember) {
-                        staffInfo = `${staffMember.name}`;
-                    }
-                }
-                
+                let staffInfo = `${user.name}`;
                 // Відображення ролей
                 let roleChips = '';
                 if (user.role && user.role.length > 0) {
