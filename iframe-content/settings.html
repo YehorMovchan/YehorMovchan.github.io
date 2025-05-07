@@ -967,7 +967,7 @@
         // Завантаження користувачів
         function loadUsers() {
             $.ajax({
-                url: "http://localhost:8080/users",
+                url: "http://localhost:8080/users-list",
                 method: 'get',
                 dataType: 'json',
                 success: (data) => {
@@ -1028,7 +1028,7 @@
                 if (user.staff) {
                     const staffMember = allStaff.find(s => s.id === user.staff);
                     if (staffMember) {
-                        staffInfo = `${staffMember.lastName} ${staffMember.firstName}`;
+                        staffInfo = `${staffMember.name}`;
                     }
                 }
                 
