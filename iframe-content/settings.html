@@ -1003,7 +1003,7 @@
             select.find('option:not(:first)').remove();
             
             allStaff.forEach(staff => {
-                select.append(`<option value="${staff.id}">${staff.lastName} ${staff.firstName} ${staff.middleName || ''}</option>`);
+                select.append(`<option value="${staff.id}">${staff.name} || ''}</option>`);
             });
         }
         
@@ -1036,10 +1036,8 @@
                 let roleChips = '';
                 if (user.role && user.role.length > 0) {
                     roleChips = '<div class="role-chips">';
-                    user.role.forEach(role => {
-                        const roleClass = role.toLowerCase();
-                        roleChips += `<span class="role-chip ${roleClass}">${role}</span>`;
-                    });
+                    const roleClass = user.role.toLowerCase();
+                    roleChips += `<span class="role-chip ${roleClass}">${user.role}</span>`;
                     roleChips += '</div>';
                 }
                 
