@@ -458,11 +458,11 @@
                 <label>Ролі:</label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="role-admin" value="ADMIN">
+                        <input type="radio" id="role-admin" value="ADMIN" name="role">
                         <label for="role-admin">Адміністратор</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="role-teacher" value="TEACHER">
+                        <input type="radio" id="role-teacher" value="TEACHER" name="role">
                         <label for="role-teacher">Вчитель</label>
                     </div>
                 </div>
@@ -1140,9 +1140,7 @@
             const staffId = $("#staff-select").val();
             
             // Збираємо вибрані ролі
-            const roles = [];
-            if ($("#role-admin").is(":checked")) roles.push("ADMIN");
-            if ($("#role-teacher").is(":checked")) roles.push("TEACHER");
+            const role = $("input[name='role']:checked").val();
             
             if (!username || !password) {
                 alert("Введіть логін та пароль");
@@ -1157,7 +1155,7 @@
             const userData = {
                 username: username,
                 password: password,
-                role: roles
+                role: role
             };
             
             // Додаємо staff тільки якщо обрано
