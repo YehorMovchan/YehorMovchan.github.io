@@ -152,6 +152,48 @@
             margin-bottom: 10px;
             color: #333;
         }
+        
+        /* Стилі для таблиці історії змін */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .history-table th, .history-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .history-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        .history-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .history-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .buttons-block {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .history-modal {
+            max-width: 800px;
+            max-height: 600px;
+        }
+        
+        .history-modal-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -179,6 +221,7 @@
             </div>
             <div class="buttons-block">
                 <button id="edit-nutrition-price">Редагувати ціну харчування</button>
+                <button id="view-nutrition-history">Історія змін</button>
             </div>
         </div>
     </div>
@@ -193,6 +236,7 @@
             </div>
             <div class="buttons-block">
                 <button id="edit-lesson-price">Редагувати ціну уроків</button>
+                <button id="view-lesson-history">Історія змін</button>
             </div>
         </div>
     </div>
@@ -229,9 +273,53 @@
                 <label for="dinner-price">Вечеря (грн):</label>
                 <input type="number" id="dinner-price" min="0">
             </div>
+            <div class="input-group full-width">
+                <label for="nutrition-reason-of-change">Причина зміни:</label>
+                <textarea id="nutrition-reason-of-change" rows="3"></textarea>
+            </div>
         </div>
         <button id="edit-nutrition-price-button">Зберегти зміни</button>
         <button onclick="$('#edit-nutrition-price-modal').fadeOut()">Закрити</button>
+    </div>
+    
+    <!-- Модальне вікно для історії змін цін харчування -->
+    <div class="modal hidden history-modal" id="nutrition-history-modal">
+        <h4>Історія змін вартості харчування</h4>
+        <div class="history-modal-content">
+            <table class="history-table" id="nutrition-history-table">
+                <thead>
+                    <tr>
+                        <th>Дата від</th>
+                        <th>Дата до</th>
+                        <th>Сніданок</th>
+                        <th>Обід</th>
+                        <th>Вечеря</th>
+                        <th>Причина зміни</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <button onclick="$('#nutrition-history-modal').fadeOut()">Закрити</button>
+    </div>
+    
+    <!-- Модальне вікно для історії змін вартості навчання -->
+    <div class="modal hidden history-modal" id="lesson-history-modal">
+        <h4>Історія змін вартості навчання</h4>
+        <div class="history-modal-content">
+            <table class="history-table" id="lesson-history-table">
+                <thead>
+                    <tr>
+                        <th>Дата від</th>
+                        <th>Дата до</th>
+                        <th>Вартість</th>
+                        <th>Причина зміни</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <button onclick="$('#lesson-history-modal').fadeOut()">Закрити</button>
     </div>
 </body>
 <script>
@@ -468,6 +556,11 @@
                     <div>Вечеря</div>
                     <div><strong>${nutritionPrices.dinner} грн</strong></div>
                 </div>
+                ${nutritionPrices.reasonOfChange ? 
+                    `<div class="price-item">
+                        <div>Причина останньої зміни:</div>
+                        <div>${nutritionPrices.reasonOfChange}</div>
+                    </div>` : ''}
                 <div class="price-date">
                     Актуально з: ${formatDate(nutritionPrices.from)}
                 </div>
@@ -479,9 +572,15 @@
             const breakfast = parseInt($("#breakfast-price").val());
             const lunch = parseInt($("#lunch-price").val());
             const dinner = parseInt($("#dinner-price").val());
+            const reasonOfChange = $("#nutrition-reason-of-change").val().trim();
             
             if (isNaN(breakfast) || isNaN(lunch) || isNaN(dinner)) {
                 alert("Введіть коректні ціни для всіх типів харчування");
+                return;
+            }
+            
+            if (!reasonOfChange) {
+                alert("Введіть причину зміни вартості");
                 return;
             }
             
@@ -492,7 +591,8 @@
                 lunch: lunch,
                 dinner: dinner,
                 from: today,
-                to: null
+                to: null,
+                reasonOfChange: reasonOfChange
             };
             
             $.ajax({
@@ -503,6 +603,8 @@
                 success: (response) => {
                     nutritionPrices = response;
                     renderNutritionPrices();
+                    $("#nutrition-reason-of-change").val("");
+                    $("#edit-nutrition-price-modal").fadeOut();
                     alert("Вартість харчування успішно оновлено!");
                 },
                 error: (err) => {
@@ -592,6 +694,7 @@
                     lessonPrice = response;
                     renderLessonPrice();
                     $("#reason-of-change").val("");
+                    $("#edit-lesson-price-modal").fadeOut();
                     alert("Вартість навчання успішно оновлено!");
                 },
                 error: (err) => {
@@ -599,6 +702,102 @@
                     alert("Не вдалося оновити вартість. Спробуйте пізніше.");
                 }
             });
+        });
+        
+        // Завантаження історії цін харчування
+        function loadNutritionPriceHistory() {
+            $.ajax({
+                url: "http://localhost:8080/nutrition-price/all",
+                method: 'get',
+                dataType: 'json',
+                success: (data) => {
+                    renderNutritionPriceHistory(data);
+                },
+                error: (err) => {
+                    console.error("Помилка завантаження історії цін харчування:", err);
+                    $("#nutrition-history-table tbody").html("<tr><td colspan='6'>Помилка завантаження даних</td></tr>");
+                }
+            });
+        }
+        
+        // Відображення історії цін харчування
+        function renderNutritionPriceHistory(historyData) {
+            const tbody = $("#nutrition-history-table tbody");
+            tbody.empty();
+            
+            if (!historyData || historyData.length === 0) {
+                tbody.html("<tr><td colspan='6'>Історія відсутня</td></tr>");
+                return;
+            }
+            
+            // Сортування за датою (від найновіших до найстаріших)
+            historyData.sort((a, b) => new Date(b.from) - new Date(a.from));
+            
+            historyData.forEach(item => {
+                tbody.append(`
+                    <tr>
+                        <td>${formatDate(item.from)}</td>
+                        <td>${formatDate(item.to)}</td>
+                        <td>${item.breakfast} грн</td>
+                        <td>${item.lunch} грн</td>
+                        <td>${item.dinner} грн</td>
+                        <td>${item.reasonOfChange || "-"}</td>
+                    </tr>
+                `);
+            });
+        }
+        
+        // Завантаження історії цін навчання
+        function loadLessonPriceHistory() {
+            $.ajax({
+                url: "http://localhost:8080/lesson-price/all",
+                method: 'get',
+                dataType: 'json',
+                success: (data) => {
+                    renderLessonPriceHistory(data);
+                },
+                error: (err) => {
+                    console.error("Помилка завантаження історії цін навчання:", err);
+                    $("#lesson-history-table tbody").html("<tr><td colspan='4'>Помилка завантаження даних</td></tr>");
+                }
+            });
+        }
+        
+        // Відображення історії цін навчання
+        function renderLessonPriceHistory(historyData) {
+            const tbody = $("#lesson-history-table tbody");
+            tbody.empty();
+            
+            if (!historyData || historyData.length === 0) {
+                tbody.html("<tr><td colspan='4'>Історія відсутня</td></tr>");
+                return;
+            }
+            
+            // Сортування за датою (від найновіших до найстаріших)
+            historyData.sort((a, b) => new Date(b.from) - new Date(a.from));
+            
+            historyData.forEach(item => {
+                tbody.append(`
+                    <tr>
+                        <td>${formatDate(item.from)}</td>
+                        <td>${formatDate(item.to)}</td>
+                        <td>${item.price} грн</td>
+                        <td>${item.reasonOfChange || "-"}</td>
+                    </tr>
+                `);
+            });
+        }
+        
+        // Обробник натискання на кнопку "Історія змін" для харчування
+        $("#view-nutrition-history").click(function() {
+            loadNutritionPriceHistory();
+            $("#nutrition-history-modal").fadeIn();
+        });
+        
+        // Обробник натискання на кнопку "Історія змін" для навчання
+        $("#view-lesson-history").click(function() {
+            loadLessonPriceHistory();
+            $("#lesson-history-modal").fadeIn();
         });
         
         // ---------------- ПОЧАТКОВЕ ЗАВАНТАЖЕННЯ ----------------
