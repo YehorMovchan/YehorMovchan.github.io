@@ -1003,7 +1003,7 @@
             select.find('option:not(:first)').remove();
             
             allStaff.forEach(staff => {
-                select.append(`<option value="${staff.id}">${staff.name} || ''}</option>`);
+                select.append(`<option value="${staff.id}">${staff.name}</option>`);
             });
         }
         
@@ -1147,10 +1147,6 @@
                 return;
             }
             
-            if (roles.length === 0) {
-                alert("Виберіть хоча б одну роль");
-                return;
-            }
             
             const userData = {
                 username: username,
