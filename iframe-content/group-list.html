@@ -11,7 +11,7 @@
     <script>
         $(document).ready(function() {
             $.ajax({
-                url: "http://localhost:8080/view/groups-type",
+                url: "https://school-f6vi.onrender.com/view/groups-type",
                 method: 'get',
                 dataType: 'json',
                 success:(data)=>{
@@ -33,7 +33,7 @@
                     $(".wrapper").css("visibility", "hidden");
                     $('#add-entity-modal').fadeIn();
                     $.ajax({
-                        url: "http://localhost:8080/staff",
+                        url: "https://school-f6vi.onrender.com/staff",
                         method: 'get',
                         dataType: 'json',
                         success:(data)=>{
@@ -60,7 +60,7 @@
                     leader: $("#add-club-leader").val()
                 }
                 $.ajax({
-                    url: "http://localhost:8080/groups-type",
+                    url: "https://school-f6vi.onrender.com/groups-type",
                     method: 'post',
                     contentType: 'application/json',
                     data: JSON.stringify(club),

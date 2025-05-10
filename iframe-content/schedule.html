@@ -15,7 +15,7 @@
       var scheduleData = {};
       var currentCell = null;
      
-      $.getJSON("http://localhost:8080/schedule/history-dates", function(data) {
+      $.getJSON("https://school-f6vi.onrender.com/schedule/history-dates", function(data) {
         data.forEach(function(dateRange) {
           if (dateRange.length === 2) {
             var startDate = dateRange[0];
@@ -38,7 +38,7 @@
         }
         else{
           let dates = val.split(' - ');
-          $.getJSON(`http://localhost:8080/view/schedule/history/${dates[0]}/${dates[1]}/${$('#daySelect').val()}`, (data)=>{
+          $.getJSON(`https://school-f6vi.onrender.com/view/schedule/history/${dates[0]}/${dates[1]}/${$('#daySelect').val()}`, (data)=>{
             $("#scheduleHistoryTable").show();
             $("#scheduleTable").hide();
             scheduleHistoryData = {};
@@ -67,14 +67,14 @@
       })
       
 
-      $.getJSON('http://localhost:8080/subject', function(data) {
+      $.getJSON('https://school-f6vi.onrender.com/subject', function(data) {
         subjects = data;
         $.each(subjects, function(index, subject) {
           $('#subjectSelect').append($('<option>', { value: subject.id, text: subject.name }));
         });
       });
       
-      $.getJSON('http://localhost:8080/staff/teachers', function(data) {
+      $.getJSON('https://school-f6vi.onrender.com/staff/teachers', function(data) {
         teachers = data;
         $.each(teachers, function(index, teacher) {
           $('#teacherSelect').append($('<option>', { value: teacher.id, text: teacher.name }));
@@ -89,7 +89,7 @@
           $(this).empty();
         });
         
-        $.getJSON('http://localhost:8080/view/schedule/actual/' + day, function(data) {
+        $.getJSON('https://school-f6vi.onrender.com/view/schedule/actual/' + day, function(data) {
           // Припускаємо, що data – масив об'єктів розкладу
           $.each(data, function(index, entry) {
             // Формуємо ключ: "classField-lessonNumber"
@@ -199,7 +199,7 @@
         
         // Відправляємо POST запит (URL для збереження потрібно налаштувати під свій бекенд)
         $.ajax({
-          url: 'http://localhost:8080/schedule/save', // змініть URL за потребою
+          url: 'https://school-f6vi.onrender.com/schedule/save', // змініть URL за потребою
           method: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(scheduleArray),

@@ -81,7 +81,7 @@
                 $("#edit-program-modal").fadeIn();
             });
 
-            $.getJSON(`http://localhost:8080/view/programs-type/${programId}`, (data)=>{
+            $.getJSON(`https://school-f6vi.onrender.com/view/programs-type/${programId}`, (data)=>{
                 $("#program-name").text(data.name);
                 $("#program-price").text(data.price);
                 $("#program-info").text(data.info);
@@ -99,7 +99,7 @@
             });
 
             $("#open-history").click(()=>{
-                $.getJSON(`http://localhost:8080/programs-price/history/${programId}`, (data)=>{
+                $.getJSON(`https://school-f6vi.onrender.com/programs-price/history/${programId}`, (data)=>{
                     let table = $("#price-history table");
                     table.find("tr:gt(0)").remove();
                     data.forEach(price=>{
@@ -131,14 +131,14 @@
                 }
                 
                 $.ajax({
-                    url: `http://localhost:8080/programs-type/${programId}`,
+                    url: `https://school-f6vi.onrender.com/programs-type/${programId}`,
                     method: 'put',
                     contentType: 'application/json',
                     data: JSON.stringify(program),
                     success:()=>{
                         if(oldPrice != price.price){
                             $.ajax({
-                            url: `http://localhost:8080/programs-price/${priceId}`,
+                            url: `https://school-f6vi.onrender.com/programs-price/${priceId}`,
                             method: 'put',
                             contentType: 'application/json',
                             data: JSON.stringify(price),
@@ -155,7 +155,7 @@
             });
             $("#delete-entity").click(()=>{
                 $.ajax({
-                    url: `http://localhost:8080/programs-type/${programId}`,
+                    url: `https://school-f6vi.onrender.com/programs-type/${programId}`,
                     method: 'delete',
                     success:()=>{
                         window.location.href = "https://yehormovchan.github.io/iframe-content/program-list.html";

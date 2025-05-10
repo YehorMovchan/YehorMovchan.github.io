@@ -47,7 +47,7 @@
 
 <script>
 
-    $.getJSON("http://localhost:8080/view/staff", (data)=>{
+    $.getJSON("https://school-f6vi.onrender.com/view/staff", (data)=>{
         console.log(data);
         let container = $("#employees-list");
             
@@ -103,7 +103,7 @@
 
 
         $.ajax({
-            url: "http://localhost:8080/staff",
+            url: "https://school-f6vi.onrender.com/staff",
             method: 'POST',
             contentType: false,
             cache: false,
@@ -121,7 +121,7 @@
                 from: new Date().toISOString()
             }
             $.ajax({
-                url: "http://localhost:8080/staff-payment",
+                url: "https://school-f6vi.onrender.com/staff-payment",
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(staff),

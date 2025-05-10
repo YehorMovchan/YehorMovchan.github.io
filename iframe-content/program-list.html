@@ -11,7 +11,7 @@
     <script>
         $(document).ready(function() {
             $.ajax({
-                url: "http://localhost:8080/programs-type",
+                url: "https://school-f6vi.onrender.com/programs-type",
                 method: 'get',
                 dataType: 'json',
                 success:(data)=>{
@@ -39,7 +39,7 @@
                     info: $("#add-program-info").val()
                 }
                 $.ajax({
-                    url: "http://localhost:8080/programs-type",
+                    url: "https://school-f6vi.onrender.com/programs-type",
                     method: 'post',
                     dataType: 'json',
                     contentType: 'application/json',
@@ -56,7 +56,7 @@
                         from: new Date().toISOString()
                     }
                     $.ajax({
-                        url: `http://localhost:8080/programs-price`,
+                        url: `https://school-f6vi.onrender.com/programs-price`,
                         method: 'post',
                         dataType: 'json',
                         contentType: 'application/json',

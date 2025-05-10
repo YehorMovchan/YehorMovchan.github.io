@@ -25,9 +25,10 @@
             let currentMemberIds = new Set();
 
             function loadGroupMembers() {
-                $.getJSON(`http://localhost:8080/view/group/group=${groupId}`, function(data) {
+                $.getJSON(`https://school-f6vi.onrender.com/view/group/group=${groupId}`, function(data) {
                     currentMemberIds.clear();
                     let membersList = "";
+                    
                     data.forEach(member => {
                         currentMemberIds.add(member.kidId);
                         membersList += `<li>${member.kidName} <button class="remove-kid" data-id="${member.id}">Видалити</button></li>`;
@@ -38,7 +39,7 @@
             }
 
             function loadKids() {
-                $.getJSON("http://localhost:8080/kid", function(data) {
+                $.getJSON("https://school-f6vi.onrender.com/kid", function(data) {
                     let options = "";
                     data.forEach(kid => {
                         if (!currentMemberIds.has(kid.id)) {
@@ -52,7 +53,7 @@
             $("#add-kid").click(function() {
                 const kidId = $("#kid-select").val();
                 $.ajax({
-                    url: `http://localhost:8080/group`,
+                    url: `https://school-f6vi.onrender.com/group`,
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify({ _group: groupId, kid: kidId, from: new Date().toISOString() }),
@@ -63,7 +64,7 @@
             $("#group-members").on("click", ".remove-kid", function() {
                 const id = $(this).data("id");
                 $.ajax({
-                    url: `http://localhost:8080/group/${id}`,
+                    url: `https://school-f6vi.onrender.com/group/${id}`,
                     type: "DELETE",
                     success: loadGroupMembers
                 });

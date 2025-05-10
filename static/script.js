@@ -34,7 +34,7 @@ function getUserRole(){
         else{
             let payload = JSON.parse(atob(token.split('.')[1]));
             let username = payload.sub;
-            $.getJSON(`http://localhost:8080/users/${username}`, (user)=>{
+            $.getJSON(`https://school-f6vi.onrender.com/users/${username}`, (user)=>{
                 resolve(user.role);
             }).fail((error)=>{
                 reject(error);
@@ -52,7 +52,7 @@ function getUser(){
         else{
             let payload = JSON.parse(atob(token.split('.')[1]));
             let username = payload.sub;
-            $.getJSON(`http://localhost:8080/users/${username}`, (user)=>{
+            $.getJSON(`https://school-f6vi.onrender.com/users/${username}`, (user)=>{
                 resolve(user);
             }).fail((error)=>{
                 reject(error);

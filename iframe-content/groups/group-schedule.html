@@ -84,7 +84,7 @@
      let groupId = new URLSearchParams(window.location.search).get('id');
 
     // Завантаження розкладу гуртка
-    $.getJSON(`http://localhost:8080/groups-schedule/${groupId}`, function(data) {
+    $.getJSON(`https://school-f6vi.onrender.com/groups-schedule/${groupId}`, function(data) {
       const dayNames = ["Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця"];
 
       data.forEach(item => {
@@ -124,7 +124,7 @@
             };
 
             $.ajax({
-                url: `http://localhost:8080/groups-schedule/${id}`,
+                url: `https://school-f6vi.onrender.com/groups-schedule/${id}`,
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(updatedSchedule),
@@ -147,7 +147,7 @@
         $('#confirmDelete').on('click', function () {
           const reason = $('#deleteReason').val().trim();
           $.ajax({
-            url: `http://localhost:8080/groups-schedule/${id}`,
+            url: `https://school-f6vi.onrender.com/groups-schedule/${id}`,
             type: 'DELETE',
             success: function () {
              location.reload();
@@ -171,7 +171,7 @@
         };
 
         $.ajax({
-          url: `http://localhost:8080/groups-schedule`,
+          url: `https://school-f6vi.onrender.com/groups-schedule`,
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(newSchedule),

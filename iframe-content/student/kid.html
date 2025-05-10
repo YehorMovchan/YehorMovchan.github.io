@@ -24,7 +24,7 @@
 
 
             if (kidId) {
-                $.getJSON(`http://localhost:8080/kid/${kidId}`, 
+                $.getJSON(`https://school-f6vi.onrender.com/kid/${kidId}`, 
                 (kid) => {
                     $(".general-loader").hide();
                     $("#kid-name").text(kid.name);
@@ -55,7 +55,7 @@
                     $(".general-request-error").show();
                 });
 
-                $.getJSON(`http://localhost:8080/nutrition/${kidId}`, 
+                $.getJSON(`https://school-f6vi.onrender.com/nutrition/${kidId}`, 
                 (nutrition) => {
                     console.log(nutrition);
                     $(".nutrition-loader").hide();
@@ -70,7 +70,7 @@
                 }
             );
 
-                $.getJSON(`http://localhost:8080/view/program/kid=${kidId}`,
+                $.getJSON(`https://school-f6vi.onrender.com/view/program/kid=${kidId}`,
                 (program) => {
                     console.log(program);
                     $(".programs-loader").hide();
@@ -114,7 +114,7 @@
                 }
                 
                 $.ajax({
-                    url: `http://localhost:8080/kid/${kidId}`,
+                    url: `https://school-f6vi.onrender.com/kid/${kidId}`,
                     method: "PUT",
                     contentType: false,
                     data: formData,
@@ -145,7 +145,7 @@
                 };
                 
                 $.ajax({
-                    url: `http://localhost:8080/nutrition/edit/${kidId}`,
+                    url: `https://school-f6vi.onrender.com/nutrition/edit/${kidId}`,
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(updatedNutrition),
@@ -155,7 +155,7 @@
             });
 
             $("#view-nutrition-history").click(function() {
-                $.getJSON(`http://localhost:8080/nutrition/history/${kidId}`, function(history) {
+                $.getJSON(`https://school-f6vi.onrender.com/nutrition/history/${kidId}`, function(history) {
                     let tableRows = history.map(entry => 
                         `<tr>
                             <td>${entry.from}</td>
@@ -191,7 +191,7 @@
             });
 
             
-            $.getJSON(`http://localhost:8080/programs-type`, function(programTypes) {
+            $.getJSON(`https://school-f6vi.onrender.com/programs-type`, function(programTypes) {
                 programTypes.forEach(program => {
                     $("#programs-type").append(`<option value="${program.id}">${program.name}</option>`);
                 });
@@ -211,7 +211,7 @@
                 };
                 
                 $.ajax({
-                    url: `http://localhost:8080/program/edit/${kidId}`,
+                    url: `https://school-f6vi.onrender.com/program/edit/${kidId}`,
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(updatedProgram),
@@ -221,7 +221,7 @@
             });
         
             $("#view-program-history").click(function() {
-                $.getJSON(`http://localhost:8080/view/program/history/kid=${kidId}`, function(history) {
+                $.getJSON(`https://school-f6vi.onrender.com/view/program/history/kid=${kidId}`, function(history) {
                     let tableRows = history.map(entry => 
                         `<tr>
                             <td>${entry.from}</td>
@@ -254,7 +254,7 @@
 
             $("#delete-entity").click(function() {
                 $.ajax({
-                    url: `http://localhost:8080/kid/${kidId}`,
+                    url: `https://school-f6vi.onrender.com/kid/${kidId}`,
                     method: "DELETE",
                     success: () => {
                         location.href = "https://yehormovchan.github.io/iframe-content/kid-list.html";
@@ -280,7 +280,7 @@
                     formData.append("receipt", new Blob([null], {type: "application/json"}), "empty");
                 }
                 $.ajax({
-                    url: "http://localhost:8080/transaction",
+                    url: "https://school-f6vi.onrender.com/transaction",
                     method: "POST",
                     contentType: false,
                     data: formData,
@@ -293,14 +293,14 @@
             })
 
 
-            $.getJSON("http://localhost:8080/transactions-type", (data)=>{
+            $.getJSON("https://school-f6vi.onrender.com/transactions-type", (data)=>{
                 let select = $("#transaction-type");
                 data.forEach(type => {
                     select.append(`<option value="${type.id}">${type.name}</option>`);
                 });
             }) 
             
-            $.getJSON("http://localhost:8080/kid", (data)=>{
+            $.getJSON("https://school-f6vi.onrender.com/kid", (data)=>{
                 let select = $("#transaction-kid");
                 data.forEach(kid => {
                     select.append(`<option value="${kid.id}">${kid.name}</option>`);

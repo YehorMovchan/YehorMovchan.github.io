@@ -23,8 +23,8 @@
                 let from = `${year}-${m}-01`;
                 let to = `${year}-${m}-${new Date(year, m, 0).getDate()}`;
                 
-                $.getJSON(`http://localhost:8080/view/group/kid=${kidId}`, function(groups) {
-                    $.getJSON(`http://localhost:8080/view/attendance/group/${kidId}/${from}/${to}`, function(attendance) {
+                $.getJSON(`https://school-f6vi.onrender.com/view/group/kid=${kidId}`, function(groups) {
+                    $.getJSON(`https://school-f6vi.onrender.com/view/attendance/group/${kidId}/${from}/${to}`, function(attendance) {
                         $(".request-error").hide()
                         let {dates, days} = getMonthDates(month);
                         buildTable(groups, dates, days, attendance);

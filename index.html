@@ -113,7 +113,7 @@
             let username = $("#login").val();
             let password = $("#password").val();
             $.ajax({
-            url: 'http://localhost:8080/auth/login',
+            url: 'https://school-f6vi.onrender.com/auth/login',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ username: username, password: password }),

@@ -23,7 +23,7 @@
                 let toDate = $("#to-date").val();
                 let transactionType = $("#transaction-type").val();
                 
-                $.getJSON(`http://localhost:8080/view/transaction/${kidId}`, function(data) {
+                $.getJSON(`https://school-f6vi.onrender.com/view/transaction/${kidId}`, function(data) {
                     $(".request-error").hide()
                     let filteredData = data.filter(transaction => {
                         let date = new Date(transaction.date);
@@ -38,7 +38,7 @@
                 }).fail(()=>{
                     $(".request-error").show();
                 });;
-                $.getJSON(`http://localhost:8080/transaction/sum/${kidId}`, function(data) {
+                $.getJSON(`https://school-f6vi.onrender.com/transaction/sum/${kidId}`, function(data) {
                     let totalSum = data;
                     $("#total-sum").text(`Баланс: ${totalSum} грн`);
                     if(totalSum >= 0) {
@@ -54,7 +54,7 @@
             }
 
             function loadTransactionTypes() {
-                $.getJSON("http://localhost:8080/transactions-type", function(types) {
+                $.getJSON("https://school-f6vi.onrender.com/transactions-type", function(types) {
                     $(".request-error").hide()
                     let select = $("#transaction-type");
                     select.append('<option value="">Усі</option>');

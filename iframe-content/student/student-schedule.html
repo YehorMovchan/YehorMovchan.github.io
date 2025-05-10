@@ -92,7 +92,7 @@
             
             // Функція для завантаження інформації про учня
             function loadKidInfo(kidId) {
-                $.getJSON(`http://localhost:8080/kid/${kidId}`, function(kidData) {
+                $.getJSON(`https://school-f6vi.onrender.com/kid/${kidId}`, function(kidData) {
                     $("#kid-info").text(`${kidData.name}, Клас: ${kidData.grade}`);
                 }).fail(function(error) {
                     console.error("Error loading kid info:", error);
@@ -112,7 +112,7 @@
                 let combinedSchedule = Array(5).fill().map(() => Array(12).fill().map(() => []));
                 
                 // Спочатку завантажуємо розклад уроків
-                $.getJSON(`http://localhost:8080/view/schedule/kid=${kidId}`, function(lessonData) {
+                $.getJSON(`https://school-f6vi.onrender.com/view/schedule/kid=${kidId}`, function(lessonData) {
                     // Заповнюємо розклад уроками
                     lessonData.forEach(lesson => {
                         const dayIndex = lesson.dayOfWeek - 1; // 1-based to 0-based
@@ -126,7 +126,7 @@
                     });
                     
                     // Тепер завантажуємо розклад гуртків
-                    $.getJSON(`http://localhost:8080/view/groups-kid-schedule/kid=${kidId}`, function(groupsData) {
+                    $.getJSON(`https://school-f6vi.onrender.com/view/groups-kid-schedule/kid=${kidId}`, function(groupsData) {
                         // Додаємо гуртки до об'єднаного розкладу
                         groupsData.forEach(group => {
                             const dayIndex = group.dayOfWeek - 1; // 1-based to 0-based

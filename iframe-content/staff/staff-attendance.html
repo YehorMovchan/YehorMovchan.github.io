@@ -83,7 +83,7 @@
             let urlParams = new URLSearchParams(window.location.search);
             let staffId = urlParams.get("id");
             let salary;
-            $.getJSON(`http://localhost:8080/staff-payment/${staffId}`, (payment) => {
+            $.getJSON(`https://school-f6vi.onrender.com/staff-payment/${staffId}`, (payment) => {
                 salary = payment.salary;
                 $("#salary").text(salary.toFixed(2));
             });
@@ -95,7 +95,7 @@
                 let dateTo = $("#date-to").val();
                 
                 if (staffId && dateFrom && dateTo) {
-                    $.getJSON(`http://localhost:8080/attendance/staff/${staffId}/${dateFrom}/${dateTo}`, function(data) {
+                    $.getJSON(`https://school-f6vi.onrender.com/attendance/staff/${staffId}/${dateFrom}/${dateTo}`, function(data) {
                         let tableBody = "";
                         if (data.length > 0) {
                             data.forEach(attendance => {
@@ -115,7 +115,7 @@
                         }
                         $("#attendance-table-body").html(tableBody);
                     });
-                    $.getJSON(`http://localhost:8080/attendance/staff/total/${staffId}/${dateFrom}/${dateTo}`, function(totalHours) {
+                    $.getJSON(`https://school-f6vi.onrender.com/attendance/staff/total/${staffId}/${dateFrom}/${dateTo}`, function(totalHours) {
                         let totalSalary = totalHours * salary;
                         $("#total-hours").text(totalHours.toFixed(2));
                         $("#total-salary").text(totalSalary.toFixed(2));
@@ -136,7 +136,7 @@
 
                 if (date && start && end) {
                     $.ajax({
-                        url: `http://localhost:8080/attendance/staff`,
+                        url: `https://school-f6vi.onrender.com/attendance/staff`,
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify({
