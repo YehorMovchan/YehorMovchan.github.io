@@ -39,7 +39,7 @@
         }
         else{
           let dates = val.split(' - ');
-          $.getJSON(`https://school-f6vi.onrender.com/view/schedule/history/${dates[0]}/${dates[1]}/${$('#daySelect').val()}`, (data)=>{
+          $.getJSON(`https://school-f6vi.onrender.com/view/schedule/history/${dates[0]}/${dates[1]}/${$('input[name="daySelect"]').val()}`, (data)=>{
             $("#scheduleHistoryTable").show();
             $("#scheduleTable").hide();
             scheduleHistoryData = {};
@@ -114,10 +114,10 @@
       }
       
       // Завантаження розкладу для початкового дня (Понеділок, value=1)
-      loadSchedule($('#daySelect').val());
+      loadSchedule($('input[name="daySelect"]').val());
       
       // При зміні дня тижня перезавантажуємо розклад
-      $('#daySelect').change(function() {
+      $('input[name="daySelect"]').change(function() {
         var day = $(this).val();
         loadSchedule(day);
       });
@@ -166,7 +166,7 @@
         
         var lessonNumber = currentCell.closest('tr').data('lesson');
         var classField = currentCell.data('class');
-        var dayOfWeek = $('#daySelect').val();
+        var dayOfWeek = $('input[name="daySelect"]').val();
         
         // Створюємо або оновлюємо запис розкладу
         var key = classField + '-' + lessonNumber;
@@ -257,27 +257,18 @@
 <body>
     <div class="wrapper">
         <div class="filter-menu">
-            <label for="daySelect">Виберіть день тижня:</label>
-            <select id="daySelect">
-                <option value="1">Понеділок</option>
-                <option value="2">Вівторок</option>
-                <option value="3">Середа</option>
-                <option value="4">Четвер</option>
-                <option value="5">П'ятниця</option>
-            </select>
-
           <fieldset>
             <legend>Оберіть день тижня:</legend>
             <div class="toggle">
-              <input type="radio" name="sizeBy" value="monday" id="sizeMonday" checked="checked" />
+              <input type="radio" name="daySelect" value="monday" id="sizeMonday" checked="checked" />
               <label for="sizeMonday">Понеділок</label>
-              <input type="radio" name="sizeBy" value="tuesday" id="sizeTuesday" />
+              <input type="radio" name="daySelect" value="tuesday" id="sizeTuesday" />
               <label for="sizeTuesday">Вівторок</label>
-              <input type="radio" name="sizeBy" value="wednesday" id="sizeWednesday" />
+              <input type="radio" name="daySelect" value="wednesday" id="sizeWednesday" />
               <label for="sizeWednesday">Середа</label>
-              <input type="radio" name="sizeBy" value="thursday" id="sizeThursday" />
+              <input type="radio" name="daySelect" value="thursday" id="sizeThursday" />
               <label for="sizeThursday">Четвер</label>
-              <input type="radio" name="sizeBy" value="friday" id="sizeFriday" />
+              <input type="radio" name="daySelect" value="friday" id="sizeFriday" />
               <label for="sizeFriday">П'ятниця</label>
             </div>
           </fieldset>
