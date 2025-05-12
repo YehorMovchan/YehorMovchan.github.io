@@ -6,6 +6,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://yehormovchan.github.io/static/script.js"></script>
   <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
+
   <script>
     $(document).ready(function() {
       var subjects = [];
@@ -251,6 +252,7 @@
       font-style: italic; /* Курсивний текст */
     }
   </style>
+  <link rel="stylesheet" href="https://yehormovchan.github.io/static/radio-toggle.css">
 </head>
 <body>
     <div class="wrapper">
@@ -263,6 +265,19 @@
                 <option value="4">Четвер</option>
                 <option value="5">П'ятниця</option>
             </select>
+
+            <fieldset>
+            <legend>Оберіть день тижня:</legend>
+            <div class="toggle">
+              <input type="radio" name="sizeBy" value="monday" id="sizeMonday" checked="checked" />
+              <label for="sizeWeight">Понеділок</label>
+              <input type="radio" name="sizeBy" value="tuesday" id="sizeTuesday" />
+              <label for="sizeDimensions">Вівторок</label>
+              <input type="radio" name="sizeBy" value="wednesday" id="sizeWednesday" />
+              <label for="sizeDimensions">Середа</label>
+            </div>
+          </fieldset>
+
             <div class="addition-filter">
               <label for="date-select">Історія розкладів:</label>
               <div class="select-wrapper">
