@@ -250,6 +250,7 @@ table tr{
     border-radius: 10px;
     flex-direction: column;
     gap: 20px;
+    z-index: 1000;
 }
 
 .hidden {
