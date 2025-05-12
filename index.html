@@ -134,10 +134,11 @@
             $("#username").hide();
             $("#sign-out").hide();
         })
+        function changePage(el){
+            iframe.src = links[el.hash];
+        }
     })
-    function changePage(el){
-        iframe.src = links[el.hash];
-    }
+
 
 
 

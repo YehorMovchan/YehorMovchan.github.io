@@ -1,19 +1,22 @@
 $(document).ready(function() {
     let urlParams = new URLSearchParams(window.location.search);
     let kidId = urlParams.get('id');
-
-    if (kidId) {
-        $.getJSON(`https://school-f6vi.onrender.com/kid/${kidId}`, function(kid) {
-            $(".request-error").hide()
-            loadParents(kid.mother, "#mother-select", 2);
-            loadParents(kid.father, "#father-select", 1);
-        });
+    getParents(kidId);
+    function getParents(kidId){
+        if (kidId) {
+            $.getJSON(`https://school-f6vi.onrender.com/kid/${kidId}`, function(kid) {
+                $(".request-error").hide()
+                loadParents(kid.mother, "#mother-select", 2);
+                loadParents(kid.father, "#father-select", 1);
+            });
+        }
+        else{
+            loadParents(null, "#mother-select", 2);
+            loadParents(null, "#father-select", 1);
+            $("#save-parents").hide();
+        }
     }
-    else{
-        loadParents(null, "#mother-select", 2);
-        loadParents(null, "#father-select", 1);
-        $("#save-parents").hide();
-    }
+   
 
     function loadParents(selectedId, selector, sex) {
         $(".request-error").hide()
@@ -67,6 +70,8 @@ $(document).ready(function() {
                 data: JSON.stringify(newParent),
                 success: function(response) {
                     alert("Батька додано!");
+                    getParents(kidId);
+                    $("#parent-form").fadeOut();
                 }
             });
         });
@@ -103,7 +108,8 @@ $(document).ready(function() {
                     data: JSON.stringify(updatedParent),
                     success: function() {
                         alert("Дані оновлено");
-                        location.reload();
+                        getParents(kidId);
+                        $("#edit-parent-form").fadeOut();
                     }
                 });
             });
