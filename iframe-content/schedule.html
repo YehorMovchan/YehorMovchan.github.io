@@ -257,30 +257,40 @@
 <body>
     <div class="wrapper">
         <div class="filter-menu">
-          <fieldset>
-            <legend>Оберіть день тижня:</legend>
-            <div class="toggle">
-              <input type="radio" name="daySelect" value="1" id="sizeMonday" checked="checked" />
-              <label for="sizeMonday">Понеділок</label>
-              <input type="radio" name="daySelect" value="2" id="sizeTuesday" />
-              <label for="sizeTuesday">Вівторок</label>
-              <input type="radio" name="daySelect" value="3" id="sizeWednesday" />
-              <label for="sizeWednesday">Середа</label>
-              <input type="radio" name="daySelect" value="4" id="sizeThursday" />
-              <label for="sizeThursday">Четвер</label>
-              <input type="radio" name="daySelect" value="5" id="sizeFriday" />
-              <label for="sizeFriday">П'ятниця</label>
-            </div>
-          </fieldset>
-
-            <!-- <div class="addition-filter">
+              <fieldset>
+                <legend>Відображати розклад по:</legend>
+                <div class="toggle">
+                  <input type="radio" name="schedule-view" value="days" id="sizeDays" checked="checked" />
+                  <label for="sizeMonday">Дням тижня</label>
+                  <input type="radio" name="schedule-view" value="teachers" id="sizeTeachers" />
+                  <label for="sizeTuesday">Вчителям</label>
+                  <input type="radio" name="schedule-view" value="classes" id="sizeClasses" />
+                  <label for="sizeWednesday">Класам</label>
+                </div>
+            </fieldset>
+            <div class="addition-filter">
+              <fieldset id="daySelect">
+                <legend>Оберіть день тижня:</legend>
+                <div class="toggle">
+                  <input type="radio" name="daySelect" value="1" id="sizeMonday" checked="checked" />
+                  <label for="sizeMonday">Понеділок</label>
+                  <input type="radio" name="daySelect" value="2" id="sizeTuesday" />
+                  <label for="sizeTuesday">Вівторок</label>
+                  <input type="radio" name="daySelect" value="3" id="sizeWednesday" />
+                  <label for="sizeWednesday">Середа</label>
+                  <input type="radio" name="daySelect" value="4" id="sizeThursday" />
+                  <label for="sizeThursday">Четвер</label>
+                  <input type="radio" name="daySelect" value="5" id="sizeFriday" />
+                  <label for="sizeFriday">П'ятниця</label>
+                </div>
+              </fieldset>
               <label for="date-select">Історія розкладів:</label>
               <div class="select-wrapper">
                 <select id="date-select">
                     <option value="">Актуальний</option>
                 </select>
               </div>
-            </div> -->
+            </div>
         </div>
     <!-- Таблиця розкладу -->
         <table id="scheduleTable">
