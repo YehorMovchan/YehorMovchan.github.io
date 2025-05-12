@@ -73,9 +73,10 @@
     <script>
         $(document).ready(()=>{
             const programId = new URLSearchParams(window.location.search).get('id');
+            const programName = new URLSearchParams(window.location.search).get('name');
             let oldPrice;
             let priceId;
-            $("#program-members").attr("src", `https://yehormovchan.github.io/iframe-content/programs/program-members.html?id=${programId}`);
+            $("#program-members").attr("src", `https://yehormovchan.github.io/iframe-content/programs/program-members.html?id=${programId}&name=${programName}`);
             $("#program-groups").attr("src", `https://yehormovchan.github.io/iframe-content/programs/groups.html?id=${programId}`);
             $("#edit-program-button").click(()=>{
                 $("#edit-program-modal").fadeIn();
