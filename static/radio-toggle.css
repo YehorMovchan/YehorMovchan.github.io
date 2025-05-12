@@ -117,3 +117,9 @@ body:not(:-moz-handler-blocked) fieldset {
     display: inline;
   }
 }
+
+input[type="radio"]:focus + label {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(93, 143, 209, 0.6);
+    border-radius: 4px;
+}
