@@ -7,11 +7,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
     <script src="https://yehormovchan.github.io/static/script.js"></script>
-    <style>
-        a{
-            display: none !important; 
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -66,6 +61,9 @@
         let iframe;
         let page = location.hash;
         const aList = $("a").toArray();
+        aList.forEach(e=>{
+            e.style.display = "none";
+        })
         iframe = $("#iframe-content")[0]
         getUserRole().then(role=>{
             if(!role){
@@ -81,7 +79,7 @@
                    
                     aList.forEach(element => {
                         if(permits.includes(element.id)){
-                            $(element).show();
+                            e.style.display = "block";
                         }
                     });
                 })
