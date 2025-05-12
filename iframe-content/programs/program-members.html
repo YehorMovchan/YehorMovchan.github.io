@@ -46,11 +46,12 @@
          $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
             const programId = urlParams.get("id");
+            const programName = urlParams.get("name");
             let currentMemberIds = new Set();
 
             function loadProgramMembers() {
+                $(".kid-program-new").text(programName);
                 $.getJSON(`https://school-f6vi.onrender.com/view/program/program=${programId}`, function(data) {
-                    $(".kid-program-new").text(data[0].programName || "");
                     currentMemberIds.clear();
                     let membersList = "";
                     data.forEach(member => {
