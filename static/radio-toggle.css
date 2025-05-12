@@ -3,10 +3,7 @@ fieldset {
   padding: 2rem;
   box-sizing: border-box;
   display: block;
-  border: none;
-  border: solid 1px #CCC;
   min-width: 0;
-  background-color: #FFF;
 }
 fieldset legend {
   margin: 0 0 1.5rem;
