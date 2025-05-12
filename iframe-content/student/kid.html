@@ -363,8 +363,8 @@
         <div class="wrapper edit-wrapper">
             <h2>Додати оплату</h2>
             <label>Дитина: <select id="transaction-kid"></select></label> <br>
-            <label>Сума: <input type="number" id="transaction-sum"></label><br>
-            <label>Дата: <input type="date" id="transaction-date"></label><br>
+            <label>Сума: <input type="number" id="transaction-sum" required></label><br>
+            <label>Дата: <input type="date" id="transaction-date" required></label><br>
             <label>Тип оплати: <select id="transaction-type"></select></label><br>
             <label>Квитанція: <input type="file" id="transaction-receipt"></label><br>
             <button id="save-transaction">Зберегти</button>
@@ -375,8 +375,8 @@
     <div id="edit-kid-modal" class="modal hidden">
         <div class="edit-wrapper wrapper">
                 <h2>Редагування учня</h2>
-                <label>Ім'я: <input type="text" id="edit-kid-name"></label><br>
-                <label>Клас: <input type="number" id="edit-kid-grade"></label><br>
+                <label>Ім'я: <input type="text" id="edit-kid-name" required></label><br>
+                <label>Клас: <input type="number" id="edit-kid-grade" required></label><br>
                 <label>Навчається в школі: <label id="student-label"><input type="checkbox" id="edit-kid-student"></label></label><br>
                 <label>Дата народження: <input type="date" id="edit-kid-birthday"></label><br>
                 <label>Свідоцтво про народження <input type="file" id="upload-certificate" accept="image/*"> </label> <br>

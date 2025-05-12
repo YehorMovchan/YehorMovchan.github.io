@@ -40,10 +40,10 @@
       </select></label><br>
       
       <label>Час початку:
-      <input type="time" id="edit-startTime"></label><br>
+      <input type="time" id="edit-startTime" required></label><br>
       
       <label>Час закінчення:
-      <input type="time" id="edit-endTime"></label><br>
+      <input type="time" id="edit-endTime" required></label><br>
 
       <button id="saveChanges">Зберегти</button><br>
       <button id="close-edit-modal" onclick="$('#edit-modal').fadeOut()">Закрити</button>
@@ -62,10 +62,10 @@
         </select></label><br>
         
         <label>Час початку:
-        <input type="time" id="new-startTime"></label><br>
+        <input type="time" id="new-startTime" required></label><br>
         
         <label>Час закінчення:
-        <input type="time" id="new-endTime"></label><br>
+        <input type="time" id="new-endTime" required></label><br>
         
         <button id="saveNew">Зберегти</button><br>
         <button id="close-create-modal" onclick="$('#create-modal').fadeOut()">Закрити</button>
