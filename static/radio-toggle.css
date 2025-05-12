@@ -4,6 +4,7 @@ fieldset {
   box-sizing: border-box;
   display: block;
   min-width: 0;
+  border: none;
 }
 fieldset legend {
   margin: 0 0 1.5rem;
