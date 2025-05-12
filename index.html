@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
     <script src="https://yehormovchan.github.io/static/script.js"></script>
     <style>
-        li{
+        a{
             display: none;
         }
     </style>
@@ -65,7 +65,7 @@
     $(document).ready(()=>{
         let iframe;
         let page = location.hash;
-        const links = $("li").toArray();
+        const aList = $("a").toArray();
         iframe = $("#iframe-content")[0]
         getUserRole().then(role=>{
             if(!role){
@@ -79,7 +79,7 @@
                 $.getJSON("https://yehormovchan.github.io/assets/permits.json", (data)=>{
                     let permits = data[role];
                    
-                    links.forEach(element => {
+                    aList.forEach(element => {
                         if(permits.includes(element.id)){
                             $(element).show();
                         }
