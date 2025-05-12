@@ -58,12 +58,12 @@
 
     let iframe;
     let page = location.hash;
+    const aList = $("a").toArray();
+    aList.forEach(e=>{
+        e.style.display = "none";
+    })
     
     $(document).ready(()=>{
-        const aList = $("a").toArray();
-        aList.forEach(e=>{
-            e.style.display = "none";
-        })
         iframe = $("#iframe-content")[0]
         getUserRole().then(role=>{
             if(!role){
