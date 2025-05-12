@@ -1,6 +1,4 @@
-/* Merged Stylesheet */
-
-/* Global Styles */
+/* Основні стилі */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,26 +6,24 @@ body {
     background-color: #eef2f7;
     color: #333;
     overflow-x: hidden;
-    overflow-y: visible;
+    overflow-y:visible;
 }
-
-body::-webkit-scrollbar {
+body::-webkit-scrollbar{
     display: none;
 }
 
-a {
+a{
     text-decoration: none;
     color: #002d5d;
 }
 
-/* Container and Layout */
-.container {
+.container{
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100vh; /* Висота на весь екран */
 }
 
-/* Header and Navigation */
+/* Хедер */
 header {
     display: flex;
     justify-content: center;
@@ -39,7 +35,7 @@ header {
     margin: 0;
 }
 
-nav {
+nav{
     flex-grow: 1; 
     display: flex;
     justify-content: center;
@@ -53,11 +49,9 @@ nav ul {
     background: #1787ff;
     margin: 0;
 }
-
 nav ul li {
     margin: 0 15px;
 }
-
 nav ul li a {
     color: white;
     text-decoration: none;
@@ -65,21 +59,24 @@ nav ul li a {
     display: block;
     transition: background 0.3s;
 }
-
 nav ul li a:hover {
     background: #0056b3;
 }
 
-/* Main Content */
+/* Основний контент */
 main {
     margin: auto;
     width: 100%;
+    margin: 0;
     flex: 1;
     padding: 20px;
     text-align: center;
     overflow: auto;
 }
 
+.main::-webkit-scrollbar{
+    display: none;
+}
 .dashboard {
     background: white;
     padding: 20px;
@@ -88,8 +85,112 @@ main {
     max-width: 800px;
     margin: auto;
 }
+iframe{
+    width: 100%;
+    height: 100%;
+}
 
-/* Buttons and Interactions */
+/* Статистика */
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+.stat-item {
+    background: #dbeafe;
+    padding: 15px;
+    border-radius: 5px;
+    flex: 1;
+    margin: 0 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Футер */
+footer {
+    background: #0056b3;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    height: 10vh;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Елементи заголовків */
+h1, h2 {
+    text-align: center;
+}
+h2 {
+    color: white;
+    background-color: #0056b3;
+    padding: 10px;
+    border-radius: 5px;
+}
+h3{
+    height: min-content;
+    margin: 5px;
+}
+
+
+/* Список елементів */
+.item-list {
+    list-style: none;
+    padding: 0;
+    max-width: 600px;
+    margin: auto;
+}
+.item-list li {
+    background: white;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.details-link {
+    padding: 5px 15px;
+    background: #1787ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+.details-link:hover {
+    background: #0056b3;
+}
+
+/* Форма */
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: #1787ff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(23, 135, 255, 0.5);
+}
+input[type="checkbox"], input[type="radio"] {
+    accent-color: #1787ff;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
 button {
     background: #1787ff;
     color: white;
@@ -100,9 +201,241 @@ button {
     cursor: pointer;
     transition: background 0.3s;
 }
-
 button:hover {
     background: #0056b3;
+}
+
+/* Таблиці */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+th {
+    background: #1787ff;
+    color: white;
+}
+tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+tbody tr:hover {
+    background: #dbeafe;
+}
+table tr{
+    table-layout: auto;
+    width: 80%;
+}
+
+/* Модальне вікно */
+.modal {
+    max-height: 60%;
+    overflow: scroll;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.accordion-block{
+    height: max-content;
+    margin: auto;
+    width: 70%;
+    
+}
+
+.accordion-header {
+    background-color: #f1f1f1;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    margin: auto;
+    width: 100%;
+}
+.addition-block {
+    display: none;
+    width: 100%;
+    height: 300px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: auto;
+}
+
+
+.main-info{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.main-info>div{
+    gap: 10px;
+    width: 30%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px;
+}
+
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.edit-wrapper{
+    align-items: center;
+    gap: 2px;
+}
+
+.edit-wrapper>*{
+    width: 70%;
+}
+
+.clickable {
+    color: #0063cc; 
+    cursor: pointer; 
+}
+
+.clickable:hover {
+    text-decoration: none;
+    color: #003d7e;
+}
+
+.parent-wrapper{
+    gap: 10px;
+    width: 70%;
+    margin: auto;
+}
+
+.parent{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 5px;
+}
+
+.filter-menu{
+    margin: auto;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+
+}
+
+.zoom-panel{
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-around;
+    width: 5%;
+}
+
+.zoom-panel div{
+    width: max-content;
+    height: max-content;
+}
+
+.zoom-panel img{
+    width: 15px;
+}
+
+
+
+.loader {
+    margin: auto;
+    margin-top: 100px;
+    width: 50px;
+    padding: 8px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #25b09b;
+    --_m: 
+        conic-gradient(#0000 10%,#000),
+        linear-gradient(#000 0 0) content-box;
+    -webkit-mask: var(--_m);
+            mask: var(--_m);
+    -webkit-mask-composite: source-out;
+            mask-composite: subtract;
+    animation: l3 1s infinite linear;
+}
+@keyframes l3 {to{transform: rotate(1turn)}}
+
+.request-error{
+    margin: auto;
+    width: max-content;
+    color: rgb(138, 3, 3);
+}
+
+
+.wrapper>button{
+
+    width: 50%;
+    min-width: min-content;
+    align-self: center;
+    margin-top: 20px;
+}
+
+.addition-filter{   
+    align-self: flex-end;
+}
+
+.modal img{
+    max-width: 700px;
+    max-height: 60%;
+}
+
+.summary{
+    align-self: flex-end;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+}
+
+.summary>*{
+    width: 50%;
+}
+
+.headline {
+    max-width: 600px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.headline h1 {
+    grid-column-start: 2;
+    margin: 0;
 }
 
 .add-button {
@@ -120,6 +453,13 @@ button:hover {
     background-color: #45a049;
 }
 
+.delete-button-container {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    margin-top: 20px;
+    width: max-content;
+}
 .delete-button {
     background-color: #af4c4c;
     color: white;
@@ -135,65 +475,71 @@ button:hover {
     background-color: #a04545;
 }
 
-/* Forms and Inputs */
-form {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
-    margin: 20px auto;
+.side-menu{
+    width: 20%;
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }
 
-input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+label>input{
+    width: 90%;
 }
 
-input:focus, select:focus, textarea:focus {
-    border-color: #1787ff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(23, 135, 255, 0.5);
-}
 
-input[type="checkbox"], input[type="radio"] {
-    accent-color: #1787ff;
-    width: 18px;
-    height: 18px;
+
+.sign-in {
+    background-color: white;
+    color: #0056b3;
+    border: none;
+    padding: 8px 15px;
     cursor: pointer;
-}
-
-/* Lists and Items */
-.item-list {
-    list-style: none;
-    padding: 0;
-    max-width: 600px;
-    margin: auto;
-}
-
-.item-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px;
-    border-bottom: 1px solid #eee;
-    background: white;
-    margin: 5px 0;
     border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    margin-left: auto; /* Відсуває кнопку до правого краю */
 }
 
-.item-list li:hover {
-    background-color: #f5f5f5;
+.sign-in:hover {
+    background-color: #e0e0e0;
 }
 
-/* Subject and Nutrition Containers */
-.subject-container, 
-.nutrition-price-container, 
-.lesson-price-container {
+.login-error{
+    color: red;
+    font-weight: bold;
+    margin: 5px;
+}
+
+.class-lesson {
+    background-color: #e3f2fd;
+}
+.group-lesson {
+    background-color: #e8f5e9;
+}
+.lesson-details {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #666;
+}
+.lesson-cell {
+    vertical-align: top;
+    min-height: 60px;
+    padding: 5px !important;
+}
+.lesson-title {
+    font-weight: bold;
+}
+
+.summary>.total-sum{
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: inline-block;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    width: max-content;
+    margin-top: 20px;
+}
+.subject-container, .nutrition-price-container, .lesson-price-container {
     max-height: 400px;
     overflow-y: auto;
     margin-bottom: 20px;
@@ -202,7 +548,18 @@ input[type="checkbox"], input[type="radio"] {
     padding: 15px;
 }
 
-/* Delete Button Styles */
+.item-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.item-list li:hover {
+    background-color: #f5f5f5;
+}
+
 .delete-btn {
     background-color: #ff4d4d;
     color: white;
@@ -216,16 +573,16 @@ input[type="checkbox"], input[type="radio"] {
     background-color: #ff0000;
 }
 
-/* Add and Update Forms */
 .add-form, .update-price-form {
-    display: flex;
     margin-top: 15px;
     gap: 10px;
 }
 
-.add-form input, 
-.price-inputs input, 
-.price-inputs textarea {
+.add-form {
+    display: flex;
+}
+
+.add-form input, .price-inputs input, .price-inputs textarea {
     flex-grow: 1;
     padding: 8px;
     border: 1px solid #ddd;
@@ -233,22 +590,14 @@ input[type="checkbox"], input[type="radio"] {
     margin-bottom: 10px;
 }
 
-.add-form button, 
-.update-price-form button {
-    background-color: #4CAF50;
-    color: white;
+.add-form button, .update-price-form button {
     border: none;
     padding: 8px 15px;
     border-radius: 3px;
     cursor: pointer;
 }
 
-.add-form button:hover, 
-.update-price-form button:hover {
-    background-color: #45a049;
-}
 
-/* Pagination */
 .pagination {
     display: flex;
     justify-content: center;
@@ -264,50 +613,74 @@ input[type="checkbox"], input[type="radio"] {
     border-radius: 3px;
 }
 
-.pagination button.active {
-    background-color: #1787ff;
-    color: white;
+
+.no-subjects {
+    padding: 20px;
+    text-align: center;
+    color: #666;
 }
 
-/* Tables */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    background: white;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    overflow: hidden;
+.settings-item {
+    margin-bottom: 30px;
 }
 
-th, td {
+.current-price {
+    margin-bottom: 20px;
     padding: 10px;
-    border: 1px solid #ccc;
-    text-align: left;
+    background-color: #f9f9f9;
+    border-radius: 5px;
 }
 
-th {
-    background: #1787ff;
-    color: white;
+.price-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    padding: 8px;
+    background: #fff;
+    border-radius: 3px;
+    border: 1px solid #eee;
 }
 
-tbody tr:nth-child(even) {
-    background: #f9f9f9;
+.price-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
 }
 
-tbody tr:hover {
-    background: #dbeafe;
+.input-group {
+    display: flex;
+    flex-direction: column;
 }
 
-/* History Table */
+.input-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.price-date {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
+}
+
+h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
 .history-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
 }
 
-.history-table th, 
-.history-table td {
+.history-table th, .history-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
@@ -326,7 +699,23 @@ tbody tr:hover {
     background-color: #f1f1f1;
 }
 
-/* User Styles */
+.buttons-block {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.history-modal {
+    max-width: 800px;
+    max-height: 600px;
+}
+
+.history-modal-content {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Стилі для розділу користувачів */
 .users-container {
     max-height: 400px;
     overflow-y: auto;
@@ -351,6 +740,11 @@ tbody tr:hover {
     flex-grow: 1;
 }
 
+.user-info span {
+    display: block;
+    margin-bottom: 5px;
+}
+
 .user-username {
     font-weight: bold;
     font-size: 1.1em;
@@ -359,6 +753,16 @@ tbody tr:hover {
 .user-role {
     color: #666;
     font-size: 0.9em;
+}
+
+.user-staff {
+    font-style: italic;
+    color: #555;
+}
+
+.user-controls {
+    display: flex;
+    gap: 10px;
 }
 
 .role-chips {
@@ -384,122 +788,37 @@ tbody tr:hover {
     color: #1565c0;
 }
 
-/* Modal Styles */
-.modal {
-    max-height: 60%;
-    overflow: scroll;
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.hidden {
-    display: none;
-}
-
-/* Headings */
-h1, h2 {
-    text-align: center;
-}
-
-h2 {
-    color: white;
-    background-color: #0056b3;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-/* Additional Utility Classes */
-.clickable {
-    color: #0063cc; 
-    cursor: pointer; 
-}
-
-.clickable:hover {
-    text-decoration: none;
-    color: #003d7e;
-}
-
-.sign-in {
-    background-color: white;
-    color: #0056b3;
-    border: none;
-    padding: 8px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 14px;
-    margin-left: auto;
-}
-
-.sign-in:hover {
-    background-color: #e0e0e0;
-}
-
-.login-error {
-    color: red;
-    font-weight: bold;
-    margin: 5px;
-}
-
-/* Lesson Specific Styles */
-.class-lesson {
-    background-color: #e3f2fd;
-}
-
-.group-lesson {
-    background-color: #e8f5e9;
-}
-
-.lesson-details {
-    margin-top: 5px;
-    font-size: 0.9em;
-    color: #666;
-}
-
-.lesson-cell {
-    vertical-align: top;
-    min-height: 60px;
-    padding: 5px !important;
-}
-
-.lesson-title {
-    font-weight: bold;
-}
-
-/* Responsive and Layout Utilities */
-.main-info {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
+/* Стилі для модального вікна додавання користувача */
+.user-form-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
     margin-bottom: 20px;
 }
 
-.main-info > div {
-    gap: 10px;
-    width: 30%;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 5px;
+.user-form-container .full-width {
+    grid-column: 1 / -1;
 }
 
-.summary > .total-sum {
-    font-weight: bold;
-    font-size: 1.2em;
-    padding: 10px 20px;
-    border-radius: 10px;
-    display: inline-block;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    width: max-content;
-    margin-top: 20px;
+.checkbox-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.select-container {
+    position: relative;
+}
+
+.staff-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
 }
