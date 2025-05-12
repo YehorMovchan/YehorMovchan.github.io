@@ -1,6 +1,5 @@
 fieldset {
   margin: 0;
-  padding: 2rem;
   box-sizing: border-box;
   display: block;
   min-width: 0;
@@ -12,7 +11,7 @@ fieldset legend {
   width: 100%;
   float: left;
   display: table;
-  font-size: 1.5rem;
+  font-size: 1.2em;
   line-height: 140%;
   font-weight: 600;
   color: #333;
