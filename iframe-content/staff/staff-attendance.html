@@ -86,10 +86,11 @@
             $.getJSON(`https://school-f6vi.onrender.com/staff-payment/${staffId}`, (payment) => {
                 salary = payment.salary;
                 $("#salary").text(salary.toFixed(2));
+                $("filter-button").trigger("click");
             });
             $("#date-from").val(new Date().toISOString().split('T')[0]);
             $("#date-to").val(new Date().toISOString().split('T')[0]);
-            $("filter-button").trigger("click");
+            
             
             $("#filter-button").click(function() {
                 let dateFrom = $("#date-from").val();
