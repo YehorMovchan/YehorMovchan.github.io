@@ -75,6 +75,7 @@
                     if(user.role == "TEACHER") {
                         $("#create-attendance-side-menu").fadeIn();
                         $("#attendance-date").val(new Date().toISOString().split('T')[0]);
+                        $("filter-button").click();
                     }
                 }
             });
@@ -89,6 +90,7 @@
             });
             $("#date-from").val(new Date().toISOString().split('T')[0]);
             $("#date-to").val(new Date().toISOString().split('T')[0]);
+            $("filter-button").click();
             
             $("#filter-button").click(function() {
                 let dateFrom = $("#date-from").val();
