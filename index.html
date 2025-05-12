@@ -62,6 +62,7 @@
     aList.forEach(e=>{
         e.style.display = "none";
     })
+    let links
     
     $(document).ready(()=>{
         iframe = $("#iframe-content")[0]
@@ -99,7 +100,8 @@
         })
 
         $.getJSON("https://yehormovchan.github.io/assets/links.json", (data)=>{
-            iframe.src=data[page];
+            links = data;
+            iframe.src=links[page];
         })
         
 
