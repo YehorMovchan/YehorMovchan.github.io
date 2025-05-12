@@ -12,8 +12,10 @@ body::-webkit-scrollbar-thumb{
     background-color: #0056b3;
     border-radius: 5px;
 }
-input[type="radio"]:focus {
+input[type="radio"]:focus + label,
+input[type="radio"]:checked + label {
     outline: none;
+    box-shadow: none;
 }
 label:focus {
     outline: none;
