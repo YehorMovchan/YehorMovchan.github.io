@@ -45,7 +45,6 @@ $(document).ready(function() {
             data: JSON.stringify(updatedData),
             success: function() {
                 alert("Дані оновлено");
-                location.reload();
             }
         });
     });
@@ -68,7 +67,6 @@ $(document).ready(function() {
                 data: JSON.stringify(newParent),
                 success: function(response) {
                     alert("Батька додано!");
-                    location.reload();
                 }
             });
         });
