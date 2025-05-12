@@ -7,6 +7,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
     <script src="https://yehormovchan.github.io/static/script.js"></script>
+    <style>
+        li{
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -55,14 +60,15 @@
     </footer> -->
 </body>
 <script>
-    let iframe;
-    let page = location.hash;
-    let links;
+
+    
     $(document).ready(()=>{
+        let iframe;
+        let page = location.hash;
+        const links = $("li").toArray();
         iframe = $("#iframe-content")[0]
         getUserRole().then(role=>{
             if(!role){
-                $("a").hide()
                 iframe.src = "";
                 location.hash = "#";
                 $("#sign-in-button").show();
@@ -72,13 +78,10 @@
             else{
                 $.getJSON("https://yehormovchan.github.io/assets/permits.json", (data)=>{
                     let permits = data[role];
-                    let aList = $("a").toArray();
-                    aList.forEach(element => {
+                   
+                    links.forEach(element => {
                         if(permits.includes(element.id)){
                             $(element).show();
-                        }
-                        else{
-                            $(element).hide();
                         }
                     });
                 })
@@ -98,8 +101,7 @@
         })
 
         $.getJSON("https://yehormovchan.github.io/assets/links.json", (data)=>{
-            links = data;
-            iframe.src=links[page];
+            iframe.src=data[page];
         })
         
 
