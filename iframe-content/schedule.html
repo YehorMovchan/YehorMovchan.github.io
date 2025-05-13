@@ -763,6 +763,12 @@
       let scheduleData = {};
 
 
+      $("#teacherSelect-filter").hide();
+      $("#classSelect-filter").hide();
+      $("#schedule-by-days").show();
+      $("#schedule-by-teacher").hide();
+      $("#schedule-by-class").hide();
+
       $.each(classes, function(index, classNumber) {
         $('#class-select').append($('<option>', { value: classNumber, text: classNumber }));
       });
@@ -815,7 +821,7 @@
     
       function loadSchedule(day) {
         scheduleData = {};
-        $('#schedule-by-days tbody td').each(function() {
+        $('#schedule-by-days tbody').each(function() {
           $(this).empty();
         });
         
@@ -905,7 +911,7 @@
         </div>
     </div>
 
-    <table id="schedule-by-days">
+    <table id="schedule-by-days" class="schedule-table">
       <thead>
         <tr>
           <th>Номер уроку</th>
@@ -927,7 +933,7 @@
       </tbody>
     </table>
 
-    <table id="schedule-by-teacher">
+    <table id="schedule-by-teacher" class="schedule-table">
       <thead>
         <th>Номер уроку</th>
         <th>Понеділок</t>
@@ -940,7 +946,7 @@
 
       </tbody>
     </table>
-    <table id="schedule-by-class">
+    <table id="schedule-by-class" class="schedule-table">
       <thead>
         <th>Номер уроку</th>
         <th>Понеділок</th>

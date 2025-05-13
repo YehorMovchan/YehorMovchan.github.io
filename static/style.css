@@ -828,3 +828,13 @@ h4 {
     font-size: 0.8em;
     color: #666;
 }
+
+.schedule-table{
+    width: 80%;
+    margin: auto;
+    margin-top: 20px;
+    font-size: 12px;
+}
+td, th{
+    width: 8%;
+}
