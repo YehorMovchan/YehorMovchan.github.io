@@ -802,6 +802,9 @@
             $("#schedule-by-days").show();
             $("#schedule-by-teacher").hide();
             $("#schedule-by-class").hide();
+            $("#class-select-wrapper").hide();
+            $("#teacher-select-wrapper").show();
+            $("#subject-select-wrapper").show();
           } else if (selectedValue === "teachers") {
             $("#daySelect-filter").hide();
             $("#teacherSelect-filter").show();
@@ -809,6 +812,9 @@
             $("#schedule-by-days").hide();
             $("#schedule-by-teacher").show();
             $("#schedule-by-class").hide();
+            $("#class-select-wrapper").show();
+            $("#teacher-select-wrapper").hide();
+            $("#subject-select-wrapper").show();
           } else if (selectedValue === "classes") {
             $("#daySelect-filter").hide();
             $("#teacherSelect-filter").hide();
@@ -816,6 +822,9 @@
             $("#schedule-by-days").hide();
             $("#schedule-by-teacher").hide();
             $("#schedule-by-class").show();
+            $("#class-select-wrapper").hide();
+            $("#teacher-select-wrapper").show();
+            $("#subject-select-wrapper").show();
           }
       });
     
@@ -1011,19 +1020,19 @@
 
     <div class="modal hidden">
       <h2 id="modal-title"></h2>
-      <label>Предмет:
+      <label id="subject-select-wrapper">Предмет:
         <select id="subject-select">
           <option value="">--Виберіть предмет--</option>
         </select>
       </label>
-      <label>Вчитель:
+      <label id="teacher-select-wrapper">Вчитель:
         <select id="teacher-select">
           <option value="">--Виберіть вчителя--</option>
         </select>
       </label>
-      <label>Клас:
+      <label id="class-select-wrapper">Клас:
         <select id="class-select">
-          <option value="">--Виберіть вчителя--</option>
+          <option value="">--Виберіть клас--</option>
         </select>
       </label>
       <button id="modalSave">Зберегти</button>
