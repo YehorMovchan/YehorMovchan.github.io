@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
@@ -359,7 +359,7 @@
     });
   </script>
   <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
-  <style>
+  <style>/*
     table{
         width: 80%;
         margin: auto;
@@ -374,27 +374,27 @@
       color: grey;
     }
     table.history {
-      background: #f0f0f0; /* Світло-сірий фон */
-      color: #888; /* Тьмяний колір тексту */
-      border: 1px solid #ddd; /* Світло-сірі межі */
+      background: #f0f0f0; 
+      color: #888; 
+      border: 1px solid #ddd; 
     }
 
     table.history th {
-      background: #b0b0b0; /* Сірий заголовок */
-      color: #fff; /* Білий текст */
+      background: #b0b0b0;
+      color: #fff;
     }
 
     table.history tbody tr:nth-child(even) {
-      background: #e8e8e8; /* Тьмяніший відтінок для чергування */
+      background: #e8e8e8; 
     }
 
     table.history tbody tr:hover {
-      background: inherit; /* Відключення підсвічування */
+      background: inherit;
     }
 
     table.history td {
-      font-style: italic; /* Курсивний текст */
-    }
+      font-style: italic; 
+    }*/
   </style>
   <link rel="stylesheet" href="https://yehormovchan.github.io/static/radio-toggle.css">
 </head>
@@ -444,19 +444,19 @@
                   </select>
                 </div>
               </div>
-              <!-- <label for="date-select">Історія розкладів:</label>
+              <label for="date-select">Історія розкладів:</label>
               <div class="select-wrapper">
                 <select id="date-select">
                     <option value="">Актуальний</option>
                 </select>
-              </div> -->
+              </div> 
             </div>
         </div>
-    <!-- Таблиця розкладу -->
+  
         <table id="scheduleTable-days">
             <thead>
             <tr>
-                <!-- Номери класів від 1 до 11 -->
+              
                 <th>1</th>
                 <th>2</th>
                 <th>3</th>
@@ -471,8 +471,7 @@
             </tr>
             </thead>
             <tbody>
-            <!-- Рядки для уроків 1-8. Перший стовпець – номер уроку,
-                інші клітинки містять data-атрибут data-class -->
+           
             <tr data-lesson="1">
                 <td data-class="1"></td>
                 <td data-class="2"></td>
@@ -596,7 +595,7 @@
         <table id="scheduleHistoryTable" class="history">
           <thead>
           <tr>
-              <!-- Номери класів від 1 до 11 -->
+             
               <th>1</th>
               <th>2</th>
               <th>3</th>
@@ -611,8 +610,7 @@
           </tr>
           </thead>
           <tbody>
-          <!-- Рядки для уроків 1-8. Перший стовпець – номер уроку,
-              інші клітинки містять data-атрибут data-class -->
+      
           <tr data-lesson="1">
               <td data-class="1"></td>
               <td data-class="2"></td>
@@ -720,10 +718,10 @@
           </tbody>
       </table>
     
-    <!-- Кнопка для збереження розкладу -->
+  
         <button id="saveSchedule">Зберегти розклад</button>
     </div>
-  <!-- Модальне вікно -->
+ 
   <div class="modal hidden">
     <h2>Вибір уроку та вчителя</h2>
     <label for="subjectSelect">Предмет:</label>
@@ -741,5 +739,123 @@
   </div>
   
 
+</body>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Редагування розкладу</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://yehormovchan.github.io/static/script.js"></script>
+  <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
+  <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+  <script>
+    $(document).ready(function() {
+      // Сховати всі фільтри, окрім "daySelect-filter"
+      $("#teacherSelect-filter").hide();
+      $("#classSelect-filter").hide();
+      $("#scheduleHistoryTable").hide();
+
+      $("input[name='schedule-view']").change(function() {
+          var selectedValue = $(this).val();
+          if (selectedValue === "days") {
+            $("#daySelect-filter").show();
+            $("#teacherSelect-filter").hide();
+            $("#classSelect-filter").hide();
+          } else if (selectedValue === "teachers") {
+            $("#daySelect-filter").hide();
+            $("#teacherSelect-filter").show();
+            $("#classSelect-filter").hide();
+          } else if (selectedValue === "classes") {
+            $("#daySelect-filter").hide();
+            $("#teacherSelect-filter").hide();
+            $("#classSelect-filter").show();
+          }
+        });
+    });
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="filter-menu">
+      <fieldset>
+        <legend>Відображати розклад по:</legend>
+          <div class="toggle">
+            <input type="radio" name="schedule-view" value="days" id="sizeDays" checked="checked" />
+            <label for="sizeDays">Дням тижня</label>
+            <input type="radio" name="schedule-view" value="teachers" id="sizeTeachers" />
+            <label for="sizeTeachers">Вчителям</label>
+            <input type="radio" name="schedule-view" value="classes" id="sizeClasses" />
+            <label for="sizeClasses">Класам</label>
+          </div>
+        </fieldset>
+        <div class="addition-filter">
+          <fieldset id="daySelect-filter">
+            <legend>Оберіть день тижня:</legend>
+            <div class="toggle">
+              <input type="radio" name="daySelect" value="1" id="sizeMonday" checked="checked" />
+              <label for="sizeMonday">Понеділок</label>
+              <input type="radio" name="daySelect" value="2" id="sizeTuesday" />
+              <label for="sizeTuesday">Вівторок</label>
+              <input type="radio" name="daySelect" value="3" id="sizeWednesday" />
+              <label for="sizeWednesday">Середа</label>
+              <input type="radio" name="daySelect" value="4" id="sizeThursday" />
+              <label for="sizeThursday">Четвер</label>
+              <input type="radio" name="daySelect" value="5" id="sizeFriday" />
+              <label for="sizeFriday">П'ятниця</label>
+            </div>
+          </fieldset>
+          <div id="teacherSelect-filter">
+            <label for="teacherSelect">Оберіть вчителя:</label>
+            <div class="select-wrapper">
+              <select id="teacherSelect">
+                <option value="">--Виберіть вчителя--</option>
+              </select>
+            </div>
+          </div>
+          <div id="classSelect-filter">
+            <label for="classSelect">Оберіть клас:</label>
+            <div class="select-wrapper">
+              <select id="classSelect">
+                <option value="">--Виберіть клас--</option>
+              </select>
+            </div>
+          </div>
+          <label for="date-select">Історія розкладів:</label>
+          <div class="select-wrapper">
+            <select id="date-select">
+                <option value="">Актуальний</option>
+            </select>
+          </div> 
+        </div>
+    </div>
+
+    <table id="schedule-by-days">
+      <thead>
+        <tr>
+          <th>Номер уроку</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+          <th>5</th>
+          <th>6</th>
+          <th>7</th>
+          <th>8</th>
+          <th>9</th>
+          <th>10</th>
+          <th>11</th>
+        </tr>
+      </thead>
+      <tbody id="schedule-by-days-body">
+
+      </tbody>
+    </table>
+  </div>
 </body>
 </html>
