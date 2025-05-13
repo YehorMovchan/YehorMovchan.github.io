@@ -910,7 +910,7 @@
           url: 'https://school-f6vi.onrender.com/schedule/save', 
           method: 'POST',
           contentType: 'application/json',
-          data: JSON.stringify(scheduleArray),
+          data: JSON.stringify(scheduleData),
           success: function(response) {
             alert("Розклад успішно збережено!");
           },
@@ -1034,16 +1034,19 @@
         <select id="subject-select">
           <option value="">--Виберіть предмет--</option>
         </select>
+        <br>
       </label>
       <label id="teacher-select-wrapper">Вчитель:
         <select id="teacher-select">
           <option value="">--Виберіть вчителя--</option>
         </select>
+        <br>
       </label>
       <label id="class-select-wrapper">Клас:
         <select id="class-select">
           <option value="">--Виберіть клас--</option>
         </select>
+        <br>
       </label>
       <button id="modalSave">Зберегти</button>
       <button id="modalCancel">Скасувати</button>
