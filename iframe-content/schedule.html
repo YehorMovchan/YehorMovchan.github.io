@@ -754,9 +754,35 @@
   <script src="https://yehormovchan.github.io/static/script.js"></script>
   <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
   <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
+  <link rel="stylesheet" href="https://yehormovchan.github.io/static/radio-toggle.css">
   <script>
     $(document).ready(function() {
-      // Сховати всі фільтри, окрім "daySelect-filter"
+      let teachers = [];
+      let subjects = [];
+      let classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+      let scheduleData = {};
+
+
+      $.each(classes, function(index, classNumber) {
+        $('#class-select').append($('<option>', { value: classNumber, text: classNumber }));
+      });
+
+      $.getJSON('https://school-f6vi.onrender.com/subject', function(data) {
+        subjects = data;
+        $.each(subjects, function(index, subject) {
+          $('#subject-select').append($('<option>', { value: subject.id, text: subject.name }));
+        });
+      });
+      
+      $.getJSON('https://school-f6vi.onrender.com/staff/teachers', function(data) {
+        teachers = data;
+        $.each(teachers, function(index, teacher) {
+          $('#teacher-select').append($('<option>', { value: teacher.id, text: teacher.name }));
+        });
+      });
+
+
+
       $("#teacherSelect-filter").hide();
       $("#classSelect-filter").hide();
       $("#scheduleHistoryTable").hide();
@@ -767,16 +793,53 @@
             $("#daySelect-filter").show();
             $("#teacherSelect-filter").hide();
             $("#classSelect-filter").hide();
+            $("#schedule-by-days").show();
+            $("#schedule-by-teacher").hide();
+            $("#schedule-by-class").hide();
           } else if (selectedValue === "teachers") {
             $("#daySelect-filter").hide();
             $("#teacherSelect-filter").show();
             $("#classSelect-filter").hide();
+            $("#schedule-by-days").hide();
+            $("#schedule-by-teacher").show();
+            $("#schedule-by-class").hide();
           } else if (selectedValue === "classes") {
             $("#daySelect-filter").hide();
             $("#teacherSelect-filter").hide();
             $("#classSelect-filter").show();
+            $("#schedule-by-days").hide();
+            $("#schedule-by-teacher").hide();
+            $("#schedule-by-class").show();
           }
+      });
+    
+      function loadSchedule(day) {
+        scheduleData = {};
+        $('#schedule-by-days tbody td').each(function() {
+          $(this).empty();
         });
+        
+        $.getJSON('https://school-f6vi.onrender.com/view/schedule/actual/' + day, function(data) {
+          $.each(data, function(index, entry) {
+            var key = entry.classField + '-' + entry.lessonNumber;
+            scheduleData[key] = {
+                classField: entry.classField,
+                dayOfWeek: entry.dayOfWeek,
+                from: entry.from,
+                to: entry.to,
+                teacher: entry.teacherId,
+                subject: entry.subjectId,
+                lessonNumber:entry.lessonNumber
+            }
+            // Заповнюємо відповідну клітинку таблиці
+            $('#scheduleTable-days tbody tr[data-lesson="'+ entry.lessonNumber +'"] td[data-class="'+ entry.classField +'"]').html(
+              '<span class="subject-name">' + entry.subjectName + '</span><br>' +
+              '<span class="teacher-name">' + entry.teacherName + '</span>'
+            );
+          });
+        });
+      }
+    
     });
   </script>
 </head>
@@ -826,12 +889,6 @@
               </select>
             </div>
           </div>
-          <label for="date-select">Історія розкладів:</label>
-          <div class="select-wrapper">
-            <select id="date-select">
-                <option value="">Актуальний</option>
-            </select>
-          </div> 
         </div>
     </div>
 
@@ -856,6 +913,55 @@
 
       </tbody>
     </table>
+
+    <table id="schedule-by-teacher">
+      <thead>
+        <tr>Номер уроку</tr>
+        <tr>Понеділок</tr>
+        <tr>Вівторок</tr>
+        <tr>Середа</tr>
+        <tr>Четвер</tr>
+        <tr>П'ятниця</tr>
+      </thead>
+      <tbody id="schedule-by-teacher-body">
+
+      </tbody>
+    </table>
+    <table id="schedule-by-class">
+      <thead>
+        <tr>Номер уроку</tr>
+        <tr>Понеділок</tr>
+        <tr>Вівторок</tr>
+        <tr>Середа</tr>
+        <tr>Четвер</tr>
+        <tr>П'ятниця</tr>
+      </thead>
+      <tbody id="schedule-by-class-body">
+
+      </tbody>
+    </table>
+
+    <div class="modal hidden">
+      <h2 id="modal-title"></h2>
+      <label>Предмет:
+        <select id="subject-select">
+          <option value="">--Виберіть предмет--</option>
+        </select>
+      </label>
+      <label>Вчитель:
+        <select id="teacher-select">
+          <option value="">--Виберіть вчителя--</option>
+        </select>
+      </label>
+      <label>Клас:
+        <select id="class-select">
+          <option value="">--Виберіть вчителя--</option>
+        </select>
+      </label>
+      <button id="modalSave">Зберегти</button>
+      <button id="modalCancel">Скасувати</button>
+    </div>
+  
   </div>
 </body>
 </html>
