@@ -826,6 +826,9 @@
           for(let i=1; i<9; i++){
             const lessonSchedule = data.filter((lesson)=> lesson.lessonNumber == i);
             const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.innerText = i;
+            tr.appendChild(td);
             classes.forEach((classNumber) => {
               const lesson = lessonSchedule.find((lesson) => lesson.classField == classNumber);
               const td = document.createElement("td");
@@ -844,6 +847,11 @@
         });
       }
       
+      $("input[name='daySelect']").change(function() {
+        let selectedDay = $(this).val();
+        loadSchedule(selectedDay);
+      });
+
       loadSchedule(1);
     });
   </script>

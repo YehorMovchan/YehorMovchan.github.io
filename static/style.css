@@ -823,3 +823,8 @@ h4 {
     border: 1px solid #ddd;
     border-radius: 3px;
 }
+
+.small-text {
+    font-size: 0.8em;
+    color: #666;
+}
