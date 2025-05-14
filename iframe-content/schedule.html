@@ -757,9 +757,7 @@
   <link rel="stylesheet" href="https://yehormovchan.github.io/static/radio-toggle.css">
   <script>
     $(document).ready(function() {
-      // Starting block for the schedule
-      // This block is responsible for loading the schedule by day
-      {
+      
         let teachers = [];
         let subjects = [];
         let classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -798,7 +796,7 @@
         $("#class-select-wrapper").hide();
         $("#teacher-select-wrapper").show();
         $("#subject-select-wrapper").show();
-      }
+      
 
       $("input[name='schedule-view']").change(function() {
           var selectedValue = $(this).val();
