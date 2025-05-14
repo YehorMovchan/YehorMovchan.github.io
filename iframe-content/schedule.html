@@ -906,6 +906,22 @@
       });
 
       $('#saveSchedule').click(function() {
+        scheduleData.forEach(element => {
+            if(Object.keys(element).length > 7){
+              let temp = {
+                subject: element.subjectId,
+                teacher: element.teacherId,
+                classField: element.classField,
+                lessonNumber: element.lessonNumber,
+                dayOfWeek: element.dayOfWeek,
+                from: element.from,
+                to: null
+              }
+              scheduleData = scheduleData.filter((lesson)=> lesson.id != element.id);
+              scheduleData.push(temp);
+              
+            }
+        });
         $.ajax({
           url: 'https://school-f6vi.onrender.com/schedule/save', 
           method: 'POST',
