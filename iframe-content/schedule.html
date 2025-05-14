@@ -772,13 +772,14 @@
   
         $.each(classes, function(index, classNumber) {
           $('#class-select').append($('<option>', { value: classNumber, text: classNumber }));
-          $('#class-select-filter').append($('<option>', { value: classNumber, text: classNumber }));
+          $('#class-select-for-schedule').append($('<option>', { value: classNumber, text: classNumber }));
         });
   
         $.getJSON('https://school-f6vi.onrender.com/subject', function(data) {
           subjects = data;
           $.each(subjects, function(index, subject) {
             $('#subject-select').append($('<option>', { value: subject.id, text: subject.name }));
+            $('#subject-select-for-schedule').append($('<option>', { value: subject.id, text: subject.name }));
           });
         });
         
@@ -786,6 +787,7 @@
           teachers = data;
           $.each(teachers, function(index, teacher) {
             $('#teacher-select').append($('<option>', { value: teacher.id, text: teacher.name }));
+            $('#teacher-select-for-schedule').append($('<option>', { value: teacher.id, text: teacher.name }));
           });
         });
   
@@ -1055,7 +1057,7 @@
           <div id="teacher-select-filter">
             <label for="teacher-select">Оберіть вчителя:</label>
             <div class="select-wrapper">
-              <select id="teacher-select">
+              <select id="teacher-select-for-schedule">
                 <option value="">--Виберіть вчителя--</option>
               </select>
             </div>
@@ -1063,7 +1065,7 @@
           <div id="class-select-filter">
             <label for="class-select">Оберіть клас:</label>
             <div class="select-wrapper">
-              <select id="class-select">
+              <select id="class-select-for-schedule">
                 <option value="">--Виберіть клас--</option>
               </select>
             </div>
