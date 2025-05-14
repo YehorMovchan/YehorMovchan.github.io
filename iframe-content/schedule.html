@@ -963,9 +963,9 @@
               const lesson = lessonSchedule.find((lesson) => lesson.dayOfWeek == day && lesson.teacherId == teacherId);
               const td = document.createElement("td");
               td.className = "lesson-cell";
-              td.setAttribute("data-class", classNumber);
               td.setAttribute("data-lesson-number", i);
               if(lesson){
+                td.setAttribute("data-class", classNumber);
                 td.setAttribute("data-lesson", lesson.id);
                 td.innerHTML = `<span class="subject main-text">${lesson.subjectName}</span> <br><span class="grade small-text">${lesson.classField}</span>`;
               }
