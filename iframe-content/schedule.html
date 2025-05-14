@@ -994,6 +994,7 @@
                     from: new Date(),
                     to: null,
                   });
+                  let subjectName = subjects.find((subject)=> subject.id == subjectId).name;
                   td.innerHTML = `<span class="subject main-text">${subjectName}</span> <br><span class="teacher small-text">${classField}</span>`;
                   td.setAttribute("data-lesson", lessonId);
                   td.setAttribute("data-class", classField);
