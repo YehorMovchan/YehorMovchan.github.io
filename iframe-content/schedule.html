@@ -763,8 +763,8 @@
       let scheduleData = [];
 
 
-      $("#teacherSelect-filter").hide();
-      $("#classSelect-filter").hide();
+      $("#teacher-select-filter").hide();
+      $("#class-select-filter").hide();
       $("#schedule-by-days").show();
       $("#schedule-by-teacher").hide();
       $("#schedule-by-class").hide();
@@ -799,8 +799,8 @@
       $("input[name='schedule-view']").change(function() {
           var selectedValue = $(this).val();
           if (selectedValue === "days") {
-            $("#daySelect-filter").show();
-            $("#teacherSelect-filter").hide();
+            $("#day-select-filter").show();
+            $("#teacher-select-filter").hide();
             $("#classSelect-filter").hide();
             $("#schedule-by-days").show();
             $("#schedule-by-teacher").hide();
@@ -809,9 +809,9 @@
             $("#teacher-select-wrapper").show();
             $("#subject-select-wrapper").show();
           } else if (selectedValue === "teachers") {
-            $("#daySelect-filter").hide();
-            $("#teacherSelect-filter").show();
-            $("#classSelect-filter").hide();
+            $("#day-select-filter").hide();
+            $("#teacher-select-filter").show();
+            $("#class-select-filter").hide();
             $("#schedule-by-days").hide();
             $("#schedule-by-teacher").show();
             $("#schedule-by-class").hide();
@@ -819,9 +819,9 @@
             $("#teacher-select-wrapper").hide();
             $("#subject-select-wrapper").show();
           } else if (selectedValue === "classes") {
-            $("#daySelect-filter").hide();
-            $("#teacherSelect-filter").hide();
-            $("#classSelect-filter").show();
+            $("#day-select-filter").hide();
+            $("#teacher-select-filter").hide();
+            $("#class-select-filter").show();
             $("#schedule-by-days").hide();
             $("#schedule-by-teacher").hide();
             $("#schedule-by-class").show();
@@ -959,7 +959,7 @@
           </div>
         </fieldset>
         <div class="addition-filter">
-          <fieldset id="daySelect-filter">
+          <fieldset id="day-select-filter">
             <legend>Оберіть день тижня:</legend>
             <div class="toggle">
               <input type="radio" name="daySelect" value="1" id="sizeMonday" checked="checked" />
@@ -974,18 +974,18 @@
               <label for="sizeFriday">П'ятниця</label>
             </div>
           </fieldset>
-          <div id="teacherSelect-filter">
-            <label for="teacherSelect">Оберіть вчителя:</label>
+          <div id="teacher-select-filter">
+            <label for="teacher-select">Оберіть вчителя:</label>
             <div class="select-wrapper">
-              <select id="teacherSelect">
+              <select id="teacher-select">
                 <option value="">--Виберіть вчителя--</option>
               </select>
             </div>
           </div>
-          <div id="classSelect-filter">
-            <label for="classSelect">Оберіть клас:</label>
+          <div id="class-select-filter">
+            <label for="class-select">Оберіть клас:</label>
             <div class="select-wrapper">
-              <select id="classSelect">
+              <select id="class-select">
                 <option value="">--Виберіть клас--</option>
               </select>
             </div>
