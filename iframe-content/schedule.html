@@ -950,7 +950,7 @@
         
         $.getJSON('https://school-f6vi.onrender.com/view/schedule/teacher=' + teacherId, (data)=> {
           let lessons = [1, 2, 3, 4, 5, 6, 7, 8];
-          let classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+          let days = [1, 2, 3, 4, 5];
           scheduleData = data;
 
           for(let i=1; i<9; i++){
@@ -959,15 +959,15 @@
             const td = document.createElement("td");
             td.innerText = i;
             tr.appendChild(td);
-            classes.forEach((classNumber) => {
-              const lesson = lessonSchedule.find((lesson) => lesson.classField == classNumber);
+            days.forEach((day) => {
+              const lesson = lessonSchedule.find((lesson) => lesson.dayOfWeek == day && lesson.teacherId == teacherId);
               const td = document.createElement("td");
               td.className = "lesson-cell";
               td.setAttribute("data-class", classNumber);
               td.setAttribute("data-lesson-number", i);
               if(lesson){
                 td.setAttribute("data-lesson", lesson.id);
-                td.innerHTML = `<span class="subject main-text">${lesson.subjectName}</span> <br><span class="teacher small-text">${lesson.teacherName}</span>`;
+                td.innerHTML = `<span class="subject main-text">${lesson.subjectName}</span> <br><span class="grade small-text">${lesson.classField}</span>`;
               }
               else{
                 td.setAttribute("data-lesson", "");
@@ -985,42 +985,7 @@
         loadScheduleByTeacher(selectedTeacher);
       });
 
-      function loadScheduleByClass(classId) {
-        $('#schedule-by-class tbody').each(function() {
-          $(this).empty();
-        });
-        
-        $.getJSON('https://school-f6vi.onrender.com/view/schedule/class=' + classId, (data)=> {
-          let lessons = [1, 2, 3, 4, 5, 6, 7, 8];
-          let classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-          scheduleData = data;
-
-          for(let i=1; i<9; i++){
-            const lessonSchedule = data.filter((lesson)=> lesson.lessonNumber == i);
-            const tr = document.createElement("tr");
-            const td = document.createElement("td");
-            td.innerText = i;
-            tr.appendChild(td);
-            classes.forEach((classNumber) => {
-              const lesson = lessonSchedule.find((lesson) => lesson.classField == classNumber);
-              const td = document.createElement("td");
-              td.className = "lesson-cell";
-              td.setAttribute("data-class", classNumber);
-              td.setAttribute("data-lesson-number", i);
-              if(lesson){
-                td.setAttribute("data-lesson", lesson.id);
-                td.innerHTML = `<span class="subject main-text">${lesson.subjectName}</span> <br><span class="teacher small-text">${lesson.teacherName}</span>`;
-              }
-              else{
-                td.setAttribute("data-lesson", "");
-                td.innerHTML = `<span class="subject main-text"></span> <br><span class="teacher small-text"></span>`;
-              }
-              tr.appendChild(td);
-            })
-            $('#schedule-by-class-body').append(tr);
-          }
-        });
-      }
+      
 
       $('#class-select').change(function() {
         let selectedClass = $(this).val();
