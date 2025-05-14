@@ -772,6 +772,7 @@
   
         $.each(classes, function(index, classNumber) {
           $('#class-select').append($('<option>', { value: classNumber, text: classNumber }));
+          $('#class-select-filter').append($('<option>', { value: classNumber, text: classNumber }));
         });
   
         $.getJSON('https://school-f6vi.onrender.com/subject', function(data) {
@@ -790,8 +791,8 @@
   
   
   
-        $("#teacherSelect-filter").hide();
-        $("#classSelect-filter").hide();
+        $("#teacher-select-filter").hide();
+        $("#class-select-filter").hide();
         $("#scheduleHistoryTable").hide();
         $("#class-select-wrapper").hide();
         $("#teacher-select-wrapper").show();
@@ -1128,18 +1129,19 @@
           <option value="">--Виберіть предмет--</option>
         </select>
         <br>
+        <br>
       </label>
       <label id="teacher-select-wrapper">Вчитель:
         <select id="teacher-select">
           <option value="">--Виберіть вчителя--</option>
         </select>
-        <br>
+        <br><br>
       </label>
       <label id="class-select-wrapper">Клас:
         <select id="class-select">
           <option value="">--Виберіть клас--</option>
         </select>
-        <br>
+        <br><br>
       </label>
       <button id="modalSave">Зберегти</button>
       <button id="modalCancel">Скасувати</button>
