@@ -804,6 +804,7 @@
       $("input[name='schedule-view']").change(function() {
           var selectedValue = $(this).val();
           if (selectedValue === "days") {
+            loadScheduleByDay($('input[name="daySelect"]:checked').val());
             $("#day-select-filter").show();
             $("#teacher-select-filter").hide();
             $("#classSelect-filter").hide();
@@ -1013,7 +1014,6 @@
         let selectedTeacher = $(this).val();
         loadScheduleByTeacher(selectedTeacher);
       });
-
       
 
       $('#class-select-for-schedule').change(function() {
