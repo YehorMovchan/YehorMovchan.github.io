@@ -965,9 +965,7 @@
               td.className = "lesson-cell";
               td.setAttribute("data-lesson-number", i);
               if(lesson){
-                td.setAttribute("data-teacher", lesson.teacherId);
                 td.setAttribute("data-lesson", lesson.id);
-
                 td.innerHTML = `<span class="subject main-text">${lesson.subjectName}</span> <br><span class="grade small-text">${lesson.classField} клас</span>`;
               }
               else{
@@ -975,14 +973,15 @@
                 td.innerHTML = `<span class="subject main-text"></span> <br><span class="teacher small-text"></span>`;
               }
               td.onclick = function() {
-                $('#modal-title').text(`Редагування розкладу для ${lesson.teacherName}`);
+                const teacherName = teachers.find((teacher)=> teacher.id == teacherId).name;
+                $('#modal-title').text(`Редагування розкладу для ${teacherName}`);
                 $('#subject-select').val(lesson ? lesson.subjectId : "");
                 $('#class-select').val(lesson ? lesson.classField : "");
                 $('.modal').show();
                 $('#modalSave').off('click').on('click', ()=>{
                   const subjectId = $('#subject-select').val();
                   const classField = $('#class-select').val();
-                  const teacherId = td.getAttribute("data-teacher");
+                  const lessonNumber = td.getAttribute("data-lesson-number");
                   const lessonId = td.getAttribute("data-lesson");
                   scheduleData = scheduleData.filter((lesson)=> lesson.id != lessonId);
                   scheduleData.push({
@@ -994,7 +993,6 @@
                     from: new Date(),
                     to: null,
                   });
-                  let teacherName = teachers.find((teacher)=> teacher.id == teacherId).name;
                   td.innerHTML = `<span class="subject main-text">${subjectName}</span> <br><span class="teacher small-text">${classField}</span>`;
                   td.setAttribute("data-lesson", lessonId);
                   td.setAttribute("data-class", classField);
