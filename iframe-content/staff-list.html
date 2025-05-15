@@ -26,9 +26,10 @@
             <option value="staff">Інші працівники</option>
         </select>
     </div><br>
+    <div class="filter-menu">
+        <input type="text" id="staff-search" placeholder="Пошук за ім'ям">
+    </div>
     <div id="staff-list" class="item-list">
-        <br>
-        <input type="text" id="staff-search" placeholder="Пошук учня...">
         <div class="loader"></div>
         <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
     </div>
@@ -57,92 +58,93 @@
                 $(this).toggle($(this).text().toLowerCase().indexOf(searchValue) > -1);
             });
         });
-    });
 
-    $.getJSON("https://school-f6vi.onrender.com/view/staff", (data)=>{
-        console.log(data);
-        let container = $("#staff-list");
-            
-            function renderList(filter) {
-                container.empty();
-                let filteredData = data.filter(emp => filter === "all" || emp.teacher == (filter === "teachers"));
+
+        $.getJSON("https://school-f6vi.onrender.com/view/staff", (data)=>{
+            console.log(data);
+            let container = $("#staff-list");
                 
-                filteredData.forEach(emp => {
-                    container.append(`
-                        <a href="https://yehormovchan.github.io/iframe-content/staff/staff.html?id=${emp.id}">
-                            <li>
-                                <span>
-                                    <strong>${emp.name}</strong>
-                                </span>
-                             </li>
-                         </a>
-                    `);
+                function renderList(filter) {
+                    container.empty();
+                    let filteredData = data.filter(emp => filter === "all" || emp.teacher == (filter === "teachers"));
                     
+                    filteredData.forEach(emp => {
+                        container.append(`
+                            <a href="https://yehormovchan.github.io/iframe-content/staff/staff.html?id=${emp.id}">
+                                <li>
+                                    <span>
+                                        <strong>${emp.name}</strong>
+                                    </span>
+                                </li>
+                            </a>
+                        `);
+                        
+                    });
+                }
+                
+                $("#filter").change(function() {
+                    renderList($(this).val());
                 });
-            }
-            
-            $("#filter").change(function() {
-                renderList($(this).val());
-            });
-            
-            renderList("all");
+                
+                renderList("all");
+                $(".loader").hide();
+        }).fail(()=>{
             $(".loader").hide();
-    }).fail(()=>{
-        $(".loader").hide();
-        $(".request-error").show();
-    })
-
-    $("#add-staff-button").click(()=>{
-        const staff = {
-            name: $("#add-staff-name").val(),
-            teacher: $("#add-staff-teacher").is(":checked"),
-            position: $("#add-staff-position").val(),
-            phone: $("#add-staff-phone").val(),
-            passportNumber: $("#add-staff-passport-number").val(),
-            info: $("#add-staff-info").val(),
-        }
-        let formData = new FormData();
-        formData.append("staff", new Blob([JSON.stringify(staff)], { type: "application/json"}));
-        let passportCopy = $("#add-staff-passport-copy")[0].files[0];
-        if(passportCopy ){
-            let blob = new Blob([passportCopy], {type: passportCopy.type});
-            formData.append("passportCopy", blob, passportCopy.name);
-        }
-        else{
-            formData.append("passportCopy", new Blob([null], {type: "application/json"}), "empty");
-        }
-
-
-
-        $.ajax({
-            url: "https://school-f6vi.onrender.com/staff",
-            method: 'POST',
-            contentType: false,
-            cache: false,
-            processData: false,
-            data: formData,
-            success: (staffId)=>{
-                addSalary(staffId);
-            }
+            $(".request-error").show();
         })
 
-        function addSalary(staffId){
-            let staff = {
-                staff: staffId,
-                salary: $("#add-staff-salary").val(),
-                from: new Date().toISOString()
+        $("#add-staff-button").click(()=>{
+            const staff = {
+                name: $("#add-staff-name").val(),
+                teacher: $("#add-staff-teacher").is(":checked"),
+                position: $("#add-staff-position").val(),
+                phone: $("#add-staff-phone").val(),
+                passportNumber: $("#add-staff-passport-number").val(),
+                info: $("#add-staff-info").val(),
             }
+            let formData = new FormData();
+            formData.append("staff", new Blob([JSON.stringify(staff)], { type: "application/json"}));
+            let passportCopy = $("#add-staff-passport-copy")[0].files[0];
+            if(passportCopy ){
+                let blob = new Blob([passportCopy], {type: passportCopy.type});
+                formData.append("passportCopy", blob, passportCopy.name);
+            }
+            else{
+                formData.append("passportCopy", new Blob([null], {type: "application/json"}), "empty");
+            }
+
+
+
             $.ajax({
-                url: "https://school-f6vi.onrender.com/staff-payment",
-                method: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(staff),
-                success: ()=>{
-                    location.reload();
+                url: "https://school-f6vi.onrender.com/staff",
+                method: 'POST',
+                contentType: false,
+                cache: false,
+                processData: false,
+                data: formData,
+                success: (staffId)=>{
+                    addSalary(staffId);
                 }
             })
-        }
-    })
+
+            function addSalary(staffId){
+                let staff = {
+                    staff: staffId,
+                    salary: $("#add-staff-salary").val(),
+                    from: new Date().toISOString()
+                }
+                $.ajax({
+                    url: "https://school-f6vi.onrender.com/staff-payment",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(staff),
+                    success: ()=>{
+                        location.reload();
+                    }
+                })
+            }
+        })
+    });
 </script>
 
 
