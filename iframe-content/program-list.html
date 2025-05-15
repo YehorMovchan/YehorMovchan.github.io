@@ -72,6 +72,12 @@
                     })
                 }
             })
+            $("#program-search").on("input", function() {
+                let searchValue = $(this).val().toLowerCase();
+                $("#programs-list li").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(searchValue) > -1);
+                });
+            });
         })
     </script>
 </head>
@@ -83,7 +89,10 @@
         </div>
     </div>
     <br>
-    <div id="programs-list" class="item-list"></div>
+    <div id="programs-list" class="item-list">
+        <br>
+        <input type="text" id="program-search" placeholder="Пошук учня...">
+    </div>
 
     <div class="modal hidden" id="add-entity-modal">
         <div class="wrapper edit-wrapper">

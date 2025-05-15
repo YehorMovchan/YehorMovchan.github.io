@@ -71,6 +71,20 @@
                     }
                 })
             })
+            $("#club-search").on("input", function () {
+                let query = $(this).val().toLowerCase();
+
+                $("#club-list ul li").each(function () {
+                    let text = $(this).text().toLowerCase();
+                    if (text.includes(query)) {
+                        $(this).parent().parent().show();
+                        $(this).show(); 
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+            });
         })
        
         
@@ -84,7 +98,10 @@
         </div>
     </div>
     <br>
-    <div id="clubs-list" class="item-list"></div>
+    <div id="clubs-list" class="item-list">
+        <br>
+        <input type="text" id="club-search" placeholder="Пошук учня...">
+    </div>
 
     <div class="modal hidden" id="add-entity-modal">
         <div class="loader" id="add-entity-modal-loader"></div>

@@ -26,7 +26,9 @@
             <option value="staff">Інші працівники</option>
         </select>
     </div><br>
-    <div id="employees-list" class="item-list">
+    <div id="staff-list" class="item-list">
+        <br>
+        <input type="text" id="staff-search" placeholder="Пошук учня...">
         <div class="loader"></div>
         <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
     </div>
@@ -48,10 +50,18 @@
 </body>
 
 <script>
+    $(document).ready(function() {
+        $("#staff-search").on("input", function() {
+            let searchValue = $(this).val().toLowerCase();
+            $("#staff-list li").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(searchValue) > -1);
+            });
+        });
+    });
 
     $.getJSON("https://school-f6vi.onrender.com/view/staff", (data)=>{
         console.log(data);
-        let container = $("#employees-list");
+        let container = $("#staff-list");
             
             function renderList(filter) {
                 container.empty();
