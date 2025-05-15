@@ -1069,7 +1069,7 @@
                   let teacherName = teachers.find((teacher)=> teacher.id == teacherId).name;
                   td.innerHTML = `<span class="subject main-text">${subjectName}</span> <br><span class="teacher small-text">${teacherName}</span>`;
                   td.setAttribute("data-lesson", lessonId);
-                  td.setAttribute("data-class", classField);
+                  td.setAttribute("data-class", classNumber);
                   td.setAttribute("data-lesson-number", lessonNumber);
                   $('.modal').hide();
                 })
