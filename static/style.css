@@ -844,3 +844,10 @@ td, th{
     font-weight: bold;
     font-style: italic;
 }
+
+.filter-menu input[type="text"]{
+    width: 80%;
+    margin: auto;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
