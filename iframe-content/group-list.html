@@ -75,7 +75,7 @@
             $("#club-search").on("input", function () {
                 let query = $(this).val().toLowerCase();
 
-                $("#club-list ul li").each(function () {
+                $("#club-list li").each(function () {
                     let text = $(this).text().toLowerCase();
                     if (text.includes(query)) {
                         $(this).parent().parent().show();
