@@ -144,7 +144,7 @@
     function changePage(el){
         iframe.src = links[el.hash];
         liList.forEach(e=>{
-            $(e).children()[0].removeClass("active");
+            $(e).children().removeClass("active");
         })
         $(el).addClass("active");
     }
