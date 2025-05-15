@@ -17,14 +17,14 @@
         <header>
             <nav>
                 <ul>
-                    <li><a id="kid-list" href="#kid-list" onclick="changePage(this)">Учні</a></li>
-                    <li><a id="staff-list" href="#staff-list"  onclick="changePage(this)">Працівники</a></li>
-                    <li><a id="schedule" href="#schedule" onclick="changePage(this)">Розклад</a></li>
-                    <li><a id="groups-list" href="#groups-type" onclick="changePage(this)">Гуртки</a></li>
-                    <li><a id="programs-list" href="#programs-type" onclick="changePage(this)">Програми навчання</a></li>
-                    <li><a id="staff-schedule" href="#staff-schedule" onclick="changePage(this)">Розклад</a></li>
-                    <li><a id="personal-account" href="#personal-account" onclick="changePage(this)">Особистий кабінет</a></li>
-                    <li><a id="settings" href="#settings" onclick="changePage(this)">Налаштування</a></li>
+                    <li id="kid-list"><a href="#kid-list" onclick="changePage(this)">Учні</a></li>
+                    <li id="staff-list"><a href="#staff-list"  onclick="changePage(this)">Працівники</a></li>
+                    <li id="schedule"><a href="#schedule" onclick="changePage(this)">Розклад</a></li>
+                    <li id="groups-list"><a href="#groups-type" onclick="changePage(this)">Гуртки</a></li>
+                    <li id="programs-list"><a href="#programs-type" onclick="changePage(this)">Програми навчання</a></li>
+                    <li id="staff-schedule"><a href="#staff-schedule" onclick="changePage(this)">Розклад</a></li>
+                    <li id="personal-account"><a href="#personal-account" onclick="changePage(this)">Особистий кабінет</a></li>
+                    <li id="settings"><a href="#settings" onclick="changePage(this)">Налаштування</a></li>
                 </ul>
             </nav>
             <div class="user-info">
@@ -61,8 +61,8 @@
 
     let iframe;
     let page = location.hash;
-    const aList = $("a").toArray();
-    aList.forEach(e=>{
+    const liList = $("li").toArray();
+    liList.forEach(e=>{
         e.style.display = "none";
     })
     let links
@@ -81,7 +81,7 @@
                 $.getJSON("https://yehormovchan.github.io/assets/permits.json", (data)=>{
                     let permits = data[role];
                    
-                    aList.forEach(element => {
+                    liList.forEach(element => {
                         if(permits.includes(element.id)){
                             element.style.display = "block";
                         }
@@ -143,6 +143,12 @@
     })
     function changePage(el){
         iframe.src = links[el.hash];
+        $(el).addClass("active");
+        liList.forEach(e=>{
+            if(e.id != el.id){
+                e.classList.remove("active");
+            }
+        })
     }
 
 
