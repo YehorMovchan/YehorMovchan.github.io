@@ -10,6 +10,30 @@ $(document).ready(function() {
             $(iframeDoc.head).append('<style>body { background-color: green; }</style>');
         }
     })
+
+    $('select').select2({
+      placeholder: "Почніть вводити...",
+        allowClear: true,
+        minimumResultsForSearch: 0,
+        language: {
+            noResults: function () {
+            return "Нічого не знайдено 😢";
+            }
+        }
+    });
+
+    $('select').on('select2:open', function () {
+      // Фокус на полі введення пошуку
+      setTimeout(() => {
+        document.querySelector('.select2-container--open .select2-search__field').focus();
+      }, 0);
+    });
+
+    // Відкрити селект при фокусі на ньому
+    $('select').on('focus', function () {
+      $(this).select2('open');
+    });
+
 });
 
 
