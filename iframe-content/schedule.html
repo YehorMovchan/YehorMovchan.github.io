@@ -1039,7 +1039,6 @@
               td.setAttribute("data-lesson-number", i);
               if(lesson){
                 td.setAttribute("data-lesson", lesson.id);
-                td.setAttribute("data-class", lesson.classField);
                 td.innerHTML = `<span class="subject main-text">${lesson.subjectName}</span> <br><span class="grade small-text">${lesson.teacherName} клас</span>`;
               }
               else{
@@ -1047,8 +1046,7 @@
                 td.innerHTML = `<span class="subject main-text"></span> <br><span class="teacher small-text"></span>`;
               }
               td.onclick = function() {
-                const classField = td.getAttribute("data-class");
-                $('#modal-title').text(`Редагування розкладу для ${classField} класу`);
+                $('#modal-title').text(`Редагування розкладу для ${classNumber} класу`);
                 $('#subject-select').val(lesson ? lesson.subjectId : "");
                 $('#teacher-select').val(lesson ? lesson.teacherId : "");
                 $('.modal').show();
@@ -1061,7 +1059,7 @@
                   scheduleData.push({
                     subject: subjectId,
                     teacher: teacherId,
-                    classField: classField,
+                    classField: classNumber,
                     lessonNumber: lessonNumber,
                     dayOfWeek: day,
                     from: new Date(),
