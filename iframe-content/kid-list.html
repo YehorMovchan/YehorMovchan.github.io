@@ -30,6 +30,7 @@
         <button onclick="$(`#create-transaction`).fadeIn()">Додати оплату</button>
     </div>
     <div id="students-list" class="item-list">
+        <input type="text" id="student-search" placeholder="Пошук учня..." style="margin-bottom: 10px; padding: 5px; width: 100%;">
         <div class="loader"></div>
         <div class="request-error">Сталася помилка, спробуйте пізніше.</div>
     </div>
@@ -194,6 +195,7 @@
                     $(`#grade-${grade}`).append(`<a href="https://yehormovchan.github.io/iframe-content/student/kid.html?id=`+student.id+`"><li><span><strong>${student.name}</strong> (${student.id})</span></li></a>`);
                 });
             });
+            
         },
         error:(xhr)=>{
             $(".loader").hide();
@@ -201,6 +203,32 @@
         }
     }
     )
+
+    $("#student-search").on("input", function () {
+        let query = $(this).val().toLowerCase();
+
+        $("#students-list ul li").each(function () {
+            let text = $(this).text().toLowerCase();
+            if (text.includes(query)) {
+                $(this).parent().parent().show(); // показує весь блок класу
+                $(this).show(); // показує відповідного учня
+            } else {
+                $(this).hide();
+            }
+        });
+
+        // Приховуємо заголовки класів, якщо в них немає видимих учнів
+        $("#students-list ul").each(function () {
+            let hasVisible = $(this).find("li:visible").length > 0;
+            if (!hasVisible) {
+                $(this).prev("h2").hide(); // приховати заголовок класу
+                $(this).hide();           // приховати ul
+            } else {
+                $(this).prev("h2").show();
+                $(this).show();
+            }
+        });
+    });
 
     $("#add-entity-button").click(()=>{
         const kid = {
