@@ -1,750 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="uk">
-<head>
-  <meta charset="UTF-8">
-  <title>Редагування розкладу</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://yehormovchan.github.io/static/script.js"></script>
-  <link rel="stylesheet" href="https://yehormovchan.github.io/static/iframe-styles.css">
-
-  <script>
-    $(document).ready(function() {
-      var subjects = [];
-      var teachers = [];
-      $("#scheduleHistoryTable").hide();
-    
-      var scheduleData = {};
-      var currentCell = null;
-     
-      $("input[name='schedule-view']").change(function() {
-        var selectedValue = $(this).val();
-        if (selectedValue === "days") {
-          $("#daySelect-filter").show();
-          $("#scheduleTable-days").show();
-          $("#scheduleTabel-teachers").hide();
-          $("#teacherSelect-filter").hide();
-          $("#classSelect-filter").hide();
-        } else if (selectedValue === "teachers") {
-          $("#daySelect-filter").hide();
-          $("#scheduleTable-days").hide();
-          $("#scheduleTabel-teachers").show();
-          $("#teacherSelect-filter").show();
-          $("#classSelect-filter").hide();
-        } else if (selectedValue === "classes") {
-          $("#daySelect-filter").hide();
-          $("#teacherSelect-filter").hide();
-          $("#classSelect-filter").show();
-        }
-      });
-
-
-      $.getJSON("https://school-f6vi.onrender.com/schedule/history-dates", function(data) {
-        data.forEach(function(dateRange) {
-          if (dateRange.length === 2) {
-            var startDate = dateRange[0];
-            var endDate = dateRange[1];
-            var formattedOption = startDate + " - " + endDate;
-
-            $('#date-select').append($('<option>', {
-              value:formattedOption,
-              text: formattedOption
-            }));
-          }
-        });
-      });
-
-      $("#date-select").on("change", ()=>{
-        let val = $("#date-select").val();
-        if(val==""){
-          $("#scheduleHistoryTable").hide();
-          $("#scheduleTable-days").show();
-        }
-        else{
-          let dates = val.split(' - ');
-          $.getJSON(`https://school-f6vi.onrender.com/view/schedule/history/${dates[0]}/${dates[1]}/${$('input[name="daySelect"]').val()}`, (data)=>{
-            $("#scheduleHistoryTable").show();
-            $("#scheduleTable-days").hide();
-            scheduleHistoryData = {};
-            $.each(data, function(index, entry) {
-              // Формуємо ключ: "classField-lessonNumber"
-              var key = entry.classField + '-' + entry.lessonNumber;
-              scheduleHistoryData[key] = {
-                  classField: entry.classField,
-                  dayOfWeek: entry.dayOfWeek,
-                  from: entry.from,
-                  to: entry.to,
-                  teacher: entry.teacherId,
-                  subject: entry.subjectId,
-                  lessonNumber:entry.lessonNumber
-              }
-              // Заповнюємо відповідну клітинку таблиці
-              $('#scheduleHistoryTable tbody tr[data-lesson="'+ entry.lessonNumber +'"] td[data-class="'+ entry.classField +'"]').html(
-                '<span class="subject-name">' + entry.subjectName + '</span><br>' +
-                '<span class="teacher-name">' + entry.teacherName + '</span>'
-              );
-            });
-          })
-        }
-
-        
-      })
-      
-
-      $.getJSON('https://school-f6vi.onrender.com/subject', function(data) {
-        subjects = data;
-        $.each(subjects, function(index, subject) {
-          $('#subjectSelect').append($('<option>', { value: subject.id, text: subject.name }));
-        });
-      });
-      
-      $.getJSON('https://school-f6vi.onrender.com/staff/teachers', function(data) {
-        teachers = data;
-        $.each(teachers, function(index, teacher) {
-          $('#teacherSelect').append($('<option>', { value: teacher.id, text: teacher.name }));
-        });
-      });
-      
-      // Функція завантаження розкладу для вибраного дня
-      function loadSchedule(day) {
-        // Очищення даних та таблиці
-        scheduleData = {};
-        $('#scheduleTable-days tbody td').each(function() {
-          $(this).empty();
-        });
-        
-        $.getJSON('https://school-f6vi.onrender.com/view/schedule/actual/' + day, function(data) {
-          // Припускаємо, що data – масив об'єктів розкладу
-          $.each(data, function(index, entry) {
-            // Формуємо ключ: "classField-lessonNumber"
-            var key = entry.classField + '-' + entry.lessonNumber;
-            scheduleData[key] = {
-                classField: entry.classField,
-                dayOfWeek: entry.dayOfWeek,
-                from: entry.from,
-                to: entry.to,
-                teacher: entry.teacherId,
-                subject: entry.subjectId,
-                lessonNumber:entry.lessonNumber
-            }
-            // Заповнюємо відповідну клітинку таблиці
-            $('#scheduleTable-days tbody tr[data-lesson="'+ entry.lessonNumber +'"] td[data-class="'+ entry.classField +'"]').html(
-              '<span class="subject-name">' + entry.subjectName + '</span><br>' +
-              '<span class="teacher-name">' + entry.teacherName + '</span>'
-            );
-          });
-        });
-      }
-      
-      // Завантаження розкладу для початкового дня (Понеділок, value=1)
-      loadSchedule($('input[name="daySelect"]').val());
-      
-      // При зміні дня тижня перезавантажуємо розклад
-      $('input[name="daySelect"]').change(function() {
-        var day = $(this).val();
-        loadSchedule(day);
-      });
-      
-      // Обробка кліку по клітинці (тільки по клітинках з data-class)
-      $('#scheduleTable-days tbody td[data-class]').click(function() {
-        currentCell = $(this);
-        var lessonNumber = currentCell.closest('tr').data('lesson');
-        var classField = currentCell.data('class');
-        var key = classField + '-' + lessonNumber;
-        var entry = scheduleData[key];
-        // Якщо запис існує – встановлюємо вибрані значення в селекторах
-        if (entry) {
-          $('#subjectSelect').val(entry.subjectId);
-          $('#teacherSelect').val(entry.teacherId);
-        } else {
-          $('#subjectSelect').val('');
-          $('#teacherSelect').val('');
-        }
-        // Відображаємо модальне вікно
-        $('.modal').show();
-      });
-      
-      // Обробка кнопки "Скасувати" у модальному вікні
-      $('#modalCancel').click(function() {
-        $('.modal').hide();
-      });
-      
-      // Обробка кнопки "Зберегти" у модальному вікні
-      $('#modalSave').click(function() {
-        var subjectId = $('#subjectSelect').val();
-        var teacherId = $('#teacherSelect').val();
-        
-        var subjectName
-        var teacherName
-
-        if(subjectId === "" || teacherId === "") {
-            subjectName=""
-            teacherName=""
-        }
-        else{
-            subjectName = $('#subjectSelect option:selected').text();
-            teacherName = $('#teacherSelect option:selected').text();
-        }
-        
-        
-        var lessonNumber = currentCell.closest('tr').data('lesson');
-        var classField = currentCell.data('class');
-        var dayOfWeek = $('input[name="daySelect"]').val();
-        
-        // Створюємо або оновлюємо запис розкладу
-        var key = classField + '-' + lessonNumber;
-        var entry = scheduleData[key] || {};
-        entry.classField = classField;
-        entry.dayOfWeek = parseInt(dayOfWeek);
-        entry.from = new Date();
-        entry.to = null;
-        entry.teacher = parseInt(teacherId);
-        entry.subject = parseInt(subjectId);
-        entry.lessonNumber = lessonNumber;
-        // Зберігаємо також імена для відображення
-        
-        scheduleData[key] = entry;
-        
-        // Оновлюємо вигляд клітинки: предмет великим шрифтом, вчитель – меншим та сірим
-        currentCell.html('<span class="subject-name">' + subjectName + '</span><br>' +
-                         '<span class="teacher-name">' + teacherName + '</span>');
-        
-        // Закриваємо модальне вікно
-        $('.modal').hide();
-      });
-      
-      // Обробка кліку по кнопці "Зберегти розклад"
-      $('#saveSchedule').click(function() {
-        // Формуємо масив з об'єктів розкладу
-        var scheduleArray = [];
-        $.each(scheduleData, function(key, entry) {
-          scheduleArray.push(entry);
-        });
-        
-        // Відправляємо POST запит (URL для збереження потрібно налаштувати під свій бекенд)
-        $.ajax({
-          url: 'https://school-f6vi.onrender.com/schedule/save', // змініть URL за потребою
-          method: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify(scheduleArray),
-          success: function(response) {
-            alert("Розклад успішно збережено!");
-          },
-          error: function(xhr, status, error) {
-            alert("Помилка при збереженні розкладу: " + error);
-          }
-        });
-      });
-    });
-  </script>
-
-  <script>
-    $(document).ready(()=>{
-      var lessonData;
-      var groupData;
-      var teacherId;
-      
-      $("#teacherSelect").change(function() {
-          teacherId = $(this).val();
-          if (teacherId) {
-              loadCombinedSchedule(teacherId);
-          } else {
-              $("#schedule-teachers-body").empty();
-          }
-      });
-
-      // Функція для конвертації часу з формату "11:00:00" в індекс рядка
-      function timeToRowIndex(time) {
-          const hour = parseInt(time.split(':')[0]);
-          return hour - 9; // 9:00 -> індекс 0, 10:00 -> індекс 1, ...
-      }
-      
-      // Нова функція для завантаження і об'єднання розкладів
-      function loadCombinedSchedule(teacherId) {
-          // Створюємо структуру даних для зберігання об'єднаного розкладу
-          let combinedSchedule = Array(5).fill().map(() => Array(12).fill().map(() => []));
-          
-          // Спочатку завантажуємо розклад уроків
-          $.getJSON(`https://school-f6vi.onrender.com/view/schedule/teacher=${teacherId}`, function(lessonData) {
-              // Заповнюємо розклад уроками
-              lessonData.forEach(lesson => {
-                  const dayIndex = lesson.dayOfWeek - 1; // 1-based to 0-based
-                  // Припускаємо, що уроки починаються з 9:00, перший урок має номер 1
-                  const hourIndex = parseInt(lesson.lessonNumber) - 1;
-                  
-                  if (dayIndex >= 0 && dayIndex < 5 && hourIndex >= 0 && hourIndex < 12) {
-                      lesson.type = 'class'; // додаємо тип, щоб відрізняти від гуртків
-                      combinedSchedule[dayIndex][hourIndex].push(lesson);
-                  }
-              });
-              
-              // Тепер завантажуємо розклад гуртків
-              $.getJSON(`https://school-f6vi.onrender.com/view/groups-schedule/leader=${teacherId}`, function(groupsData) {
-                  // Додаємо гуртки до об'єднаного розкладу
-                  groupsData.forEach(group => {
-                      const dayIndex = group.dayOfWeek - 1; // 1-based to 0-based
-                      // Конвертуємо час початку в індекс рядка
-                      const startTime = group.startTime;
-                      const hourIndex = timeToRowIndex(startTime);
-                      
-                      if (dayIndex >= 0 && dayIndex < 5 && hourIndex >= 0 && hourIndex < 12) {
-                          group.type = 'group'; // додаємо тип, щоб відрізняти від уроків
-                          combinedSchedule[dayIndex][hourIndex].push(group);
-                      }
-                  });
-                  
-                  // Відображаємо об'єднаний розклад
-                  renderCombinedSchedule(combinedSchedule);
-              }).fail(function(error) {
-                  console.error("Error loading groups schedule:", error);
-                  // Якщо не вдалося завантажити гуртки, все одно відображаємо уроки
-                  renderCombinedSchedule(combinedSchedule);
-              });
-          }).fail(function(error) {
-              console.error("Error loading lessons schedule:", error);
-              $("#schedule-teachers-body").html("<tr><td colspan='6'>Помилка завантаження розкладу</td></tr>");
-          });
-      }
-      
-      // Функція для відображення об'єднаного розкладу
-      function renderCombinedSchedule(schedule) {
-          $("#schedule-teachers-body").empty();
-          
-          // Створюємо рядки розкладу
-          for (let i = 0, time = 9; i < 12; i++, time++) {
-              let tr = document.createElement("tr");
-              tr.appendChild(document.createElement("td")).innerText = `${i + 1} (${time}:00 - ${time}:45)`;
-              
-              // Додаємо комірки для кожного дня тижня
-              for (let j = 0; j < 5; j++) {
-                  let td = document.createElement("td");
-                  td.className = "lesson-cell";
-                  
-                  // Перевіряємо, чи є заняття на цей час і день
-                  if (schedule[j][i] && schedule[j][i].length > 0) {
-                      schedule[j][i].forEach(item => {
-                          // Створюємо елемент для заняття
-                          let lessonDiv = document.createElement("div");
-                          lessonDiv.className = item.type === 'class' ? 'class-lesson' : 'group-lesson';
-                          
-                          if (item.type === 'class') {
-                              // Заняття (урок)
-                              lessonDiv.innerHTML = `
-                                  <div class="lesson-title">${item.subjectName} (${item.classField})</div>
-                                  <div class="lesson-details">Урок</div>
-                              `;
-                              
-                          } else {
-                              // Гурток
-                              // Додаємо інформацію про вартість гуртка, якщо вона є
-                              const priceInfo = item.price ? `Вартість: ${Math.abs(item.price)} грн` : '';
-                              
-                              lessonDiv.innerHTML = `
-                                  <div class="lesson-title">${item.group}</div>
-                                  <div class="lesson-details">Гурток: ${item.startTime.substring(0, 5)} - ${item.endTime.substring(0, 5)}</div>
-                                  <div class="lesson-details">${priceInfo}</div>
-                              `;
-                              
-                          }
-                          
-                          td.appendChild(lessonDiv);
-                      });
-                  }
-                  
-                  tr.appendChild(td);
-              }
-              
-              $("#schedule-teachers-body").append(tr);
-          }
-      }
-    });
-  </script>
-  <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
-  <style>/*
-    table{
-        width: 80%;
-        margin: auto;
-        margin-top: 20px;
-        font-size: 12px;
-    }
-    td, th{
-        width: 8%;
-    }
-    .teacher-name {
-      font-size: 0.8em;
-      color: grey;
-    }
-    table.history {
-      background: #f0f0f0; 
-      color: #888; 
-      border: 1px solid #ddd; 
-    }
-
-    table.history th {
-      background: #b0b0b0;
-      color: #fff;
-    }
-
-    table.history tbody tr:nth-child(even) {
-      background: #e8e8e8; 
-    }
-
-    table.history tbody tr:hover {
-      background: inherit;
-    }
-
-    table.history td {
-      font-style: italic; 
-    }*/
-  </style>
-  <link rel="stylesheet" href="https://yehormovchan.github.io/static/radio-toggle.css">
-</head>
-<body>
-    <div class="wrapper">
-        <div class="filter-menu">
-              <fieldset>
-                <legend>Відображати розклад по:</legend>
-                <div class="toggle">
-                  <input type="radio" name="schedule-view" value="days" id="sizeDays" checked="checked" />
-                  <label for="sizeDays">Дням тижня</label>
-                  <input type="radio" name="schedule-view" value="teachers" id="sizeTeachers" />
-                  <label for="sizeTeachers">Вчителям</label>
-                  <input type="radio" name="schedule-view" value="classes" id="sizeClasses" />
-                  <label for="sizeClasses">Класам</label>
-                </div>
-            </fieldset>
-            <div class="addition-filter">
-              <fieldset id="daySelect-filter">
-                <legend>Оберіть день тижня:</legend>
-                <div class="toggle">
-                  <input type="radio" name="daySelect" value="1" id="sizeMonday" checked="checked" />
-                  <label for="sizeMonday">Понеділок</label>
-                  <input type="radio" name="daySelect" value="2" id="sizeTuesday" />
-                  <label for="sizeTuesday">Вівторок</label>
-                  <input type="radio" name="daySelect" value="3" id="sizeWednesday" />
-                  <label for="sizeWednesday">Середа</label>
-                  <input type="radio" name="daySelect" value="4" id="sizeThursday" />
-                  <label for="sizeThursday">Четвер</label>
-                  <input type="radio" name="daySelect" value="5" id="sizeFriday" />
-                  <label for="sizeFriday">П'ятниця</label>
-                </div>
-              </fieldset>
-              <div id="teacherSelect-filter">
-                <label for="teacherSelect">Оберіть вчителя:</label>
-                <div class="select-wrapper">
-                  <select id="teacherSelect">
-                    <option value="">--Виберіть вчителя--</option>
-                  </select>
-                </div>
-              </div>
-              <div id="classSelect-filter">
-                <label for="classSelect">Оберіть клас:</label>
-                <div class="select-wrapper">
-                  <select id="classSelect">
-                    <option value="">--Виберіть клас--</option>
-                  </select>
-                </div>
-              </div>
-              <label for="date-select">Історія розкладів:</label>
-              <div class="select-wrapper">
-                <select id="date-select">
-                    <option value="">Актуальний</option>
-                </select>
-              </div> 
-            </div>
-        </div>
-  
-        <table id="scheduleTable-days">
-            <thead>
-            <tr>
-              
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-                <th>4</th>
-                <th>5</th>
-                <th>6</th>
-                <th>7</th>
-                <th>8</th>
-                <th>9</th>
-                <th>10</th>
-                <th>11</th>
-            </tr>
-            </thead>
-            <tbody>
-           
-            <tr data-lesson="1">
-                <td data-class="1"></td>
-                <td data-class="2"></td>
-                <td data-class="3"></td>
-                <td data-class="4"></td>
-                <td data-class="5"></td>
-                <td data-class="6"></td>
-                <td data-class="7"></td>
-                <td data-class="8"></td>
-                <td data-class="9"></td>
-                <td data-class="10"></td>
-                <td data-class="11"></td>
-            </tr>
-            <tr data-lesson="2">
-                <td data-class="1"></td>
-                <td data-class="2"></td>
-                <td data-class="3"></td>
-                <td data-class="4"></td>
-                <td data-class="5"></td>
-                <td data-class="6"></td>
-                <td data-class="7"></td>
-                <td data-class="8"></td>
-                <td data-class="9"></td>
-                <td data-class="10"></td>
-                <td data-class="11"></td>
-            </tr>
-            <tr data-lesson="3">
-                <td data-class="1"></td>
-                <td data-class="2"></td>
-                <td data-class="3"></td>
-                <td data-class="4"></td>
-                <td data-class="5"></td>
-                <td data-class="6"></td>
-                <td data-class="7"></td>
-                <td data-class="8"></td>
-                <td data-class="9"></td>
-                <td data-class="10"></td>
-                <td data-class="11"></td>
-            </tr>
-            <tr data-lesson="4">
-                <td data-class="1"></td>
-                <td data-class="2"></td>
-                <td data-class="3"></td>
-                <td data-class="4"></td>
-                <td data-class="5"></td>
-                <td data-class="6"></td>
-                <td data-class="7"></td>
-                <td data-class="8"></td>
-                <td data-class="9"></td>
-                <td data-class="10"></td>
-                <td data-class="11"></td>
-            </tr>
-            <tr data-lesson="5">
-                <td data-class="1"></td>
-                <td data-class="2"></td>
-                <td data-class="3"></td>
-                <td data-class="4"></td>
-                <td data-class="5"></td>
-                <td data-class="6"></td>
-                <td data-class="7"></td>
-                <td data-class="8"></td>
-                <td data-class="9"></td>
-                <td data-class="10"></td>
-                <td data-class="11"></td>
-            </tr>
-            <tr data-lesson="6">
-                <td data-class="1"></td>
-                <td data-class="2"></td>
-                <td data-class="3"></td>
-                <td data-class="4"></td>
-                <td data-class="5"></td>
-                <td data-class="6"></td>
-                <td data-class="7"></td>
-                <td data-class="8"></td>
-                <td data-class="9"></td>
-                <td data-class="10"></td>
-                <td data-class="11"></td>
-            </tr>
-            <tr data-lesson="7">
-                <td data-class="1"></td>
-                <td data-class="2"></td>
-                <td data-class="3"></td>
-                <td data-class="4"></td>
-                <td data-class="5"></td>
-                <td data-class="6"></td>
-                <td data-class="7"></td>
-                <td data-class="8"></td>
-                <td data-class="9"></td>
-                <td data-class="10"></td>
-                <td data-class="11"></td>
-            </tr>
-            <tr data-lesson="8">
-                <td data-class="1"></td>
-                <td data-class="2"></td>
-                <td data-class="3"></td>
-                <td data-class="4"></td>
-                <td data-class="5"></td>
-                <td data-class="6"></td>
-                <td data-class="7"></td>
-                <td data-class="8"></td>
-                <td data-class="9"></td>
-                <td data-class="10"></td>
-                <td data-class="11"></td>
-            </tr>
-            </tbody>
-        </table>
-        <table id="scheduleTabel-teachers">
-           <thead>
-            <tr>
-                <th>Номер уроку</th>
-                <th>Понеділок</th>
-                <th>Вівторок</th>
-                <th>Середа</th>
-                <th>Четвер</th>
-                <th>П'ятниця</th>
-            </tr>
-            </thead>
-            <tbody id="schedule-teachers-body">
-            </tbody>
-        </table>
-        <table id="scheduleHistoryTable" class="history">
-          <thead>
-          <tr>
-             
-              <th>1</th>
-              <th>2</th>
-              <th>3</th>
-              <th>4</th>
-              <th>5</th>
-              <th>6</th>
-              <th>7</th>
-              <th>8</th>
-              <th>9</th>
-              <th>10</th>
-              <th>11</th>
-          </tr>
-          </thead>
-          <tbody>
-      
-          <tr data-lesson="1">
-              <td data-class="1"></td>
-              <td data-class="2"></td>
-              <td data-class="3"></td>
-              <td data-class="4"></td>
-              <td data-class="5"></td>
-              <td data-class="6"></td>
-              <td data-class="7"></td>
-              <td data-class="8"></td>
-              <td data-class="9"></td>
-              <td data-class="10"></td>
-              <td data-class="11"></td>
-          </tr>
-          <tr data-lesson="2">
-              <td data-class="1"></td>
-              <td data-class="2"></td>
-              <td data-class="3"></td>
-              <td data-class="4"></td>
-              <td data-class="5"></td>
-              <td data-class="6"></td>
-              <td data-class="7"></td>
-              <td data-class="8"></td>
-              <td data-class="9"></td>
-              <td data-class="10"></td>
-              <td data-class="11"></td>
-          </tr>
-          <tr data-lesson="3">
-              <td data-class="1"></td>
-              <td data-class="2"></td>
-              <td data-class="3"></td>
-              <td data-class="4"></td>
-              <td data-class="5"></td>
-              <td data-class="6"></td>
-              <td data-class="7"></td>
-              <td data-class="8"></td>
-              <td data-class="9"></td>
-              <td data-class="10"></td>
-              <td data-class="11"></td>
-          </tr>
-          <tr data-lesson="4">
-              <td data-class="1"></td>
-              <td data-class="2"></td>
-              <td data-class="3"></td>
-              <td data-class="4"></td>
-              <td data-class="5"></td>
-              <td data-class="6"></td>
-              <td data-class="7"></td>
-              <td data-class="8"></td>
-              <td data-class="9"></td>
-              <td data-class="10"></td>
-              <td data-class="11"></td>
-          </tr>
-          <tr data-lesson="5">
-              <td data-class="1"></td>
-              <td data-class="2"></td>
-              <td data-class="3"></td>
-              <td data-class="4"></td>
-              <td data-class="5"></td>
-              <td data-class="6"></td>
-              <td data-class="7"></td>
-              <td data-class="8"></td>
-              <td data-class="9"></td>
-              <td data-class="10"></td>
-              <td data-class="11"></td>
-          </tr>
-          <tr data-lesson="6">
-              <td data-class="1"></td>
-              <td data-class="2"></td>
-              <td data-class="3"></td>
-              <td data-class="4"></td>
-              <td data-class="5"></td>
-              <td data-class="6"></td>
-              <td data-class="7"></td>
-              <td data-class="8"></td>
-              <td data-class="9"></td>
-              <td data-class="10"></td>
-              <td data-class="11"></td>
-          </tr>
-          <tr data-lesson="7">
-              <td data-class="1"></td>
-              <td data-class="2"></td>
-              <td data-class="3"></td>
-              <td data-class="4"></td>
-              <td data-class="5"></td>
-              <td data-class="6"></td>
-              <td data-class="7"></td>
-              <td data-class="8"></td>
-              <td data-class="9"></td>
-              <td data-class="10"></td>
-              <td data-class="11"></td>
-          </tr>
-          <tr data-lesson="8">
-              <td data-class="1"></td>
-              <td data-class="2"></td>
-              <td data-class="3"></td>
-              <td data-class="4"></td>
-              <td data-class="5"></td>
-              <td data-class="6"></td>
-              <td data-class="7"></td>
-              <td data-class="8"></td>
-              <td data-class="9"></td>
-              <td data-class="10"></td>
-              <td data-class="11"></td>
-          </tr>
-          </tbody>
-      </table>
-    
-  
-        <button id="saveSchedule">Зберегти розклад</button>
-    </div>
- 
-  <div class="modal hidden">
-    <h2>Вибір уроку та вчителя</h2>
-    <label for="subjectSelect">Предмет:</label>
-    <select id="subjectSelect">
-      <option value="">--Виберіть предмет--</option>
-    </select>
-    <br><br>
-    <label for="teacherSelect">Вчитель:</label>
-    <select id="teacherSelect">
-      <option value="">--Виберіть вчителя--</option>
-    </select>
-    <br><br>
-    <button id="modalSave">Зберегти</button>
-    <button id="modalCancel">Скасувати</button>
-  </div>
-  
-
-</body>
-</html> -->
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -764,7 +17,11 @@
         let subjects = [];
         let classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         let scheduleData = [];
-  
+
+        let today = new Date().toISOString().split('T')[0];
+
+        $('#schedule-date').attr('max', today);
+        $('#schedule-date').val(today);
   
         $("#teacher-select-filter").hide();
         $("#class-select-filter").hide();
@@ -843,8 +100,9 @@
         $('#schedule-by-days tbody').each(function() {
           $(this).empty();
         });
+        let date = $('#schedule-date').val();
         
-        $.getJSON('https://school-f6vi.onrender.com/view/schedule/actual/' + day, (data)=> {
+        $.getJSON(`https://school-f6vi.onrender.com/view/schedule/day=${date}/day-of-week=${day}`, (data)=> {
           let lessons = [1, 2, 3, 4, 5, 6, 7, 8];
           let classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
           scheduleData = data;
@@ -869,36 +127,38 @@
                 td.setAttribute("data-lesson", "");
                 td.innerHTML = `<span class="subject main-text"></span> <br><span class="teacher small-text"></span>`;
               }
-              td.onclick = function() {
-                $('#modal-title').text(`Редагування розкладу для ${classNumber} класу`);
-                $('#subject-select').val(lesson ? lesson.subjectId : "");
-                $('#teacher-select').val(lesson ? lesson.teacherId : "");
-                $('.modal').show();
-                $('#modalSave').off('click').on('click', ()=>{
-                  const subjectId = $('#subject-select').val();
-                  const teacherId = $('#teacher-select').val();
-                  const lessonId = td.getAttribute("data-lesson");
-                  const classField = td.getAttribute("data-class");
-                  const lessonNumber = td.getAttribute("data-lesson-number");
-                  scheduleData = scheduleData.filter((lesson)=> lesson.id != lessonId);
-                  scheduleData.push({
-                    subject: subjectId,
-                    teacher: teacherId,
-                    classField: classField,
-                    lessonNumber: lessonNumber,
-                    dayOfWeek: day,
-                    from: new Date(),
-                    to: null,
-                  });
-                  let subjectName = subjects.find((subject)=> subject.id == subjectId).name;
-                  let teacherName = teachers.find((teacher)=> teacher.id == teacherId).name;
-                  td.innerHTML = `<span class="subject main-text">${subjectName}</span> <br><span class="teacher small-text">${teacherName}</span>`;
-                  td.setAttribute("data-lesson", lessonId);
-                  td.setAttribute("data-class", classField);
-                  td.setAttribute("data-lesson-number", lessonNumber);
-                  $('.modal').hide();
-                })
-              };
+              if($('#schedule-date').val()==today){
+                td.onclick = function() {
+                  $('#modal-title').text(`Редагування розкладу для ${classNumber} класу`);
+                  $('#subject-select').val(lesson ? lesson.subjectId : "");
+                  $('#teacher-select').val(lesson ? lesson.teacherId : "");
+                  $('.modal').show();
+                  $('#modalSave').off('click').on('click', ()=>{
+                    const subjectId = $('#subject-select').val();
+                    const teacherId = $('#teacher-select').val();
+                    const lessonId = td.getAttribute("data-lesson");
+                    const classField = td.getAttribute("data-class");
+                    const lessonNumber = td.getAttribute("data-lesson-number");
+                    scheduleData = scheduleData.filter((lesson)=> lesson.id != lessonId);
+                    scheduleData.push({
+                      subject: subjectId,
+                      teacher: teacherId,
+                      classField: classField,
+                      lessonNumber: lessonNumber,
+                      dayOfWeek: day,
+                      from: new Date(),
+                      to: null,
+                    });
+                    let subjectName = subjects.find((subject)=> subject.id == subjectId).name;
+                    let teacherName = teachers.find((teacher)=> teacher.id == teacherId).name;
+                    td.innerHTML = `<span class="subject main-text">${subjectName}</span> <br><span class="teacher small-text">${teacherName}</span>`;
+                    td.setAttribute("data-lesson", lessonId);
+                    td.setAttribute("data-class", classField);
+                    td.setAttribute("data-lesson-number", lessonNumber);
+                    $('.modal').hide();
+                  })
+                };
+              }
               tr.appendChild(td);
             })
             $('#schedule-by-days-body').append(tr);
@@ -952,7 +212,9 @@
           $(this).empty();
         });
         
-        $.getJSON('https://school-f6vi.onrender.com/view/schedule/teacher=' + teacherId, (data)=> {
+        let date = $('#schedule-date').val();
+
+        $.getJSON(`https://school-f6vi.onrender.com/view/schedule/day=${date}/teacher=${teacherId}`, (data)=> {
           let lessons = [1, 2, 3, 4, 5, 6, 7, 8];
           let days = [1, 2, 3, 4, 5];
           scheduleData = data;
@@ -976,35 +238,37 @@
                 td.setAttribute("data-lesson", "");
                 td.innerHTML = `<span class="subject main-text"></span> <br><span class="teacher small-text"></span>`;
               }
-              td.onclick = function() {
-                const teacherName = teachers.find((teacher)=> teacher.id == teacherId).name;
-                $('#modal-title').text(`Редагування розкладу для ${teacherName}`);
-                $('#subject-select').val(lesson ? lesson.subjectId : "");
-                $('#class-select').val(lesson ? lesson.classField : "");
-                $('.modal').show();
-                $('#modalSave').off('click').on('click', ()=>{
-                  const subjectId = $('#subject-select').val();
-                  const classField = $('#class-select').val();
-                  const lessonNumber = td.getAttribute("data-lesson-number");
-                  const lessonId = td.getAttribute("data-lesson");
-                  scheduleData = scheduleData.filter((lesson)=> lesson.id != lessonId);
-                  scheduleData.push({
-                    subject: subjectId,
-                    teacher: teacherId,
-                    classField: classField,
-                    lessonNumber: lessonNumber,
-                    dayOfWeek: day,
-                    from: new Date(),
-                    to: null,
-                  });
-                  let subjectName = subjects.find((subject)=> subject.id == subjectId).name;
-                  td.innerHTML = `<span class="subject main-text">${subjectName}</span> <br><span class="teacher small-text">${classField}</span>`;
-                  td.setAttribute("data-lesson", lessonId);
-                  td.setAttribute("data-class", classField);
-                  td.setAttribute("data-lesson-number", lessonNumber);
-                  $('.modal').hide();
-                })
-              };
+              if($("#schedule-date").val() == today){
+                td.onclick = function() {
+                  const teacherName = teachers.find((teacher)=> teacher.id == teacherId).name;
+                  $('#modal-title').text(`Редагування розкладу для ${teacherName}`);
+                  $('#subject-select').val(lesson ? lesson.subjectId : "");
+                  $('#class-select').val(lesson ? lesson.classField : "");
+                  $('.modal').show();
+                  $('#modalSave').off('click').on('click', ()=>{
+                    const subjectId = $('#subject-select').val();
+                    const classField = $('#class-select').val();
+                    const lessonNumber = td.getAttribute("data-lesson-number");
+                    const lessonId = td.getAttribute("data-lesson");
+                    scheduleData = scheduleData.filter((lesson)=> lesson.id != lessonId);
+                    scheduleData.push({
+                      subject: subjectId,
+                      teacher: teacherId,
+                      classField: classField,
+                      lessonNumber: lessonNumber,
+                      dayOfWeek: day,
+                      from: new Date(),
+                      to: null,
+                    });
+                    let subjectName = subjects.find((subject)=> subject.id == subjectId).name;
+                    td.innerHTML = `<span class="subject main-text">${subjectName}</span> <br><span class="teacher small-text">${classField}</span>`;
+                    td.setAttribute("data-lesson", lessonId);
+                    td.setAttribute("data-class", classField);
+                    td.setAttribute("data-lesson-number", lessonNumber);
+                    $('.modal').hide();
+                  })
+                };
+              }
               tr.appendChild(td);
             })
             $('#schedule-by-teacher-body').append(tr);
@@ -1021,7 +285,10 @@
         $('#schedule-by-class tbody').each(function() {
           $(this).empty();
         });
-        $.getJSON('https://school-f6vi.onrender.com/view/schedule/grade=' + classNumber, (data)=> {
+
+        let date = $('#schedule-date').val();
+
+        $.getJSON(`https://school-f6vi.onrender.com/view/schedule/day=${date}/grade=${classNumber}`, (data)=> {
           let lessons = [1, 2, 3, 4, 5, 6, 7, 8];
           let days = [1, 2, 3, 4, 5];
           scheduleData = data;
@@ -1045,35 +312,37 @@
                 td.setAttribute("data-lesson", "");
                 td.innerHTML = `<span class="subject main-text"></span> <br><span class="teacher small-text"></span>`;
               }
-              td.onclick = function() {
-                $('#modal-title').text(`Редагування розкладу для ${classNumber} класу`);
-                $('#subject-select').val(lesson ? lesson.subjectId : "");
-                $('#teacher-select').val(lesson ? lesson.teacherId : "");
-                $('.modal').show();
-                $('#modalSave').off('click').on('click', ()=>{
-                  const subjectId = $('#subject-select').val();
-                  const teacherId = $('#teacher-select').val();
-                  const lessonNumber = td.getAttribute("data-lesson-number");
-                  const lessonId = td.getAttribute("data-lesson");
-                  scheduleData = scheduleData.filter((lesson)=> lesson.id != lessonId);
-                  scheduleData.push({
-                    subject: subjectId,
-                    teacher: teacherId,
-                    classField: classNumber,
-                    lessonNumber: lessonNumber,
-                    dayOfWeek: day,
-                    from: new Date(),
-                    to: null,
-                  });
-                  let subjectName = subjects.find((subject)=> subject.id == subjectId).name;
-                  let teacherName = teachers.find((teacher)=> teacher.id == teacherId).name;
-                  td.innerHTML = `<span class="subject main-text">${subjectName}</span> <br><span class="teacher small-text">${teacherName}</span>`;
-                  td.setAttribute("data-lesson", lessonId);
-                  td.setAttribute("data-class", classNumber);
-                  td.setAttribute("data-lesson-number", lessonNumber);
-                  $('.modal').hide();
-                })
-              };
+              if($("#schedule-date").val() == today){
+                td.onclick = function() {
+                  $('#modal-title').text(`Редагування розкладу для ${classNumber} класу`);
+                  $('#subject-select').val(lesson ? lesson.subjectId : "");
+                  $('#teacher-select').val(lesson ? lesson.teacherId : "");
+                  $('.modal').show();
+                  $('#modalSave').off('click').on('click', ()=>{
+                    const subjectId = $('#subject-select').val();
+                    const teacherId = $('#teacher-select').val();
+                    const lessonNumber = td.getAttribute("data-lesson-number");
+                    const lessonId = td.getAttribute("data-lesson");
+                    scheduleData = scheduleData.filter((lesson)=> lesson.id != lessonId);
+                    scheduleData.push({
+                      subject: subjectId,
+                      teacher: teacherId,
+                      classField: classNumber,
+                      lessonNumber: lessonNumber,
+                      dayOfWeek: day,
+                      from: new Date(),
+                      to: null,
+                    });
+                    let subjectName = subjects.find((subject)=> subject.id == subjectId).name;
+                    let teacherName = teachers.find((teacher)=> teacher.id == teacherId).name;
+                    td.innerHTML = `<span class="subject main-text">${subjectName}</span> <br><span class="teacher small-text">${teacherName}</span>`;
+                    td.setAttribute("data-lesson", lessonId);
+                    td.setAttribute("data-class", classNumber);
+                    td.setAttribute("data-lesson-number", lessonNumber);
+                    $('.modal').hide();
+                  })
+                };
+              }
               tr.appendChild(td);
             })
             $('#schedule-by-class-body').append(tr);
@@ -1087,6 +356,30 @@
         loadScheduleByClass(selectedClass);
       });
 
+      $('#date-select').change(function(){
+
+        let selectedDate = $(this).val();
+        if(selectedDate == today){
+          $('table').removeClass('history-table')
+          $('#saveSchedule').show();
+        }
+        else{
+          $('table').addClass('history-table')
+          $('#saveSchedule').hide();
+        }
+
+        let type = $("input[name='schedule-view']:checked").val();
+        if(type == "days"){
+          loadScheduleByDay($('input[name="daySelect"]:checked').val());
+        }
+        else if(type == "teachers"){
+          loadScheduleByTeacher($('#teacher-select-for-schedule').val());
+        }
+        else if(type == "classes"){
+          loadScheduleByClass($('#class-select-for-schedule').val());
+        }
+      })
+
       loadScheduleByDay(1);
     });
   </script>
@@ -1094,6 +387,7 @@
 <body>
   <div class="wrapper">
     <div class="filter-menu">
+      <input type="date" name="schedule-date" id="schedule-date" required>
       <fieldset>
         <legend>Відображати розклад по:</legend>
           <div class="toggle">
