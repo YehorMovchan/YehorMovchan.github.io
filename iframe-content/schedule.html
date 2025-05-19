@@ -361,6 +361,16 @@
         $('#schedule-date').val(today);
         $('table').removeClass('history-table')
         $('#saveSchedule').show();
+        let type = $("input[name='schedule-view']:checked").val();
+        if(type == "days"){
+          loadScheduleByDay($('input[name="daySelect"]:checked').val());
+        }
+        else if(type == "teachers"){
+          loadScheduleByTeacher($('#teacher-select-for-schedule').val());
+        }
+        else if(type == "classes"){
+          loadScheduleByClass($('#class-select-for-schedule').val());
+        }
       })
 
       $('#schedule-date').change(function(){

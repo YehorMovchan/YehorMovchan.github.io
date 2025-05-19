@@ -730,7 +730,7 @@ h4 {
 }
 
 .history-table th {
-    background-color: #f2f2f2;
+    background-color: #5b5b5b;
     font-weight: bold;
 }
 
@@ -887,4 +887,10 @@ td, th{
 
 fieldset input[type="date"]{
     width: 30%;
+}
+
+#schedule-by-days th{
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
 }
