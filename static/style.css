@@ -884,3 +884,7 @@ td, th{
     margin-bottom: 10px;
     margin-top: 10px;
 }
+
+fieldset input[type="date"]{
+    width: 30%;
+}

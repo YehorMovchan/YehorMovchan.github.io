@@ -356,6 +356,13 @@
         loadScheduleByClass(selectedClass);
       });
 
+      $('#set-schedule-day-today').click(function(e){
+        e.preventDefault();
+        $('#schedule-date').val(today);
+        $('table').removeClass('history-table')
+        $('#saveSchedule').show();
+      })
+
       $('#schedule-date').change(function(){
 
         let selectedDate = $(this).val();
@@ -390,6 +397,7 @@
       <fieldset>
         <legend>Оберіть дату:</legend>
         <input type="date" name="schedule-date" id="schedule-date" required>
+        <button id="set-schedule-day-today">Сьогодні</button>
       </fieldset>
       <fieldset>
         <legend>Відображати розклад по:</legend>
