@@ -889,7 +889,7 @@ fieldset input[type="date"]{
     width: 30%;
 }
 
-#schedule-by-days-body tr:first-child{
+#schedule-by-days-body tr td:first-child{
     text-align: center;
     font-size: 1.2em;
     font-weight: bold;
