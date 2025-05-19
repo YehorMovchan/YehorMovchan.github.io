@@ -356,7 +356,7 @@
         loadScheduleByClass(selectedClass);
       });
 
-      $('#date-select').change(function(){
+      $('#schedule-date').change(function(){
 
         let selectedDate = $(this).val();
         if(selectedDate == today){
@@ -387,7 +387,10 @@
 <body>
   <div class="wrapper">
     <div class="filter-menu">
-      <input type="date" name="schedule-date" id="schedule-date" required>
+      <fieldset>
+        <legend>Оберіть дату:</legend>
+        <input type="date" name="schedule-date" id="schedule-date" required>
+      </fieldset>
       <fieldset>
         <legend>Відображати розклад по:</legend>
           <div class="toggle">
@@ -399,7 +402,7 @@
             <label for="sizeClasses">Класам</label>
           </div>
         </fieldset>
-        <div class="addition-filter">
+    
           <fieldset id="day-select-filter">
             <legend>Оберіть день тижня:</legend>
             <div class="toggle">
@@ -415,23 +418,22 @@
               <label for="sizeFriday">П'ятниця</label>
             </div>
           </fieldset>
-          <div id="teacher-select-filter">
-            <label for="teacher-select">Оберіть вчителя:</label>
-            <div class="select-wrapper">
+          <fieldset id="teacher-select-filter">
+            <legend>Оберіть вчителя:</legend>
+             <div class="select-wrapper">
               <select id="teacher-select-for-schedule">
                 <option value="">--Виберіть вчителя--</option>
               </select>
             </div>
-          </div>
-          <div id="class-select-filter">
-            <label for="class-select">Оберіть клас:</label>
+          </fieldset>
+          <fieldset id="class-select-filter">
+            <legend>Оберіть клас:</legend>
             <div class="select-wrapper">
               <select id="class-select-for-schedule">
                 <option value="">--Виберіть клас--</option>
               </select>
             </div>
-          </div>
-        </div>
+          </fieldset>
     </div>
 
     <table id="schedule-by-days" class="schedule-table">
