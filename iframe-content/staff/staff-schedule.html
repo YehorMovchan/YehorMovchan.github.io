@@ -243,9 +243,9 @@
             function loadCombinedSchedule(teacherId) {
                 // Створюємо структуру даних для зберігання об'єднаного розкладу
                 let combinedSchedule = Array(5).fill().map(() => Array(12).fill().map(() => []));
-                
+                let today = new Date().toISOString().split('T')[0];
                 // Спочатку завантажуємо розклад уроків
-                $.getJSON(`https://school-f6vi.onrender.com/view/schedule/teacher=${teacherId}`, function(lessonData) {
+                $.getJSON(`https://school-f6vi.onrender.com/view/schedule/day=${today}/teacher=${teacherId}`, function(lessonData) {
                     // Заповнюємо розклад уроками
                     lessonData.forEach(lesson => {
                         const dayIndex = lesson.dayOfWeek - 1; // 1-based to 0-based

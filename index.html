@@ -134,6 +134,7 @@
         $("#sign-out").click(()=>{
             localStorage.removeItem('token');
             iframe.src = "";
+            document.location.href = "https://yehormovchan.github.io/index.html";
             $("a").hide();
             $("#sign-in-button").show();
             $("#username").hide();
