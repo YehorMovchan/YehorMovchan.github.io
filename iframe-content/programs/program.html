@@ -19,6 +19,7 @@
             <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
             <span><strong>Вартість:</strong> <span id="program-price"></span> </span>
             <span class="clickable" id="open-history"> (Переглянути історію вартості)</span>
+            <span>Школа входить в програму: <label> <input type="checkbox" id="schoolIncluded"> <span id="schoolIncluded-string"></span> </label></span>
             <span><span id="program-info"></span></span>
             <button id="edit-program-button">Редагувати інформацію</button>
         </div>
@@ -29,6 +30,7 @@
                 <label>Назва: <input type="text" id="edit-program-name" required></label><br>
                 <label>Вартість: <input type="number" id="edit-program-price" required></label><br>
                 <label>Причина зміни вартості: <input type="text" id="edit-program-price-reason"></label>
+                <span>Школа входить в програму: <label> <input type="checkbox" id="edit-schoolIncluded"> <span id="edit-schoolIncluded-string"></span> </label></span>
                 <label>Інформація про програму: <textarea type="date" id="edit-program-info"></textarea></label><br>
                 <button id="save-edit-program">Зберегти</button><br>
                 <button onclick="$('#edit-program-modal').fadeOut()">Закрити</button>
@@ -88,17 +90,26 @@
                 $("#program-name").text(data.name);
                 $("#program-price").text(data.price);
                 $("#program-info").text(data.info);
+                $("#schoolIncluded").prop("checked", data.schoolIncluded);
+                $("#schoolIncluded-string").text(data.schoolIncluded ? "Так" : "Ні");
+                
                 priceId = data.priceId;
-
+                
                 $("#edit-program-name").val(data.name);
                 $("#edit-program-price").val(data.price);
                 $("#edit-program-info").val(data.info);
+                $("#edit-schoolIncluded").prop("checked", data.schoolIncluded);
+                $("#edit-schoolIncluded-string").text(data.schoolIncluded ? "Так" : "Ні");
                 oldPrice = data.price;
 
                 $(".general-loader").hide();
             }).fail(()=>{
                 $(".general-loader").hide();
                 $(".general-request-error").show();
+            });
+
+            $("#edit-schoolIncluded").change(()=>{
+                $("#edit-schoolIncluded-string").text($("#edit-schoolIncluded").is(":checked") ? "Так" : "Ні");
             });
 
             $("#open-history").click(()=>{
@@ -125,6 +136,7 @@
                 let program={
                     name: $("#edit-program-name").val(),
                     info: $("#edit-program-info").val(),
+                    schoolIncluded: $("#edit-schoolIncluded").is(":checked")
                 }
                 let price = {
                     program: programId,
