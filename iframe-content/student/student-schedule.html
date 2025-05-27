@@ -73,7 +73,8 @@
         $(document).ready(function() {
             let urlParams = new URLSearchParams(window.location.search);
             let kidId = urlParams.get("id");
-            
+            let schoolIncluded;
+
             if (!kidId) {
                 getUser().then((user) => {
                     if (!user) {
@@ -94,8 +95,9 @@
             
             // Функція для завантаження інформації про учня
             function loadKidInfo(kidId) {
-                $.getJSON(`https://school-f6vi.onrender.com/kid/${kidId}`, function(kidData) {
+                $.getJSON(`https://school-f6vi.onrender.com/view/kid/${kidId}`, function(kidData) {
                     $("#kid-info").text(`${kidData.name}, Клас: ${kidData.grade}`);
+                    schoolIncluded = kidData.schoolIncluded;
                 }).fail(function(error) {
                     console.error("Error loading kid info:", error);
                     $("#kid-info").text("Не вдалося завантажити інформацію про учня");
@@ -115,17 +117,19 @@
                 let today = new Date().toISOString().split('T')[0]
                 // Спочатку завантажуємо розклад уроків
                 $.getJSON(`https://school-f6vi.onrender.com/view/schedule/kid=${kidId}`, function(lessonData) {
+                    if(schoolIncluded){
+                        lessonData.forEach(lesson => {
+                            const dayIndex = lesson.dayOfWeek - 1; // 1-based to 0-based
+                            // Припускаємо, що уроки починаються з 9:00, перший урок має номер 1
+                            const hourIndex = parseInt(lesson.lessonNumber) - 1;
+                            
+                            if (dayIndex >= 0 && dayIndex < 5 && hourIndex >= 0 && hourIndex < 12) {
+                                lesson.type = 'class'; // додаємо тип, щоб відрізняти від гуртків
+                                combinedSchedule[dayIndex][hourIndex].push(lesson);
+                            }
+                        });
+                    }
                     // Заповнюємо розклад уроками
-                    lessonData.forEach(lesson => {
-                        const dayIndex = lesson.dayOfWeek - 1; // 1-based to 0-based
-                        // Припускаємо, що уроки починаються з 9:00, перший урок має номер 1
-                        const hourIndex = parseInt(lesson.lessonNumber) - 1;
-                        
-                        if (dayIndex >= 0 && dayIndex < 5 && hourIndex >= 0 && hourIndex < 12) {
-                            lesson.type = 'class'; // додаємо тип, щоб відрізняти від гуртків
-                            combinedSchedule[dayIndex][hourIndex].push(lesson);
-                        }
-                    });
                     
                     // Тепер завантажуємо розклад гуртків
                     $.getJSON(`https://school-f6vi.onrender.com/view/groups-kid-schedule/kid=${kidId}`, function(groupsData) {

@@ -26,13 +26,12 @@
 
 
             if (kidId) {
-                $.getJSON(`https://school-f6vi.onrender.com/kid/${kidId}`, 
+                $.getJSON(`https://school-f6vi.onrender.com/view/kid/${kidId}`, 
                 (kid) => {
                     $(".general-loader").hide();
                     $("#kid-name").text(kid.name);
                     $("#kid-grade").text(kid.grade);
                     $("#kid-birthday").text(kid.birthday || 'Немає даних');
-                    $("#student").prop("checked", kid.student);
                     $("#student-span").text(kid.student ? "Так" : "Ні");
 
                     $("#edit-kid-name").val(kid.name);
@@ -50,6 +49,9 @@
                         $("#birth-certificate").text("Свідоцтво про народження відсутнє");
                         $("#birth-certificate-img").hide();
                         $("birth-certificate").removeClass("clickable");
+                    }
+                    if(!kid.schoolIncluded){
+                        $("attendance-on-lesson-block").hide();
                     }
                 }, 
                 (xhr)=>{
@@ -95,7 +97,6 @@
                     id: kidId,
                     name: $("#edit-kid-name").val(),
                     grade: $("#edit-kid-grade").val(),
-                    student: $("#edit-kid-student").prop("checked"),
                     birthday: $("#edit-kid-birthday").val(),
                     birthCertificate: null,
                     mother: null,
@@ -328,8 +329,6 @@
             <div class="loader general-loader"></div>
             <div class="general-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
             <span><strong>Клас:</strong> <span id="kid-grade"></span></span>
-            <span><strong>Навчається в школі:</strong> 
-                <label id="student-label"><input type="checkbox" id="student" disabled><span id="student-span"></span> </label></span>
             <span><strong>Дата народження:</strong> <span id="kid-birthday"></span></span>
             <span><strong id="birth-certificate" class="clickable"></strong></span>
             <div class="modal hidden" id="birth-certificate-modal">
@@ -379,7 +378,6 @@
                 <h2>Редагування учня</h2>
                 <label>Ім'я: <input type="text" id="edit-kid-name" required></label><br>
                 <label>Клас: <input type="number" id="edit-kid-grade" required></label><br>
-                <label>Навчається в школі: <label id="student-label"><input type="checkbox" id="edit-kid-student"></label></label><br>
                 <label>Дата народження: <input type="date" id="edit-kid-birthday"></label><br>
                 <label>Свідоцтво про народження <input type="file" id="upload-certificate" accept="image/*"> </label> <br>
                 <button id="save-kid">Зберегти</button><br>
@@ -442,11 +440,11 @@
     </div>
 
     <div class="accordion-block">
-        <div class="accordion-header">Гуртки</div>
+        <div class="accordion-header">Відвідуванність гуртків</div>
         <iframe id="groups" src="" frameborder="0" class="addition-block"></iframe>
     </div>
     
-    <div class="accordion-block">
+    <div class="accordion-block" id="attendance-on-lesson-block">
         <div class="accordion-header">Відвідуваність уроків</div>
         <iframe id="attendance-on-lesson" src="" frameborder="0" class="addition-block"></iframe>
     </div>
