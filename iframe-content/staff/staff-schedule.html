@@ -328,7 +328,7 @@
                                         }
                                         $("#date-select").html(dateOptions);
                                         
-                                        $.getJSON(`http://localhost:8080/kid/students/grade=${item.classField}`, function(students) {
+                                        $.getJSON(`http://localhost:8080/view/kid/students/grade=${item.classField}`, function(students) {
                                             let studentList = students.map(student => 
                                                 `<li><input type="checkbox" value="${student.id}"> ${student.name}</li>`
                                             ).join("");
