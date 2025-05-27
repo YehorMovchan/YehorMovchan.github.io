@@ -63,7 +63,7 @@
         $("#schedule").attr("src", `https://yehormovchan.github.io/iframe-content/groups/group-schedule.html?id=${groupId}`);
         $("#members").attr("src", `https://yehormovchan.github.io/iframe-content/groups/group-members.html?id=${groupId}`);
 
-        $.getJSON(`https://school-f6vi.onrender.com/view/groups-type/${groupId}`, (data)=>{
+        $.getJSON(`http://localhost:8080/view/groups-type/${groupId}`, (data)=>{
             $("#group-name").text(data.name);
             $("#group-leader").text(data.leader);
             $("#group-price").text(data.price);
@@ -80,7 +80,7 @@
             $(".general-request-error").show();
         });
 
-        $.getJSON(`https://school-f6vi.onrender.com/staff`, (data)=>{
+        $.getJSON(`http://localhost:8080/staff`, (data)=>{
             let select = $("#leader-list");
             data.forEach(teacher => {
                 select.append(`<option value="${teacher.id}">${teacher.name}</option>`);
@@ -99,7 +99,7 @@
                 leader: $("#leader-list").val()
             }
             $.ajax({
-                url: `https://school-f6vi.onrender.com/groups-type/${groupId}`,
+                url: `http://localhost:8080/groups-type/${groupId}`,
                 method: 'put',
                 contentType: 'application/json',
                 data: JSON.stringify(newData),
@@ -110,7 +110,7 @@
         });
         $("#delete-entity").click(()=>{
             $.ajax({
-                url: `https://school-f6vi.onrender.com/groups-type/${groupId}`,
+                url: `http://localhost:8080/groups-type/${groupId}`,
                 method: 'delete',
                 success:()=>{
                     window.location.href = "https://yehormovchan.github.io/iframe-content/group-list.html";

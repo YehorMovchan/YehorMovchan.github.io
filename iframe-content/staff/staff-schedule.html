@@ -97,14 +97,14 @@
                 
                 $.ajax({
                     type: "POST",
-                    url: "https://school-f6vi.onrender.com/attendance/lesson",
+                    url: "http://localhost:8080/attendance/lesson",
                     contentType: "application/json",
                     data: JSON.stringify(postData),
                     success: function(response) {
                         alert("Відмітку збережено успішно!");
                             $.ajax({
                                 type: "POST",
-                                url: "https://school-f6vi.onrender.com/transaction/nutrition-list",
+                                url: "http://localhost:8080/transaction/nutrition-list",
                                 contentType: "application/json",
                                 data: JSON.stringify(nutritionTransactions),
                                 success: function(response) {
@@ -144,7 +144,7 @@
                 // API запит для збереження відвідування гуртка
                 $.ajax({
                     type: "POST",
-                    url: "https://school-f6vi.onrender.com/attendance/group",
+                    url: "http://localhost:8080/attendance/group",
                     contentType: "application/json",
                     data: JSON.stringify(postData),
                     success: function(response) {
@@ -175,7 +175,7 @@
                         // Відправка транзакцій
                         $.ajax({
                             type: "POST",
-                            url: "https://school-f6vi.onrender.com/transaction/groups-list",
+                            url: "http://localhost:8080/transaction/groups-list",
                             contentType: "application/json",
                             data: JSON.stringify(transactions),
                             success: function(response) {
@@ -183,7 +183,7 @@
                                 alert("Транзакції для гуртка збережено успішно!");
                                 $.ajax({
                                     type: "POST",
-                                    url: "https://school-f6vi.onrender.com/transaction/nutrition-list",
+                                    url: "http://localhost:8080/transaction/nutrition-list",
                                     contentType: "application/json",
                                     data: JSON.stringify(nutritionTransactions),
                                     success: function(response) {
@@ -245,7 +245,7 @@
                 let combinedSchedule = Array(5).fill().map(() => Array(12).fill().map(() => []));
                 let today = new Date().toISOString().split('T')[0];
                 // Спочатку завантажуємо розклад уроків
-                $.getJSON(`https://school-f6vi.onrender.com/view/schedule/day=${today}/teacher=${teacherId}`, function(lessonData) {
+                $.getJSON(`http://localhost:8080/view/schedule/day=${today}/teacher=${teacherId}`, function(lessonData) {
                     // Заповнюємо розклад уроками
                     lessonData.forEach(lesson => {
                         const dayIndex = lesson.dayOfWeek - 1; // 1-based to 0-based
@@ -259,7 +259,7 @@
                     });
                     
                     // Тепер завантажуємо розклад гуртків
-                    $.getJSON(`https://school-f6vi.onrender.com/view/groups-schedule/leader=${teacherId}`, function(groupsData) {
+                    $.getJSON(`http://localhost:8080/view/groups-schedule/leader=${teacherId}`, function(groupsData) {
                         // Додаємо гуртки до об'єднаного розкладу
                         groupsData.forEach(group => {
                             const dayIndex = group.dayOfWeek - 1; // 1-based to 0-based
@@ -328,7 +328,7 @@
                                         }
                                         $("#date-select").html(dateOptions);
                                         
-                                        $.getJSON(`https://school-f6vi.onrender.com/kid/students/grade=${item.classField}`, function(students) {
+                                        $.getJSON(`http://localhost:8080/kid/students/grade=${item.classField}`, function(students) {
                                             let studentList = students.map(student => 
                                                 `<li><input type="checkbox" value="${student.id}"> ${student.name}</li>`
                                             ).join("");
@@ -363,7 +363,7 @@
                                         $("#group-date-select").html(dateOptions);
                                         
                                         // Припускаємо, що API для отримання учасників гуртка має такий вигляд
-                                        $.getJSON(`https://school-f6vi.onrender.com/view/group/group=${item.groupId}`, function(members) {
+                                        $.getJSON(`http://localhost:8080/view/group/group=${item.groupId}`, function(members) {
                                             let memberList = members.map(member => 
                                                 `<li><input type="checkbox" value="${member.kidId}"> ${member.kidName}</li>`
                                             ).join("");

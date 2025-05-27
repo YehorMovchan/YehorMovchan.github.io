@@ -60,7 +60,7 @@
         });
 
 
-        $.getJSON("https://school-f6vi.onrender.com/view/staff", (data)=>{
+        $.getJSON("http://localhost:8080/view/staff", (data)=>{
             console.log(data);
             let container = $("#staff-list");
                 
@@ -116,7 +116,7 @@
 
 
             $.ajax({
-                url: "https://school-f6vi.onrender.com/staff",
+                url: "http://localhost:8080/staff",
                 method: 'POST',
                 contentType: false,
                 cache: false,
@@ -134,7 +134,7 @@
                     from: new Date().toISOString()
                 }
                 $.ajax({
-                    url: "https://school-f6vi.onrender.com/staff-payment",
+                    url: "http://localhost:8080/staff-payment",
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(staff),

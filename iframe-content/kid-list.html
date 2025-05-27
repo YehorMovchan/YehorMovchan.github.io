@@ -120,7 +120,7 @@
 
 <script>
      $.ajax({
-        url: "https://school-f6vi.onrender.com/programs-type",
+        url: "http://localhost:8080/programs-type",
         method: 'get',
         dataType: 'json',
         success:(data)=>{
@@ -149,7 +149,7 @@
             formData.append("receipt", new Blob([null], {type: "application/json"}), "empty");
         }
         $.ajax({
-            url: "https://school-f6vi.onrender.com/transaction",
+            url: "http://localhost:8080/transaction",
             method: "POST",
             contentType: false,
             data: formData,
@@ -164,7 +164,7 @@
     $("#save-parent").click()
 
 
-    $.getJSON("https://school-f6vi.onrender.com/transactions-type", (data)=>{
+    $.getJSON("http://localhost:8080/transactions-type", (data)=>{
         let select = $("#transaction-type");
         data.forEach(type => {
             select.append(`<option value="${type.id}">${type.name}</option>`);
@@ -173,7 +173,7 @@
 
 
     $.ajax({
-        url: "https://school-f6vi.onrender.com/kid",
+        url: "http://localhost:8080/kid",
         method: 'get',
         dataType: 'json',
         success:(data)=>{
@@ -253,7 +253,7 @@
         }
        
         $.ajax({
-            url: "https://school-f6vi.onrender.com/kid",
+            url: "http://localhost:8080/kid",
             method: "POST",
             contentType: false,
             data: formData,
@@ -273,7 +273,7 @@
                 from: new Date().toISOString()
             }
             $.ajax({
-                url: "https://school-f6vi.onrender.com/nutrition",
+                url: "http://localhost:8080/nutrition",
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(nutrition),
@@ -289,7 +289,7 @@
                 from: new Date().toISOString()
             }
             $.ajax({
-                url: "https://school-f6vi.onrender.com/program",
+                url: "http://localhost:8080/program",
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(program),

@@ -220,7 +220,7 @@
         // Завантаження предметів
         function loadSubjects() {
             $.ajax({
-                url: "https://school-f6vi.onrender.com/subject",
+                url: "http://localhost:8080/subject",
                 method: 'get',
                 dataType: 'json',
                 success: (data) => {
@@ -322,7 +322,7 @@
         function deleteSubject(id) {
             if (confirm("Ви впевнені, що хочете видалити цей предмет?")) {
                 $.ajax({
-                    url: `https://school-f6vi.onrender.com/subject/${id}`,
+                    url: `http://localhost:8080/subject/${id}`,
                     method: 'delete',
                     success: () => {
                         allSubjects = allSubjects.filter(subject => subject.id !== id);
@@ -353,7 +353,7 @@
             }
             
             $.ajax({
-                url: "https://school-f6vi.onrender.com/subject",
+                url: "http://localhost:8080/subject",
                 method: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({ name: subjectName }),
@@ -378,7 +378,7 @@
 
         function loadNutritionPrices() {
             $.ajax({
-                url: "https://school-f6vi.onrender.com/nutrition-price",
+                url: "http://localhost:8080/nutrition-price",
                 method: 'get',
                 dataType: 'json',
                 success: (data) => {
@@ -462,7 +462,7 @@
             };
             
             $.ajax({
-                url: "https://school-f6vi.onrender.com/nutrition-price",
+                url: "http://localhost:8080/nutrition-price",
                 method: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify(requestData),
@@ -482,7 +482,7 @@
 
         function loadLessonPrice() {
             $.ajax({
-                url: "https://school-f6vi.onrender.com/lesson-price",
+                url: "http://localhost:8080/lesson-price",
                 method: 'get',
                 dataType: 'json',
                 success: (data) => {
@@ -552,7 +552,7 @@
             };
             
             $.ajax({
-                url: "https://school-f6vi.onrender.com/lesson-price",
+                url: "http://localhost:8080/lesson-price",
                 method: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify(requestData),
@@ -573,7 +573,7 @@
         // Завантаження історії цін харчування
         function loadNutritionPriceHistory() {
             $.ajax({
-                url: "https://school-f6vi.onrender.com/nutrition-price/all",
+                url: "http://localhost:8080/nutrition-price/all",
                 method: 'get',
                 dataType: 'json',
                 success: (data) => {
@@ -616,7 +616,7 @@
         // Завантаження історії цін навчання
         function loadLessonPriceHistory() {
             $.ajax({
-                url: "https://school-f6vi.onrender.com/lesson-price/all",
+                url: "http://localhost:8080/lesson-price/all",
                 method: 'get',
                 dataType: 'json',
                 success: (data) => {
@@ -675,7 +675,7 @@
         // Завантаження користувачів
         function loadUsers() {
             $.ajax({
-                url: "https://school-f6vi.onrender.com/users-list",
+                url: "http://localhost:8080/users-list",
                 method: 'get',
                 dataType: 'json',
                 success: (data) => {
@@ -692,7 +692,7 @@
         // Завантаження співробітників для селекту
         function loadStaff() {
             $.ajax({
-                url: "https://school-f6vi.onrender.com/staff",
+                url: "http://localhost:8080/staff",
                 method: 'get',
                 dataType: 'json',
                 success: (data) => {
@@ -820,7 +820,7 @@
         function deleteUser(id) {
             if (confirm("Ви впевнені, що хочете видалити цього користувача?")) {
                 $.ajax({
-                    url: `https://school-f6vi.onrender.com/users/${id}`,
+                    url: `http://localhost:8080/users/${id}`,
                     method: 'delete',
                     success: () => {
                         allUsers = allUsers.filter(user => user.id !== id);
@@ -868,7 +868,7 @@
             }
             
             $.ajax({
-                url: "https://school-f6vi.onrender.com/users",
+                url: "http://localhost:8080/users",
                 method: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify(userData),

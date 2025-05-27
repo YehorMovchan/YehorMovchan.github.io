@@ -4,7 +4,7 @@ $(document).ready(function() {
     getParents(kidId);
     function getParents(kidId){
         if (kidId) {
-            $.getJSON(`https://school-f6vi.onrender.com/kid/${kidId}`, function(kid) {
+            $.getJSON(`http://localhost:8080/kid/${kidId}`, function(kid) {
                 $(".request-error").hide()
                 loadParents(kid.mother, "#mother-select", 2);
                 loadParents(kid.father, "#father-select", 1);
@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     function loadParents(selectedId, selector, sex) {
         $(".request-error").hide()
-        $.getJSON(`https://school-f6vi.onrender.com/parent`, function(parents) {
+        $.getJSON(`http://localhost:8080/parent`, function(parents) {
             let filteredParents = parents.filter(p => p.sex === sex);
             let select = $(selector);
             select.append('<option value="">Оберіть</option>');
@@ -42,7 +42,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: `https://school-f6vi.onrender.com/kid/update/parent/${kidId}`,
+            url: `http://localhost:8080/kid/update/parent/${kidId}`,
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify(updatedData),
@@ -64,7 +64,7 @@ $(document).ready(function() {
             };
 
             $.ajax({
-                url: "https://school-f6vi.onrender.com/parent/save",
+                url: "http://localhost:8080/parent/save",
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(newParent),
@@ -88,7 +88,7 @@ $(document).ready(function() {
             return;
         }
 
-        $.getJSON(`https://school-f6vi.onrender.com/parent/${parentId}`, function(parent) {
+        $.getJSON(`http://localhost:8080/parent/${parentId}`, function(parent) {
             $("#edit-parent-name").val(parent.name);
             $("#edit-parent-phone").val(parent.phone);
             $("#edit-parent-address").val(parent.homeAddress);
@@ -102,7 +102,7 @@ $(document).ready(function() {
                 };
                 
                 $.ajax({
-                    url: `https://school-f6vi.onrender.com/parent/update/${parentId}`,
+                    url: `http://localhost:8080/parent/update/${parentId}`,
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(updatedParent),

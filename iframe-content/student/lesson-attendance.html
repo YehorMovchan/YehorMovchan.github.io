@@ -26,7 +26,7 @@
                     let from = `${year}-${m}-01`;
                     let to = `${year}-${m}-${new Date(year, m, 0).getDate()}`;
                     
-                    $.getJSON(`https://school-f6vi.onrender.com/view/attendance/lesson/${kidId}/${from}/${to}`, function(attendance) {
+                    $.getJSON(`http://localhost:8080/view/attendance/lesson/${kidId}/${from}/${to}`, function(attendance) {
                         $(".request-error").hide()
                         let subjects = [...new Set(attendance.map(a => a.subjectName))];
                         let {dates, days} = getMonthDates(month);

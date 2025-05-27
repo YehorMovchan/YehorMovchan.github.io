@@ -34,7 +34,7 @@
           $('#class-select-for-schedule').append($('<option>', { value: classNumber, text: classNumber }));
         });
   
-        $.getJSON('https://school-f6vi.onrender.com/subject', function(data) {
+        $.getJSON('http://localhost:8080/subject', function(data) {
           subjects = data;
           $.each(subjects, function(index, subject) {
             $('#subject-select').append($('<option>', { value: subject.id, text: subject.name }));
@@ -42,7 +42,7 @@
           });
         });
         
-        $.getJSON('https://school-f6vi.onrender.com/staff/teachers', function(data) {
+        $.getJSON('http://localhost:8080/staff/teachers', function(data) {
           teachers = data;
           $.each(teachers, function(index, teacher) {
             $('#teacher-select').append($('<option>', { value: teacher.id, text: teacher.name }));
@@ -102,7 +102,7 @@
         });
         let date = $('#schedule-date').val();
         
-        $.getJSON(`https://school-f6vi.onrender.com/view/schedule/day=${date}/day-of-week=${day}`, (data)=> {
+        $.getJSON(`http://localhost:8080/view/schedule/day=${date}/day-of-week=${day}`, (data)=> {
           let lessons = [1, 2, 3, 4, 5, 6, 7, 8];
           let classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
           scheduleData = data;
@@ -190,7 +190,7 @@
             }
         });
         $.ajax({
-          url: 'https://school-f6vi.onrender.com/schedule/save', 
+          url: 'http://localhost:8080/schedule/save', 
           method: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(scheduleData),
@@ -214,7 +214,7 @@
         
         let date = $('#schedule-date').val();
 
-        $.getJSON(`https://school-f6vi.onrender.com/view/schedule/day=${date}/teacher=${teacherId}`, (data)=> {
+        $.getJSON(`http://localhost:8080/view/schedule/day=${date}/teacher=${teacherId}`, (data)=> {
           let lessons = [1, 2, 3, 4, 5, 6, 7, 8];
           let days = [1, 2, 3, 4, 5];
           scheduleData = data;
@@ -288,7 +288,7 @@
 
         let date = $('#schedule-date').val();
 
-        $.getJSON(`https://school-f6vi.onrender.com/view/schedule/day=${date}/grade=${classNumber}`, (data)=> {
+        $.getJSON(`http://localhost:8080/view/schedule/day=${date}/grade=${classNumber}`, (data)=> {
           let lessons = [1, 2, 3, 4, 5, 6, 7, 8];
           let days = [1, 2, 3, 4, 5];
           scheduleData = data;

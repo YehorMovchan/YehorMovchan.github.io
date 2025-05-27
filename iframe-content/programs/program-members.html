@@ -53,7 +53,7 @@
 
             function loadProgramMembers() {
                 $(".kid-program-new").text(programName);
-                $.getJSON(`https://school-f6vi.onrender.com/view/program/program=${programId}`, function(data) {
+                $.getJSON(`http://localhost:8080/view/program/program=${programId}`, function(data) {
                     currentMemberIds.clear();
                     let membersList = "";
                     data.forEach(member => {
@@ -66,7 +66,7 @@
             }
 
             function loadKids() {
-                $.getJSON("https://school-f6vi.onrender.com/kid", function(data) {
+                $.getJSON("http://localhost:8080/kid", function(data) {
                     let options = "";
                     data.forEach(kid => {
                         if (!currentMemberIds.has(kid.id)) {
@@ -81,7 +81,7 @@
             
             $("#program-members").on("click", ".edit-program-button", function(){
                 const kidId = $(this).data("id");
-                $.getJSON(`https://school-f6vi.onrender.com/programs-type`, function(programTypes) {
+                $.getJSON(`http://localhost:8080/programs-type`, function(programTypes) {
                     $("#program-list").empty();
                     $("#edit-kid-confirm-button").data("id", kidId);
                     programTypes.forEach(program => {
@@ -93,7 +93,7 @@
 
             $("#add-kid").on("click", () => {
                 const kidId = $("#kid-select").val();
-                $.getJSON(`https://school-f6vi.onrender.com/view/program/kid=${kidId}`, (data)=>{
+                $.getJSON(`http://localhost:8080/view/program/kid=${kidId}`, (data)=>{
                     $(".kid-program-old").text(data.programName);
                     $("#add-kid-confirm-modal").fadeIn();
                 })
@@ -116,7 +116,7 @@
                     reasonOfChange: $("#reason-of-change-edit-input").val()
                 }
                 $.ajax({
-                    url: `https://school-f6vi.onrender.com/program/${kidId}`,
+                    url: `http://localhost:8080/program/${kidId}`,
                     contentType: "application/json",
                     data: JSON.stringify(newProgram),
                     type: "POST",
@@ -134,7 +134,7 @@
                     reasonOfChange: $("#reason-of-change-edit-input").val()
                 }
                 $.ajax({
-                    url: `https://school-f6vi.onrender.com/program/${kidId}`,
+                    url: `http://localhost:8080/program/${kidId}`,
                     contentType: "application/json",
                     data: JSON.stringify(newProgram),
                     type: "POST",

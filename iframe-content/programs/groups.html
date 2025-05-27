@@ -29,7 +29,7 @@
             let currentPrograms = new Set();
 
             function loadProgramGroups() {
-                $.getJSON(`https://school-f6vi.onrender.com/view/program-groups/program=${programId}`, function(data) {
+                $.getJSON(`http://localhost:8080/view/program-groups/program=${programId}`, function(data) {
                     currentPrograms.clear();
                     let groupList = "";
                     data.forEach(group => {
@@ -42,7 +42,7 @@
             }
 
             function loadgroups() {
-                $.getJSON("https://school-f6vi.onrender.com/groups-type", function(data) {
+                $.getJSON("http://localhost:8080/groups-type", function(data) {
                     let options = "";
                     data.forEach(group => {
                         if (!currentPrograms.has(group.id)) {
@@ -58,7 +58,7 @@
             $("#program-groups").on("click", "#delete-group", function() {
                 const id = $(this).data("id");
                 $.ajax({
-                    url: `https://school-f6vi.onrender.com/program-groups/${id}`,
+                    url: `http://localhost:8080/program-groups/${id}`,
                     type: "DELETE",
                     success: function() {
                         loadProgramGroups();
@@ -76,7 +76,7 @@
                     _group: groupId
                 };
                 $.ajax({
-                    url: "https://school-f6vi.onrender.com/program-groups",
+                    url: "http://localhost:8080/program-groups",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(data),

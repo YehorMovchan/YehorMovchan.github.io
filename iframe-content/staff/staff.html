@@ -97,7 +97,7 @@
             let urlParams = new URLSearchParams(window.location.search);
             let teacherId = urlParams.get("id");
             if (teacherId) {
-                $.getJSON(`https://school-f6vi.onrender.com/staff/${teacherId}`, function(teacher) {
+                $.getJSON(`http://localhost:8080/staff/${teacherId}`, function(teacher) {
                     $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
                         $("#attendance").attr("src", `${data.attendance}?id=${teacherId}`);
                         $("#schedule").attr("src", `${data.schedule}?id=${teacherId}`);
@@ -164,7 +164,7 @@
                 }
                 
                 $.ajax({
-                    url: `https://school-f6vi.onrender.com/staff/${teacherId}`,
+                    url: `http://localhost:8080/staff/${teacherId}`,
                     method: "PUT",
                     contentType: false,
                     data: formData,
@@ -176,7 +176,7 @@
             });
 
             $.getJSON(
-                "https://school-f6vi.onrender.com/staff-payment/" + teacherId,
+                "http://localhost:8080/staff-payment/" + teacherId,
                 (data) => {
                     $("#salary").text(data.salary + " грн");
                 }
@@ -196,7 +196,7 @@
                     reasonOfChange: reason
                 }
                 $.ajax({
-                    url: `https://school-f6vi.onrender.com/staff-payment/update/${teacherId}`,
+                    url: `http://localhost:8080/staff-payment/update/${teacherId}`,
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(updatedSalary),
@@ -207,7 +207,7 @@
 
             $("#view-salary-history").click(function() {
                 $.getJSON(
-                    `https://school-f6vi.onrender.com/staff-payment/history/${teacherId}`,
+                    `http://localhost:8080/staff-payment/history/${teacherId}`,
                     (history) => {
                         let tableRows = history.map(entry => 
                             `<tr>
@@ -240,7 +240,7 @@
 
             $("#delete-entity").click(function() {
                 $.ajax({
-                    url: `https://school-f6vi.onrender.com/staff/${teacherId}`,
+                    url: `http://localhost:8080/staff/${teacherId}`,
                     method: "DELETE",
                     success: () => window.location.href = "https://yehormovchan.github.io/iframe-content/staff-list.html",
                     error: (errorMessage) => console.log("error" + errorMessage)

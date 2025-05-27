@@ -66,7 +66,7 @@
 
             function fillInfo(staffId){
                 if (staffId) {
-                    $.getJSON(`https://school-f6vi.onrender.com/staff/${staffId}`, function(staff) {
+                    $.getJSON(`http://localhost:8080/staff/${staffId}`, function(staff) {
                         $.getJSON("https://yehormovchan.github.io/assets/teacher-links.json", (data)=>{
                             $("#attendance").attr("src", `${data.attendance}?id=${staffId}`);
                             $("#attendance").show();
@@ -98,7 +98,7 @@
                 }
 
                 $.getJSON(
-                    `https://school-f6vi.onrender.com/staff-payment/${staffId}`,
+                    `http://localhost:8080/staff-payment/${staffId}`,
                     (data) => {
                         $("#salary").text(data.salary + " грн");
                     }
@@ -108,7 +108,7 @@
 
             $("#view-salary-history").click(function() {
                 $.getJSON(
-                    `https://school-f6vi.onrender.com/staff-payment/history/${staffId}`,
+                    `http://localhost:8080/staff-payment/history/${staffId}`,
                     (history) => {
                         let tableRows = history.map(entry => 
                             `<tr>
