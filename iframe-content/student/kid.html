@@ -23,6 +23,8 @@
                 $("#attendance-on-lesson").attr("src", `${links.attendanceOnLesson}?id=${kidId}`);
                 $("#student-schedule").attr("src", `${links.studentSchedule}?id=${kidId}`);
             });
+            $(".general-loader").show();
+            $("#nutrition-container").hide();
 
 
             if (kidId) {
@@ -63,6 +65,7 @@
                 (nutrition) => {
                     console.log(nutrition);
                     $(".nutrition-loader").hide();
+                    $("#nutrition-container").show();
                     $("#breakfast").prop("checked", nutrition.breakfast);
                     $("#lunch").prop("checked", nutrition.lunch);
                     $("#dinner").prop("checked", nutrition.dinner);
@@ -340,15 +343,17 @@
         <div class="nutrition">
             <div class="loader nutrition-loader"></div>
             <div class="nutrition-request-error request-error">Сталася помилка, спробуйте пізніше.</div>
-            <h3>Харчування</h3>
-            <div class="checkbox-block">
-                <label><input type="checkbox" id="breakfast" disabled> Сніданок</label><br>
-                <label><input type="checkbox" id="lunch" disabled> Обід</label><br>
-                <label><input type="checkbox" id="dinner" disabled> Вечеря</label><br>
-            </div>
-            <div class="buttons-block">
-                <button id="edit-nutrition">Редагувати харчування</button>
-                <button id="view-nutrition-history">Історія змін</button>
+            <div id="nutrition-container">
+                <h3>Харчування</h3>
+                <div class="checkbox-block">
+                    <label><input type="checkbox" id="breakfast" disabled> Сніданок</label><br>
+                    <label><input type="checkbox" id="lunch" disabled> Обід</label><br>
+                    <label><input type="checkbox" id="dinner" disabled> Вечеря</label><br>
+                </div>
+                <div class="buttons-block">
+                    <button id="edit-nutrition">Редагувати харчування</button>
+                    <button id="view-nutrition-history">Історія змін</button>
+                </div>
             </div>
         </div>
         <div class="programs">
