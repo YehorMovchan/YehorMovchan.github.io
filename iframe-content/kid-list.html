@@ -20,14 +20,15 @@
     </style>
 </head>
 <body>
+    <div id="modal-overlay" class="modal-overlay"></div>
    <div class="headline">
         <h1>Перелік учнів </h1>
         <div class="add-button-container">
-            <button class="add-button" onclick="$('#add-entity-modal').fadeIn()">+ Додати</button>
+            <button class="add-button" onclick="$('#add-entity-modal').fadeIn();$('#modal-overlay').show()">+ Додати</button>
         </div>
    </div>
    <div class="side-menu">
-        <button onclick="$(`#create-transaction`).fadeIn()">Додати оплату</button>
+        <button onclick="$(`#create-transaction`).fadeIn();$('#modal-overlay').show()">Додати оплату</button>
     </div>
     <div class="filter-menu">
         <input type="text" id="student-search" placeholder="Пошук учня...">
@@ -78,7 +79,7 @@
             <br>
 
             <button id="add-entity-button">Додати</button>
-            <button id="close-entity-modal" onclick="$('#add-entity-modal').fadeOut()">Закрити</button>
+            <button id="close-entity-modal" onclick="$('#add-entity-modal').fadeOut();$('#modal-overlay').hide()">Закрити</button>
             
         </div>
     </div>
@@ -90,7 +91,7 @@
             <label>Телефон: <input type="text" id="parent-phone"></label><br>
             <label>Адреса: <input type="text" id="parent-address"></label><br>
             <button id="save-parent">Зберегти</button>
-            <button onclick="$('#parent-form').fadeOut()">Закрити</button>
+            <button onclick="$('#parent-form').fadeOut();$('#modal-overlay').hide()">Закрити</button>
         </div>
     </div>
     <div id="edit-parent-form" class="modal">
@@ -100,7 +101,7 @@
             <label>Телефон: <input type="text" id="edit-parent-phone"></label><br>
             <label>Адреса: <input type="text" id="edit-parent-address"></label><br>
             <button id="update-parent">Оновити</button>
-            <button onclick="$('#edit-parent-form').fadeOut()">Закрити</button>
+            <button onclick="$('#edit-parent-form').fadeOut();$('#modal-overlay').hide()">Закрити</button>
         </div>
     </div>
 
@@ -113,7 +114,7 @@
             <label>Тип оплати: <select id="transaction-type"></select></label><br>
             <label>Квитанція: <input type="file" id="transaction-receipt"></label><br>
             <button id="save-transaction">Зберегти</button>
-            <button onclick="$('#create-transaction').fadeOut()">Закрити</button>
+            <button onclick="$('#create-transaction').fadeOut();$('#modal-overlay').hide()">Закрити</button>
         </div>
     </div>
 </body>
@@ -157,6 +158,7 @@
             processData: false,
             success: ()=> {
                 location.reload();
+                $("#modal-overlay").hide();
             }
         });
     })
@@ -294,8 +296,8 @@
                 contentType: "application/json",
                 data: JSON.stringify(program),
                 success: ()=> {
-                    alert("Учня додано!");
                     location.reload();
+                    $("#modal-overlay").hide();
                 }
             });
         }
