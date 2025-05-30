@@ -901,7 +901,7 @@ fieldset input[type="date"]{
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5); /* напівпрозорий чорний */
+  background-color: rgba(0,0,0,0.5); 
   z-index: 999; /* під вікном, але вище всього іншого */
   display: none;
 }
