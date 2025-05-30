@@ -92,6 +92,7 @@
             
             $("#edit-kid-button").click(function() {
                 $("#edit-kid-modal").css("display", "flex").hide().fadeIn();
+                $("#modal-overlay").show();
             });
 
             $("#save-kid").click(function() {
@@ -128,6 +129,7 @@
                     processData: false,
                     success: (successMessage)=> {
                         location.reload()
+                        $("#modal-overlay").hide();
                     },
                     error:(errorMessage)=>{
                         console.log("error" +errorMessage)
@@ -137,6 +139,7 @@
 
             $("#edit-nutrition").click(function() {
                 $("#edit-nutrition-modal").css("display", "flex").hide().fadeIn();
+                $("#modal-overlay").show();
             });
 
             $("#confirm-nutrition").click(function() {
@@ -155,7 +158,10 @@
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(updatedNutrition),
-                    success: () => location.reload(),
+                    success: () => {
+                        location.reload();
+                        $("modal-overlay").hide();
+                    },
                     error: (errorMessage) => console.log("error" + errorMessage)
                 });
             });
@@ -193,6 +199,7 @@
                     
                     $('#nutrition-history-list').html(tableHtml);
                     $("#nutrition-history-modal").css("display", "flex").hide().fadeIn();
+                    $("#modal-overlay").show();
                 });
             });
 
@@ -205,6 +212,7 @@
 
             $("#edit-program").click(function() {
                 $("#edit-program-modal").css("display", "flex").hide().fadeIn();
+                $("#modal-overlay").show();
             });
 
             $("#confirm-program").click(function() {
@@ -221,7 +229,10 @@
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(updatedProgram),
-                    success: () => location.reload(),
+                    success: () => {
+                        location.reload();
+                        $("#modal-overlay").hide();
+                    },
                     error: (errorMessage) => console.log("error" + errorMessage)
                 });
             });
@@ -255,6 +266,7 @@
                     
                     $('#program-history-list').html(tableHtml);
                     $("#program-history-modal").css("display", "flex").hide().fadeIn();
+                    $("#modal-overlay").show();
                 });
             });
 
@@ -264,6 +276,7 @@
                     method: "DELETE",
                     success: () => {
                         location.href = "https://yehormovchan.github.io/iframe-content/kid-list.html";
+                        $("#modal-overlay").hide();
                     },
                     error: (errorMessage) => console.log("error" + errorMessage)
                 });
@@ -294,6 +307,7 @@
                     processData: false,
                     success: ()=> {
                         location.reload();
+                        $("#modal-overlay").hide();
                     }
                 });
             })
@@ -315,6 +329,7 @@
             })
 
 
+
         });
         
 
@@ -323,6 +338,7 @@
 
 </head>
 <body>
+    <div id="modal-overlay" class="modal-overlay"></div>
     <h1 id="kid-name"></h1>
     <div class="side-menu">
         <button onclick="$(`#create-transaction`).fadeIn()">Додати оплату</button>
@@ -336,7 +352,7 @@
             <span><strong id="birth-certificate" class="clickable"></strong></span>
             <div class="modal hidden" id="birth-certificate-modal">
                 <img id="birth-certificate-img" src="" alt="Свідоцтво про народження" >
-                <button onclick="$('#birth-certificate-modal').fadeOut()">Закрити</button>
+                <button onclick="$('#birth-certificate-modal').fadeOut();$('#modal-overlay').hide()">Закрити</button>
             </div>
             <button id="edit-kid-button">Редагувати інформацію</button>
         </div>
@@ -374,7 +390,7 @@
             <label>Тип оплати: <select id="transaction-type"></select></label><br>
             <label>Квитанція: <input type="file" id="transaction-receipt"></label><br>
             <button id="save-transaction">Зберегти</button>
-            <button onclick="$('#create-transaction').fadeOut()">Закрити</button>
+            <button onclick="$('#create-transaction').fadeOut();$('#modal-overlay').hide()">Закрити</button>
         </div>
     </div>
 
@@ -386,7 +402,7 @@
                 <label>Дата народження: <input type="date" id="edit-kid-birthday"></label><br>
                 <label>Свідоцтво про народження <input type="file" id="upload-certificate" accept="image/*"> </label> <br>
                 <button id="save-kid">Зберегти</button><br>
-                <button onclick="$('#edit-kid-modal').fadeOut()">Закрити</button>
+                <button onclick="$('#edit-kid-modal').fadeOut();$('#modal-overlay').hide()">Закрити</button>
         </div>
     </div>
 
@@ -400,7 +416,7 @@
             </div>
             <label>Причина зміни: <input type="text" id="nutrition-reason"></label><br>
             <button id="confirm-nutrition">Підтвердити</button>
-            <button onclick="$('#edit-nutrition-modal').fadeOut()">Закрити</button>
+            <button onclick="$('#edit-nutrition-modal').fadeOut();$('#modal-overlay').hide()">Закрити</button>
         </div>
     </div>
    
@@ -408,7 +424,7 @@
         <div class="edit-wrapper wrapper">
             <h2>Історія змін харчування</h2>
             <div id="nutrition-history-list"></div>
-            <button onclick="$('#nutrition-history-modal').fadeOut()">Закрити</button>
+            <button onclick="$('#nutrition-history-modal').fadeOut();$('#modal-overlay').hide()">Закрити</button>
         </div>
     </div>
 
@@ -418,7 +434,7 @@
             <select name="programs-type" id="programs-type"></select>
             <label>Причина зміни: <input type="text" id="program-reason"></label><br>
             <button id="confirm-program">Підтвердити</button>
-            <button onclick="$('#edit-program-modal').fadeOut()">Закрити</button>
+            <button onclick="$('#edit-program-modal').fadeOut();$('#modal-overlay').hide()">Закрити</button>
         </div>
     </div>
 
@@ -426,7 +442,7 @@
         <div class="edit-wrapper wrapper">
             <h2>Історія змін програми навчання</h2>
             <div id="program-history-list"></div>
-            <button onclick="$('#program-history-modal').fadeOut()">Закрити</button>
+            <button onclick="$('#program-history-modal').fadeOut();$('#modal-overlay').hide()">Закрити</button>
         </div>
     </div>
 
@@ -466,7 +482,7 @@
         <div class="edit-wrapper wrapper">
             <span><strong>Ви впевнені, що хочете видалити учня? Ця дія видалить усі пов'язані з ним дані.</strong></span>
             <button id="delete-entity">Так</button>
-            <button onclick="$('#delete-entity-modal').fadeOut()">Ні</button>
+            <button onclick="$('#delete-entity-modal').fadeOut();$('#modal-overlay').hide()">Ні</button>
         </div>
     </div>
 
