@@ -41,21 +41,7 @@
             </div>
         </div>
     </div>
-    <div class="settings-item">
-        <h3>Вартість навчання</h3>
-        <div class="lesson-price-container">
-            <div class="current-price">
-                <h4>Поточна вартість:</h4>
-                <div id="current-lesson-price">
-                    
-                </div>
-            </div>
-            <div class="buttons-block">
-                <button id="edit-lesson-price">Редагувати ціну уроків</button>
-                <button id="view-lesson-history">Історія змін</button>
-            </div>
-        </div>
-    </div>
+   
     
     <div class="settings-item">
         <h3>Користувачі системи</h3>
@@ -69,21 +55,6 @@
         </div>
     </div>
 
-    <div class="modal hidden" id="edit-lesson-price-modal">
-        <h4>Оновити вартість:</h4>
-        <div class="price-inputs">
-            <div class="input-group">
-                <label for="lesson-price">Ціна (грн):</label>
-                <input type="number" id="lesson-price" min="0">
-            </div>
-            <div class="input-group full-width">
-                <label for="reason-of-change">Причина зміни:</label>
-                <textarea id="reason-of-change" rows="3"></textarea>
-            </div>
-        </div>
-        <button id="edit-lesson-price-button">Зберегти зміни</button>
-        <button onclick="$('#edit-lesson-price-modal').fadeOut()">Закрити</button>
-    </div>
 
 
     <div class="modal hidden" id="edit-nutrition-price-modal"> 
@@ -132,23 +103,7 @@
     </div>
     
     <!-- Модальне вікно для історії змін вартості навчання -->
-    <div class="modal hidden history-modal" id="lesson-history-modal">
-        <h4>Історія змін вартості навчання</h4>
-        <div class="history-modal-content">
-            <table id="lesson-history-table">
-                <thead>
-                    <tr>
-                        <th>Дата від</th>
-                        <th>Дата до</th>
-                        <th>Вартість</th>
-                        <th>Причина зміни</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <button onclick="$('#lesson-history-modal').fadeOut()">Закрити</button>
-    </div>
+
     
     <!-- Модальне вікно для додавання/редагування користувача -->
     <div class="modal hidden" id="user-modal">
@@ -194,7 +149,6 @@
         const itemsPerPage = 10;
         let currentPage = 1;
         let nutritionPrices = null;
-        let lessonPrice = null;
         
         // Форматування дати для відображення
         function formatDate(dateStr) {
@@ -212,9 +166,6 @@
 
         $("#edit-nutrition-price").click(function() {
             $("#edit-nutrition-price-modal").show();
-        });
-        $("#edit-lesson-price").click(function() {
-            $("#edit-lesson-price-modal").show();
         });
         
         // Завантаження предметів
@@ -480,95 +431,7 @@
             });
         });
 
-        function loadLessonPrice() {
-            $.ajax({
-                url: "http://localhost:8080/lesson-price",
-                method: 'get',
-                dataType: 'json',
-                success: (data) => {
-                    lessonPrice = data;
-                    renderLessonPrice();
-                    
-                    // Заповнюємо поле форми поточною ціною
-                    if (lessonPrice) {
-                        $("#lesson-price").val(lessonPrice.price);
-                    }
-                },
-                error: (err) => {
-                    console.error("Помилка завантаження вартості навчання:", err);
-                    $("#current-lesson-price").html("<p>Помилка завантаження даних</p>");
-                }
-            });
-        }
-        
-        // Відображення поточної вартості навчання
-        function renderLessonPrice() {
-            const container = $("#current-lesson-price");
-            container.empty();
-            
-            if (!lessonPrice) {
-                container.html("<p>Інформація відсутня</p>");
-                return;
-            }
-            
-            container.html(`
-                <div class="price-item">
-                    <div>Вартість за урок</div>
-                    <div><strong>${lessonPrice.price} грн</strong></div>
-                </div>
-                ${lessonPrice.reasonOfChange ? 
-                    `<div class="price-item">
-                        <div>Причина останньої зміни:</div>
-                        <div>${lessonPrice.reasonOfChange}</div>
-                    </div>` : ''}
-                <div class="price-date">
-                    Актуально з: ${formatDate(lessonPrice.from)}
-                </div>
-            `);
-        }
-        
-        // Оновлення вартості навчання
-        $("#edit-lesson-price-button").click(function() {
-            const price = parseInt($("#lesson-price").val());
-            const reason = $("#reason-of-change").val().trim();
-            
-            if (isNaN(price)) {
-                alert("Введіть коректну вартість навчання");
-                return;
-            }
-            
-            if (!reason) {
-                alert("Введіть причину зміни вартості");
-                return;
-            }
-            
-            const today = getCurrentDateISO();
-            
-            const requestData = {
-                price: price,
-                from: today,
-                to: null,
-                reasonOfChange: reason
-            };
-            
-            $.ajax({
-                url: "http://localhost:8080/lesson-price",
-                method: 'post',
-                contentType: 'application/json',
-                data: JSON.stringify(requestData),
-                success: (response) => {
-                    lessonPrice = response;
-                    renderLessonPrice();
-                    $("#reason-of-change").val("");
-                    $("#edit-lesson-price-modal").fadeOut();
-                    alert("Вартість навчання успішно оновлено!");
-                },
-                error: (err) => {
-                    console.error("Помилка оновлення вартості навчання:", err);
-                    alert("Не вдалося оновити вартість. Спробуйте пізніше.");
-                }
-            });
-        });
+       
         
         // Завантаження історії цін харчування
         function loadNutritionPriceHistory() {
@@ -613,46 +476,7 @@
             });
         }
         
-        // Завантаження історії цін навчання
-        function loadLessonPriceHistory() {
-            $.ajax({
-                url: "http://localhost:8080/lesson-price/all",
-                method: 'get',
-                dataType: 'json',
-                success: (data) => {
-                    renderLessonPriceHistory(data);
-                },
-                error: (err) => {
-                    console.error("Помилка завантаження історії цін навчання:", err);
-                    $("#lesson-history-table tbody").html("<tr><td colspan='4'>Помилка завантаження даних</td></tr>");
-                }
-            });
-        }
-        
-        // Відображення історії цін навчання
-        function renderLessonPriceHistory(historyData) {
-            const tbody = $("#lesson-history-table tbody");
-            tbody.empty();
-            
-            if (!historyData || historyData.length === 0) {
-                tbody.html("<tr><td colspan='4'>Історія відсутня</td></tr>");
-                return;
-            }
-            
-            // Сортування за датою (від найновіших до найстаріших)
-            historyData.sort((a, b) => new Date(b.from) - new Date(a.from));
-            
-            historyData.forEach(item => {
-                tbody.append(`
-                    <tr>
-                        <td>${formatDate(item.from)}</td>
-                        <td>${formatDate(item.to)}</td>
-                        <td>${item.price} грн</td>
-                        <td>${item.reasonOfChange || "-"}</td>
-                    </tr>
-                `);
-            });
-        }
+       
         
         // Обробник натискання на кнопку "Історія змін" для харчування
         $("#view-nutrition-history").click(function() {
@@ -660,11 +484,7 @@
             $("#nutrition-history-modal").fadeIn();
         });
         
-        // Обробник натискання на кнопку "Історія змін" для навчання
-        $("#view-lesson-history").click(function() {
-            loadLessonPriceHistory();
-            $("#lesson-history-modal").fadeIn();
-        });
+
         
         // Управління користувачами
         let allUsers = [];
