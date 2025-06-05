@@ -88,13 +88,10 @@
                 presentStudents.forEach(studentId=>{
                     postData.push({ date: selectedDate, kid: studentId, lesson: lessonId });
                 })
-                let transactions = [];
                 let nutritionTransactions = [];
                 presentStudents.forEach(studentId => {
-                    transactions.push({ kid: studentId, date: selectedDate, sum: lessonPrice, type: 4, idOfItem: lessonId });
                     nutritionTransactions.push({ kid: studentId, date: selectedDate, sum: 0, type: 3, idOfItem: 0 });
                 });
-                
                 $.ajax({
                     type: "POST",
                     url: "http://localhost:8080/attendance/lesson",
