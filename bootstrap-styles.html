@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Демо Bootstrap утиліт: текст, фон, межі, тіні</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    >
+  </head>
+  <body class="bg-body-tertiary">
+    <header class="container py-5">
+      <div class="p-5 mb-4 bg-dark text-white rounded-4 shadow-lg">
+        <div class="container-fluid py-2">
+          <h1 class="display-5 fw-bold">Bootstrap утиліти стилізації</h1>
+          <p class="col-lg-8 fs-5">
+            На цій сторінці зібрано приклади <strong>класів Bootstrap</strong> для
+            оформлення <em>тексту</em>, <em>фону</em>, <em>меж (border)</em> та <em>тіней</em> —
+            без написання власного CSS.
+          </p>
+          <p class="mb-0 opacity-75">Порада: зазвичай класи утиліт додаємо прямо елементу. Обгортка <code>&lt;div&gt;</code> потрібна, коли стилізуємо групу елементів або фон/тінь має покривати блок повністю.</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="container pb-5">
+      <!-- 1. ТЕКСТ -->
+      <section class="mb-5">
+        <h2 class="mb-4">1) Текст (розмір, колір, прозорість)</h2>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+              <h3 class="h5">Розмір шрифту</h3>
+              <p class="fs-1 mb-1">fs-1 (найбільший)</p>
+              <p class="fs-3 mb-1">fs-3</p>
+              <p class="fs-5 mb-1">fs-5</p>
+              <p class="fs-6 mb-0">fs-6 (найменший з утиліт)</p>
+              <hr>
+              <p class="h1">h1 (заголовок)</p>
+              <p class="lead mb-0">.lead — виділений абзац</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+              <h3 class="h5">Колір та прозорість тексту</h3>
+              <p class="mb-1 text-primary">.text-primary</p>
+              <p class="mb-1 text-success">.text-success</p>
+              <p class="mb-1 text-danger">.text-danger</p>
+              <p class="mb-1 text-warning">.text-warning</p>
+              <p class="mb-1 text-info">.text-info</p>
+              <p class="mb-1 text-body-secondary">.text-body-secondary</p>
+              <hr>
+              <p class="mb-1 text-primary text-opacity-50">.text-primary.text-opacity-50</p>
+              <p class="mb-0 text-dark opacity-50">.opacity-50 (зменшує непрозорість усього елемента)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. ФОН -->
+      <section class="mb-5">
+        <h2 class="mb-4">2) Фон (колір, градієнт, прозорість)</h2>
+        <div class="row g-4">
+          <div class="col-lg-4">
+            <div class="p-4 rounded-4 shadow-sm bg-primary text-white">
+              .bg-primary .text-white
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="p-4 rounded-4 shadow-sm bg-success bg-opacity-75 text-white">
+              .bg-success.bg-opacity-75
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="p-4 rounded-4 shadow-sm bg-warning bg-opacity-25">
+              .bg-warning.bg-opacity-25
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="p-4 rounded-4 shadow-sm bg-info bg-gradient text-white">
+              .bg-info.bg-gradient — додає легкий градієнт
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="p-4 rounded-4 shadow-sm bg-dark bg-opacity-75 text-white">
+              Текстові блоки на напівпрозорому фоні: .bg-dark.bg-opacity-75
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. МЕЖІ (borders) -->
+      <section class="mb-5">
+        <h2 class="mb-4">3) Межі (колір, розмір, заокруглення, положення)</h2>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-3">
+            <div class="p-4 bg-white rounded-4 shadow-sm border border-2 border-primary">
+              .border.border-2.border-primary
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="p-4 bg-white rounded-4 shadow-sm border-start border-4 border-success">
+              Ліва межа: .border-start.border-4.border-success
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="p-4 bg-white rounded-top-4 shadow-sm border-top border-5 border-danger">
+              Верхня межа + скруглення зверху
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center align-items-center">
+            <div class="bg-primary bg-opacity-25 border border-3 border-primary rounded-circle d-inline-block" style="width: 96px; height: 96px;"></div>
+          </div>
+        </div>
+        <div class="row g-4 mt-1">
+          <div class="col-md-6">
+            <div class="p-4 bg-white shadow-sm border rounded-start-4">
+              Селективне скруглення: .rounded-start-4
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-4 bg-white shadow-sm border border-secondary-subtle rounded-pill">
+              .rounded-pill — «пілюля» (великі скруглення)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. ТІНІ -->
+      <section>
+        <h2 class="mb-4">4) Тіні</h2>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="p-4 bg-white rounded-4 shadow-sm">
+              .shadow-sm — мала тінь
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-4 bg-white rounded-4 shadow">
+              .shadow — стандартна тінь
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-4 bg-white rounded-4 shadow-lg">
+              .shadow-lg — велика тінь
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container py-5">
+      <p class="text-center text-body-secondary mb-0">Готово до копіювання у ваш проєкт Bootstrap.</p>
+    </footer>
+
+    <!-- Bootstrap JS (не обов'язково для утиліт, але стане в нагоді для компонентів) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"></script>
+  </body>
+</html>
