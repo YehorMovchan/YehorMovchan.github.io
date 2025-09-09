@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap Grid — навчальний приклад (без адаптації)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    header {background:#1f2630;color:white;padding:1.5rem 0;}
+    .col, .col-3, .col-4, .col-5, .col-6, .col-9 {background:#f8f9fa;border:1px dashed #ccc;padding:1rem;text-align:center;}
+    .code-label {display:block;font-size:0.85rem;color:#6c757d;margin-top:0.5rem;}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1 class="h3">Bootstrap Grid — демонстрація класів</h1>
+    <p class="mb-0">У цьому прикладі <b>без адаптивності</b> використано базові класи <code>col-*</code> та утиліти відступів (<code>m-*</code>, <code>p-*</code>, <code>g-*</code>).</p>
+  </div>
+</header>
+
+<section class="py-4">
+  <div class="container">
+    <h2 class="h4 mb-3">1. Дві колонки (по 6 з 12) </h2>
+    <div class="row">
+      <div class="col-6">
+        <div class="example-box p-3">col-6 p-3<span class="code-label">(половина ширини + внутрішній відступ)</span></div>
+      </div>
+      <div class="col-6">
+        <div class="example-box m-2">col-6 m-2<span class="code-label">(половина ширини + зовнішній відступ)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-4">
+  <div class="container">
+    <h2 class="h4 mb-3">1. Дві колонки .col з відступом (gap-3) </h2>
+    <div class="row gap-3">
+      <div class="col">
+        <div class="example-box">col <span class="code-label">(половина ширини + внутрішній відступ)</span></div>
+      </div>
+      <div class="col">
+        <div class="example-box">col <span class="code-label">(половина ширини + зовнішній відступ)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-4 bg-light">
+  <div class="container">
+    <h2 class="h4 mb-3">2. Три колонки (по 4 з 12)  </h2>
+    <div class="row g-3">
+      <div class="col-4">
+        <div class="example-box">col-4<span class="code-label">(1/3 ширини)</span></div>
+      </div>
+      <div class="col-4">
+        <div class="example-box">col-4</div>
+      </div>
+      <div class="col-4">
+        <div class="example-box">col-4</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-4">
+  <div class="container">
+    <h2 class="h4 mb-3">3. Чотири колонки (по 3 з 12)</h2>
+    <div class="row">
+      <div class="col-3">
+        <div class="example-box">col-3<span class="code-label">(1/4 ширини)</span></div>
+      </div>
+      <div class="col-3">
+        <div class="example-box">col-3</div>
+      </div>
+      <div class="col-3">
+        <div class="example-box">col-3</div>
+      </div>
+      <div class="col-3">
+        <div class="example-box">col-3</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-4 bg-light">
+  <div class="container">
+    <h2 class="h4 mb-3">4. Offset (зсув)</h2>
+    <div class="row">
+      <div class="col-6 offset-3">
+        <div class="example-box">col-6 offset-3<span class="code-label">(6 колонок зміщені на 3)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-4">
+  <div class="container">
+    <h2 class="h4 mb-3">5. Нерівномірний розмір колонок</h2>
+    <div class="row g-2">
+      <div class="col-3">
+        <div class="example-box">col-3 <span class="code-label"></span></div>
+      </div>
+      <div class="col-9">
+        <div class="example-box">col-9 <span class="code-label"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-4">
+  <div class="container">
+    <h2 class="h4 mb-3">6. Нерівномірний розмір колонок + gap</h2>
+    <div class="row gap-3">
+      <div class="col-3">
+        <div class="example-box">col-3 <span class="code-label"></span></div>
+      </div>
+      <div class="col-9">
+        <div class="example-box">col-9 <span class="code-label"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-4">
+  <div class="container">
+    <h2 class="h4 mb-3">7. Кількість колонок в рядку (row-cols-3)</h2>
+    <div class="row row-cols-3">
+      <div class="col"><div class="p-3 border bg-light">Col #1</div></div>
+      <div class="col"><div class="p-3 border bg-light">Col #2</div></div>
+      <div class="col"><div class="p-3 border bg-light">Col #3</div></div>
+      <div class="col"><div class="p-3 border bg-light">Col #4</div></div>
+      <div class="col"><div class="p-3 border bg-light">Col #5</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="py-4 bg-light">
+  <div class="container">
+    <h2 class="h4 mb-3">8. Приклади відступів (margin, padding)</h2>
+    <div class="row g-2">
+      <div class="col-4">
+        <div class="example-box p-5">p-5<span class="code-label">(великий внутрішній відступ)</span></div>
+      </div>
+      <div class="col-4">
+        <div class="example-box m-4">m-4<span class="code-label">(зовнішній відступ)</span></div>
+      </div>
+      <div class="col-4">
+        <div class="example-box px-5 py-1">px-5 py-1<span class="code-label">(горизонтальний + вертикальний)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="py-3 bg-dark text-light">
+  <div class="container">
+    <p class="mb-0">&copy; 2025 — Навчальний приклад Bootstrap Grid з відступами (без адаптивності).</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
