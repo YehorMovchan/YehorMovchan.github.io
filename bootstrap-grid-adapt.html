@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Адаптивна сітка Bootstrap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        header {background:#1f2630;color:white;padding:1.5rem 0;}
+        .demo-box {
+            background-color: #cfe2ff;
+            border: 1px solid #6ea8fe;
+            padding: 10px;
+            text-align: center;
+        }
+        section table {max-width: 800px; margin: auto;}
+    </style>
+  </head>
+  <body>
+    <header>
+    <div class="container">
+        <h1 class="h3">Bootstrap Grid — Адаптація</h1>
+        <p class="mb-0">У цьому прикладівикористано базові класи <code>col-*</code> з використанням адаптації.</p>
+    </div>
+    </header>
+    <section>
+        <table class="table mb-4"><thead><tr><th scope="col"></th><th scope="col">xs<br><span class="fw-normal">&lt;576px</span></th><th scope="col">sm<br><span class="fw-normal">≥576px</span></th><th scope="col">md<br><span class="fw-normal">≥768px</span></th><th scope="col">lg<br><span class="fw-normal">≥992px</span></th><th scope="col">xl<br><span class="fw-normal">≥1200px</span></th><th scope="col">xxl<br><span class="fw-normal">≥1400px</span></th></tr></thead><tbody><tr><th class="text-nowrap" scope="row">Container <code class="fw-normal">max-width</code></th><td>None (auto)</td><td>540px</td><td>720px</td><td>960px</td><td>1140px</td><td>1320px</td></tr><tr><th class="text-nowrap" scope="row">Class prefix</th><td><code>.col-</code></td><td><code>.col-sm-</code></td><td><code>.col-md-</code></td><td><code>.col-lg-</code></td><td><code>.col-xl-</code></td><td><code>.col-xxl-</code></td></tr><tr><th class="text-nowrap" scope="row"># of columns</th><td colspan="6">12</td></tr><tr><th class="text-nowrap" scope="row">Gutter width</th><td colspan="6">1.5rem (.75rem on left and right)</td></tr><tr><th class="text-nowrap" scope="row">Custom gutters</th><td colspan="6"><a href="/docs/5.3/layout/gutters">Yes</a></td></tr><tr><th class="text-nowrap" scope="row">Nestable</th><td colspan="6"><a href="#nesting">Yes</a></td></tr><tr><th class="text-nowrap" scope="row">Column ordering</th><td colspan="6"><a href="/docs/5.3/layout/columns#reordering">Yes</a></td></tr></tbody></table>
+    </section>
+    <div class="container mt-4">
+      <h1 class="mb-4">Адаптивна сітка Bootstrap Grid</h1>
+
+      
+      <h3>1. col-12 col-md-6 col-lg-3 Одна колонка на мобільному, дві на планшеті, чотири на десктопі</h3>
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-3 demo-box">col-12 col-md-6 col-lg-3</div>
+        <div class="col-12 col-md-6 col-lg-3 demo-box">col-12 col-md-6 col-lg-3</div>
+        <div class="col-12 col-md-6 col-lg-3 demo-box">col-12 col-md-6 col-lg-3</div>
+        <div class="col-12 col-md-6 col-lg-3 demo-box">col-12 col-md-6 col-lg-3</div>
+      </div>
+
+      <h3 class="mt-4">2. col-12 col-sm-4 Три колонки, але на мобільному вони одна під одною</h3>
+      <div class="row">
+        <div class="col-12 col-sm-4 demo-box">col-12 col-sm-4</div>
+        <div class="col-12 col-sm-4 demo-box">col-12 col-sm-4</div>
+        <div class="col-12 col-sm-4 demo-box">col-12 col-sm-4</div>
+      </div>
+
+      
+      <h3 class="mt-4">3. order-md-1 / order-md-2  Зміна порядку на різних екранах</h3>
+      <div class="row">
+        <div class="col-12 col-md-6 order-md-2 demo-box">col-12 col-md-6 order-md-2</div>
+        <div class="col-12 col-md-6 order-md-1 demo-box">col-12 col-md-6 order-md-1</div>
+      </div>
+
+      <!-- Приклад 4: Використання offset на середніх і більших екранах -->
+      <h3 class="mt-4">4. col-md-4 offset-md-4 Використання offset на середніх і більших екранах</h3>
+      <div class="row">
+        <div class="col-12 col-md-4 offset-md-4 demo-box">col-12 col-md-4 offset-md-4</div>
+      </div>
+    </div>
+
+    <footer class="py-3 bg-dark text-light mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2025 — Навчальний приклад Bootstrap Grid з адаптацією.</p>
+        </div>
+    </footer>
+  </body>
+</html>
