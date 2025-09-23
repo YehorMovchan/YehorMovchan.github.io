@@ -1,156 +1,144 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Адміністрування школи</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://yehormovchan.github.io/static/style.css">
-    <script src="https://yehormovchan.github.io/static/script.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <nav>
-                <ul>
-                    <li id="kid-list"><a href="#kid-list" onclick="changePage(this)">Учні</a></li>
-                    <li id="staff-list"><a href="#staff-list"  onclick="changePage(this)">Працівники</a></li>
-                    <li id="schedule"><a href="#schedule" onclick="changePage(this)">Розклад</a></li>
-                    <li id="groups-list"><a href="#groups-type" onclick="changePage(this)">Гуртки</a></li>
-                    <li id="programs-list"><a href="#programs-type" onclick="changePage(this)">Програми навчання</a></li>
-                    <li id="staff-schedule"><a href="#staff-schedule" onclick="changePage(this)">Розклад</a></li>
-                    <li id="personal-account"><a href="#personal-account" onclick="changePage(this)">Особистий кабінет</a></li>
-                    <li id="settings"><a href="#settings" onclick="changePage(this)">Налаштування</a></li>
-                </ul>
-            </nav>
-            <div class="user-info">
-                <button class="sign-in" id="sign-in-button">Увійти</button>
-                <span id="username" style="display: none;"></span>
-                <button class="sign-in" id="sign-out" style="display: none;">Вийти</button>
-            </div>
-        </header>
-        
-        <main>
-            <iframe id="iframe-content" src="" frameborder="0"></iframe>
-
-            <div class="modal hidden" id="sign-in-modal">
-                <div class="wrapper edit-wrapper">
-                    <h2>Увійти</h2>
-                    <span id="login-error" style="display: none;" class="login-error">Невірний логін або пароль</span>
-                    <label>Логін: <br><input type="text" id="login" name="login" required></label><br>
-                    <label>Пароль: <br>
-                    <input type="password" id="password" name="password" required></label><br>
-                    <button id="sign-in-modal-enter">Увійти</button>
-                    <button id="sign-in-modal-close">Закрити</button>
-                </div>
-            </div>
-
-        </main>
-    </div>
-   
-    
-    <!-- <footer>
-        <p>&copy; 2025 Адміністрування школи</p>
-    </footer> -->
-</body>
-<script>
-
-    let iframe;
-    let page = location.hash;
-    const liList = $("li").toArray();
-    liList.forEach(e=>{
-        e.style.display = "none";
-    })
-    let links
-    
-    $(document).ready(()=>{
-        iframe = $("#iframe-content")[0]
-        getUserRole().then(role=>{
-            if(!role){
-                iframe.src = "";
-                location.hash = "#";
-                $("#sign-in-button").show();
-                $("#username").hide();
-                $("#sign-out").hide();
-            }
-            else{
-                $.getJSON("https://yehormovchan.github.io/assets/permits.json", (data)=>{
-                    let permits = data[role];
-                   
-                    liList.forEach(element => {
-                        if(permits.includes(element.id)){
-                            element.style.display = "block";
-                        }
-                    });
-                })
-            }
-        })
-        
-        getUser().then(user=>{
-            if(!user){
-                $("#sign-in-button").show();
-            }
-            else{
-                $("#sign-in-button").hide();
-                $("#username").show();
-                $("#username").text(user.username);
-                $("#sign-out").show();
-            }
-        })
-
-        $.getJSON("https://yehormovchan.github.io/assets/links.json", (data)=>{
-            links = data;
-            iframe.src=links[page];
-        })
-        
-
-        $("#sign-in-button").click(()=>{
-            $("#sign-in-modal").fadeIn();
-        })
-        $("#sign-in-modal-close").click(()=>{
-            $("#sign-in-modal").fadeOut();
-        })
-        $("#sign-in-modal-enter").click(()=>{
-            let username = $("#login").val();
-            let password = $("#password").val();
-            $.ajax({
-            url: 'http://localhost:8080/auth/login',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ username: username, password: password }),
-            success: function (response) {
-                localStorage.setItem('token', response.token); // Зберігаємо токен
-                location.reload();
-            },
-            error: function () {
-                $("#login-error").show();
-            }
-        });
-        })
-        $("#sign-out").click(()=>{
-            localStorage.removeItem('token');
-            iframe.src = "";
-            document.location.href = "https://yehormovchan.github.io/index.html";
-            $("a").hide();
-            $("#sign-in-button").show();
-            $("#username").hide();
-            $("#sign-out").hide();
-        })
-
-    })
-    function changePage(el){
-        iframe.src = links[el.hash];
-        liList.forEach(e=>{
-            $(e).children().removeClass("active");
-        })
-        $(el).addClass("active");
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tailwind CSS - Демонстрація з кодом</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    code { 
+      display: block; 
+      white-space: pre; 
+      background: #f3f4f6; 
+      padding: 0.5rem; 
+      border-radius: 0.25rem; 
+      overflow-x: auto;
     }
+  </style>
+</head>
+<body class="h-full bg-gray-50 text-gray-800 flex flex-col items-center space-y-8 p-8 font-sans">
+
+  <h1 class="text-4xl font-extrabold mb-6 text-gray-900 drop-shadow-md">Демонстрація Tailwind CSS з кодом</h1>
+
+  <!-- 1. Колір тексту -->
+  <section class="space-y-2 w-full max-w-2xl bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+    <h2 class="text-2xl font-semibold mb-2 text-gray-800">Колір тексту</h2>
+    <p class="text-black">Чорний текст</p>
+    <p class="text-red-500">Червоний текст</p>
+    <p class="text-gray-600">Сірий текст</p>
+    <code>
+&lt;p class="text-black"&gt;Чорний текст&lt;/p&gt;
+&lt;p class="text-red-500"&gt;Червоний текст&lt;/p&gt;
+&lt;p class="text-gray-600"&gt;Сірий текст&lt;/p&gt;
+    </code>
+  </section>
+
+    <!-- 6. Розмір тексту та декорація -->
+  <section class="space-y-2 w-full max-w-2xl bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+        <h2 class="text-2xl font-semibold mb-2 text-gray-800">Розмір тексту та декорація</h2>
+        <p class="text-xs">Дуже маленький текст</p>
+        <p class="text-base">Стандартний текст</p>
+        <p class="text-2xl font-bold">Великий жирний текст</p>
+        <p class="underline">Підкреслений текст</p>
+        <p class="line-through">Перекреслений текст</p>
+        <p class="uppercase">Всі літери великі</p>
+        <p class="italic">Курсив</p>
+        <code>
+    &lt;p class="text-xs"&gt;Дуже маленький текст&lt;/p&gt;
+    &lt;p class="text-base"&gt;Стандартний текст&lt;/p&gt;
+    &lt;p class="text-2xl font-bold"&gt;Великий жирний текст&lt;/p&gt;
+    &lt;p class="underline"&gt;Підкреслений текст&lt;/p&gt;
+    &lt;p class="line-through"&gt;Перекреслений текст&lt;/p&gt;
+    &lt;p class="uppercase"&gt;Всі літери великі&lt;/p&gt;
+    &lt;p class="italic"&gt;Курсив&lt;/p&gt;
+        </code>
+    </section>
+
+  <!-- 2. Колір фону -->
+  <section class="space-y-2 w-full max-w-2xl bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+    <h2 class="text-2xl font-semibold mb-2 text-gray-800">Колір фону</h2>
+    <div class="bg-white p-4 rounded shadow hover:bg-gray-50 transition-colors duration-300">Білий фон</div>
+    <div class="bg-blue-500 text-white p-4 rounded shadow hover:bg-blue-600 transition-colors duration-300">Синій фон</div>
+    <div class="bg-gray-100 p-4 rounded shadow hover:bg-gray-200 transition-colors duration-300">Світло-сірий фон</div>
+    <code>
+&ltdiv class="bg-white p-4 rounded shadow"&gt;Білий фон&lt;/div&gt;
+&ltdiv class="bg-blue-500 text-white p-4 rounded shadow"&gt;Синій фон&lt;/div&gt;
+&ltdiv class="bg-gray-100 p-4 rounded shadow"&gt;Світло-сірий фон&lt;/div&gt;
+    </code>
+  </section>
+
+
+    <!-- 5. Межі та заокруглення -->
+  <section class="space-y-2 w-full max-w-2xl bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+    <h2 class="text-2xl font-semibold mb-2 text-gray-800">Межі та заокруглення</h2>
+    <div class="border border-gray-400 p-4 rounded shadow hover:border-gray-500 transition-colors duration-300">Проста рамка</div>
+    <div class="border-2 border-blue-500 rounded-lg p-4 shadow hover:border-blue-600 transition-colors duration-300">Товща рамка з заокругленням</div>
+    <div class="border-4 border-red-500 rounded-full p-4 w-24 h-24 flex items-center justify-center shadow hover:border-red-600 transition-colors duration-300">Круглий блок</div>
+    <code>
+&ltdiv class="border border-gray-400 p-4 rounded shadow"&gt;Проста рамка&lt;/div&gt;
+&ltdiv class="border-2 border-blue-500 rounded-lg p-4 shadow"&gt;Товща рамка з заокругленням&lt;/div&gt;
+&ltdiv class="border-4 border-red-500 rounded-full p-4 w-24 h-24 flex items-center justify-center shadow"&gt;Круглий блок&lt;/div&gt;
+    </code>
+  </section>
+
+    <!-- 4. Розміри блоків -->
+  <section class="space-y-2 w-full max-w-2xl bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+    <h2 class="text-2xl font-semibold mb-2 text-gray-800">Розміри блоків</h2>
+    <div class="w-64 h-32 bg-blue-200 p-4 rounded shadow hover:bg-blue-300 transition-colors duration-300">Ширина 16rem, висота 8rem</div>
+    <div class="w-full h-48 bg-green-200 p-4 rounded shadow hover:bg-green-300 transition-colors duration-300">Повна ширина, висота 12rem</div>
+    <code>
+&ltdiv class="w-64 h-32 bg-blue-200 p-4 rounded shadow"&gt;Ширина 16rem, висота 8rem&lt;/div&gt;
+&ltdiv class="w-full h-48 bg-green-200 p-4 rounded shadow"&gt;Повна ширина, висота 12rem&lt;/div&gt;
+    </code>
+  </section>
+  <!-- 3. Градієнт фону -->
+  <section class="space-y-2 w-full max-w-2xl bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+    <h2 class="text-2xl font-semibold mb-2 text-gray-800">Градієнт фону</h2>
+    <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white rounded-lg shadow hover:scale-105 transform transition-transform duration-300">
+      Градієнтний фон
+    </div>
+    <code>
+&ltdiv class="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white rounded-lg shadow"&gt;
+  Градієнтний фон
+&lt;/div&gt;
+    </code>
+  </section>
 
 
 
-</script>
-</html>
+
+
+
+
+  <!-- 7. Градієнт тексту -->
+  <section class="space-y-2 w-full max-w-2xl bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+    <h2 class="text-2xl font-semibold mb-2 text-gray-800">Градієнт тексту</h2>
+    <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-yellow-500">
+      Градієнтний текст
+    </h1>
+    <code>
+&lth1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-yellow-500"&gt;
+  Градієнтний текст
+&lt;/h1&gt;
+    </code>
+  </section>
+
+  <!-- 8. Зображення як фон і фіксація -->
+  <section class="space-y-2 w-full max-w-2xl bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+    <h2 class="text-2xl font-semibold mb-2 text-gray-800">Фонові зображення</h2>
+
+    <div class="h-64 bg-[url('https://picsum.photos/800/400')] bg-cover bg-center p-4 rounded shadow ">
+    </div>
+    <code>
+&ltdiv class="h-64 bg-[url('https://picsum.photos/800/400')] bg-cover bg-center p-4 rounded shadow"&gt;
+  Зображення як фон
+&lt;/div&gt;
+    </code>
+
+    <div class="h-64 bg-[url('https://picsum.photos/800/400')] bg-cover bg-center bg-fixed p-4 rounded shadow ">
+    </div>
+    <code>
+        &ltdiv class="h-64 bg-[url('https://picsum.photos/1920/1080')] bg-cover bg-center bg-fixed p-4 rounded shadow"&gt;
+        Фіксоване зображення як фон
+        &lt;/div&gt;
+    </code>
