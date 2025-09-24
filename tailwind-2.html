@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tailwind — приклади станів (hover / focus / checked / peer)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    pre code { display: block; white-space: pre; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace; }
+    .card { background: white; border-radius: .5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+    .code-toolbar { display:flex; gap:0.5rem; justify-content: flex-end; }
+    .demo-row { gap:1rem; display:flex; align-items:center; flex-wrap:wrap; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen p-6">
+  <div class="max-w-6xl mx-auto">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold">Tailwind — приклади станів</h1>
+      <p class="mt-2 text-gray-600">Жива сторінка з прикладами поведінки класів зі станами (hover, focus, active, checked, peer). Код під кожним прикладом — копіюй і запускай.</p>
+      <p class="text-sm text-gray-500 mt-1">Джерело: офіційна документація Tailwind — Hover, focus, and other states.</p>
+    </header>
+
+    <main class="space-y-6">
+      <!-- Example: Hover / Focus / Active -->
+      <section class="card p-6">
+        <h2 class="text-xl font-semibold">1) Hover / Focus / Active</h2>
+        <p class="text-sm text-gray-600 mb-4">Класичний приклад — кнопка з фоновим кольором для станів.</p>
+        <div class="demo-row mb-4">
+          <button class="bg-sky-500 hover:bg-sky-700 focus:outline-2 focus:outline-offset-2 focus:outline-sky-600 active:bg-sky-800 text-white px-4 py-2 rounded">Наведи / Фокус / Актив</button>
+          <button class="bg-white border border-gray-200 hover:bg-gray-50 px-4 py-2 rounded">Ще кнопка</button>
+        </div>
+        <pre><code>&lt;button class="bg-sky-500 hover:bg-sky-700 focus:outline-2 focus:outline-offset-2 focus:outline-sky-600 active:bg-sky-800 text-white px-4 py-2 rounded"&gt;Наведи / Фокус / Актив&lt;/button&gt;</code></pre>
+      </section>
+
+      <!-- Example: Focus-visible -->
+      <section class="card p-6">
+        <h2 class="text-xl font-semibold">2) Focus vs Focus-visible</h2>
+        <p class="text-sm text-gray-600 mb-4"><strong>focus-visible</strong> зазвичай показує індикатори лише для клавіатурної навігації (де це підтримується), тоді як <strong>focus</strong> реагує на будь-який фокус.</p>
+        <div class="demo-row mb-4">
+          <input class="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-sky-400" placeholder="focus показує рінг" />
+          <input class="px-3 py-2 border rounded focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-600" placeholder="focus-visible рінг (тільки клавіатура)" />
+        </div>
+        <pre><code>&lt;input class="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-sky-400" placeholder="focus..." /&gt;
+&lt;input class="px-3 py-2 border rounded focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-600" placeholder="focus-visible..." /&gt;</code></pre>
+      </section>
+
+      <!-- Example: Peer + checked (checkboxes) -->
+      <section class="card p-6">
+        <h2 class="text-xl font-semibold">3) Peer-checked (чекбокси)</h2>
+        <p class="text-sm text-gray-600 mb-4">Використовуємо <code>peer</code> на input і <code>peer-checked:</code> на нащадках для стилізації залежно від стану чекбоксу.</p>
+        <div class="space-y-2">
+          <input type="checkbox" name="" id="example1" class="peer" /> 
+          <label for="example1" class="peer-checked:text-red-300">Варіант 0</label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" class="peer hidden" />
+            <span class="px-3 py-2 border rounded peer-checked:bg-sky-600 peer-checked:text-white">Варіант 1</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" class="peer hidden" />
+            <span class="px-3 py-2 border rounded peer-checked:bg-green-600 peer-checked:text-white">Варіант 2</span>
+          </label>
+        </div>
+        <pre>
+          <code>&lt;input type="checkbox" name="" id="example1" class="peer" /&gt;
+            &lt;label for="example1" class="peer-checked:text-red-300"&gt;Варіант 0&lt;/label&gt;
+          </code>
+          <code>&lt;label class="flex items-center gap-3"&gt;
+  &lt;input type="checkbox" class="peer hidden" /&gt;
+  &lt;span class="px-3 py-2 border rounded peer-checked:bg-sky-600 peer-checked:text-white"&gt;Варіант 1&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+      </section>
+
+      <!-- Example: Peer-checked (radio buttons) -->
+      <section class="card p-6">
+        <h2 class="text-xl font-semibold">4) Peer-checked (радіокнопки)</h2>
+        <p class="text-sm text-gray-600 mb-4">Радіокнопки дозволяють вибрати лише один варіант. Використовуємо <code>peer-checked:</code> для стилізації сусідніх елементів.</p>
+        <div class="flex gap-4">
+          <label class="cursor-pointer">
+            <input type="radio" name="option" class="peer hidden" />
+            <div class="px-4 py-2 border rounded peer-checked:bg-purple-600 peer-checked:text-white">
+              Варіант A
+              <p class="text-xs text-gray-500 peer-checked:text-purple-100">Додатковий опис</p>
+            </div>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="option" class="peer hidden" />
+            <div class="px-4 py-2 border rounded peer-checked:bg-purple-600 peer-checked:text-white">
+              Варіант B
+              <p class="text-xs text-gray-500 peer-checked:text-purple-100">Додатковий опис</p>
+            </div>
+          </label>
+        </div>
+        <pre><code>&lt;label&gt;
+  &lt;input type="radio" name="option" class="peer hidden" /&gt;
+  &lt;div class="px-4 py-2 border rounded peer-checked:bg-purple-600 peer-checked:text-white"&gt;
+    Варіант A
+    &lt;p class="text-xs text-gray-500 peer-checked:text-purple-100"&gt;Додатковий опис&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/label&gt;</code></pre>
+      </section>
+
+      <!-- Example: Odd / Even -->
+      <section class="card p-6">
+        <h2 class="text-xl font-semibold">5) Odd / Even — почергові рядки</h2>
+        <p class="text-sm text-gray-600 mb-4">Корисно для таблиць або списків — <code>odd:</code> і <code>even:</code> змінюють стилі по черзі.</p>
+        <ul class="divide-y">
+          <li class="p-3 odd:bg-white even:bg-gray-50">Рядок 1</li>
+          <li class="p-3 odd:bg-white even:bg-gray-50">Рядок 2</li>
+          <li class="p-3 odd:bg-white even:bg-gray-50">Рядок 3</li>
+          <li class="p-3 odd:bg-white even:bg-gray-50">Рядок 4</li>
+        </ul>
+        <pre><code>&lt;li class="p-3 odd:bg-white even:bg-gray-50"&gt;...&lt;/li&gt;</code></pre>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-2xl font-semibold mb-4">Стилізація нащадків через <code>*</code> та <code>**</code></h2>
+        <p class="mb-2">Можна стилізувати всіх дітей (<code>*:</code>) або всіх нащадків будь-якого рівня (<code>**:</code>):</p>
+        <div class="border p-4 rounded space-y-2">
+          <ul class="*:text-blue-600 *:italic">
+            <li>Прямий нащадок div</li>
+            <li>Прямий нащадок div</li>
+          </ul>
+        </div>
+        <pre class="bg-gray-800 text-green-200 p-4 rounded mt-4 whitespace-pre">
+&lt;div class="border p-4 rounded space-y-2"&gt;
+  &lt;ul class="*:text-blue-600 *:italic"&gt;
+    &lt;li&gt;Прямий нащадок div&lt;/li&gt;
+    &lt;li&gt;Прямий нащадок div&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+        </pre>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
