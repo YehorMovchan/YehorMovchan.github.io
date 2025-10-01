@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Адаптивний дизайн за допомогою Tailwind CSS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Додаткові стилі для креативного оформлення */
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-gray-200 font-sans">
+
+  <div class="container mx-auto">
+    <h1 class="text-4xl font-bold text-center text-gray-800 mb-10 p-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg shadow-lg">
+      Демонстрація адаптивного дизайну з Tailwind CSS
+    </h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+      <!-- Картка 1 -->
+      <div class="card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl text-center transition-all">
+        <div class="text-6xl mb-4 text-yellow-500">
+          🚀
+        </div>
+        <h2 class="text-2xl font-semibold mb-2 text-gray-900">Картка 1</h2>
+        <p class="text-gray-600">Це велика картка для демонстрації адаптивності</p>
+      </div>
+
+      <!-- Картка 2 -->
+      <div class="card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl text-center transition-all">
+        <div class="text-6xl mb-4 text-green-500">
+          🌍
+        </div>
+        <h2 class="text-2xl font-semibold mb-2 text-gray-900">Картка 2</h2>
+        <p class="text-gray-600">Текст, що адаптується для різних екранів</p>
+      </div>
+
+      <!-- Картка 3 -->
+      <div class="card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl text-center transition-all">
+        <div class="text-6xl mb-4 text-blue-500">
+          🎉
+        </div>
+        <h2 class="text-2xl font-semibold mb-2 text-gray-900">Картка 3</h2>
+        <p class="text-gray-600">Тестуємо новий адаптивний дизайн</p>
+      </div>
+
+      <!-- Картка 4  -->
+      <div class="card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl text-center transition-all">
+        <div class="text-6xl mb-4 text-red-500">
+          🎨
+        </div>
+        <h2 class="text-2xl font-semibold mb-2 text-gray-900">Картка 4</h2>
+        <p class="text-gray-600">Творчість та адаптація для мобільних</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
