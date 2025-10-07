@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Картка профілю - Практика SCSS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .card .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .card .header .image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin: 0 auto 15px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #667eea;
+        }
+
+        .card .header .title {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card .header .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+
+        .card .body {
+            padding: 30px;
+        }
+
+        .card .body .section {
+            margin-bottom: 25px;
+        }
+
+        .card .body .section .title {
+            font-size: 14px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .card .body .section .content {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .card .body .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card .body .stats .item {
+            text-align: center;
+        }
+
+        .card .body .stats .item .number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .card .body .stats .item .label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .card .body .button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card .body .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .card .body .button:active {
+            transform: translateY(0);
+        }
+
+        .hints {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .hints .header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .hints .section {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .hints .section .title {
+            font-weight: bold;
+            color: #764ba2;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .hints .section .content {
+            color: #555;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .hints .section .content code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 12px;
+        }
+
+        .hints .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .hints .note .title {
+            font-weight: bold;
+            color: #856404;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .hints .note .content {
+            color: #856404;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .task {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 3px solid #667eea;
+        }
+
+        .task .header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .task .content .main-task {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #667eea;
+        }
+
+        .task .content .main-task .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .task .content .main-task .text {
+            color: #333;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .task .content .requirements {
+            margin-bottom: 20px;
+        }
+
+        .task .content .requirements .title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #764ba2;
+            margin-bottom: 12px;
+        }
+
+        .task .content .requirements .list .item {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.8;
+            padding-left: 5px;
+        }
+
+        .task .content .requirements .list .item code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 13px;
+        }
+
+        .task .content .example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .task .content .example .title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #764ba2;
+            margin-bottom: 12px;
+        }
+
+        .task .content .example .code-block {
+            background: #2d2d2d;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .task .content .example .code-block .label {
+            color: #4CAF50;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .task .content .example .code-block .code {
+            color: #f8f8f2;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .task .content .example .arrow {
+            text-align: center;
+            font-size: 24px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="task">
+        <div class="header">📋 Завдання</div>
+        <div class="content">
+            <div class="main-task">
+                <div class="title">Ваше завдання:</div>
+                <div class="text">
+                    Зробити ідентичну картку <strong>про себе</strong> у форматі <strong>SCSS</strong>, використовуючи <strong>вкладення (nesting)</strong>.
+                </div>
+            </div>
+            <div class="requirements">
+                <div class="title">Вимоги:</div>
+                <div class="list">
+                    <div class="item">✅ Використовуйте вкладення для всіх селекторів</div>
+                    <div class="item">✅ Використовуйте <code>&</code> для псевдокласів (:hover, :active)</div>
+                    <div class="item">✅ Зверніть особливу увагу на повторювані класи (.title, .content, .header, .section)</div>
+                </div>
+            </div>
+            <div class="example">
+                <div class="title">Приклад перетворення:</div>
+                <div class="code-block">
+                    <div class="label">CSS:</div>
+                    <div class="code">
+                        .card { }<br>
+                        .card .header { }<br>
+                        .card .header .title { }
+                    </div>
+                </div>
+                <div class="arrow">⬇️</div>
+                <div class="code-block">
+                    <div class="label">SCSS:</div>
+                    <div class="code">
+                        .card {<br>
+                        &nbsp;&nbsp;.header {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;.title { }<br>
+                        &nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="header">
+            <div class="image">👨‍💻</div>
+            <div class="title">Олександр Петренко</div>
+            <div class="subtitle">Frontend Developer</div>
+        </div>
+        <div class="body">
+            <div class="section">
+                <div class="title">Про мене</div>
+                <div class="content">
+                    Захоплений розробник з 3-річним досвідом створення сучасних веб-додатків. Спеціалізуюся на React та TypeScript.
+                </div>
+            </div>
+            <div class="stats">
+                <div class="item">
+                    <div class="number">47</div>
+                    <div class="label">Проєкти</div>
+                </div>
+                <div class="item">
+                    <div class="number">1.2k</div>
+                    <div class="label">Followers</div>
+                </div>
+                <div class="item">
+                    <div class="number">89</div>
+                    <div class="label">Репозиторії</div>
+                </div>
+            </div>
+            <button class="button">Зв'язатися</button>
+        </div>
+    </div>
+    <div class="hints">
+        <div class="header">💡 Підказки для SCSS вкладення</div>
+        
+        <div class="section">
+            <div class="title">⚠️ Зверніть увагу на повторювані класи!</div>
+            <div class="content">
+                У цьому коді є класи з однаковими назвами, але різними стилями:<br>
+                • <code>.title</code> (заголовок картки, секції та підказок)<br>
+                • <code>.content</code> (текст секції та підказок)<br>
+                • <code>.header</code> (шапка картки та заголовок підказок)<br>
+                • <code>.section</code> (інфо-блок і блок підказки)<br>
+                Саме вкладення допоможе їх розрізнити!
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="title">Структура .card:</div>
+            <div class="content">
+                <code>.card</code> → <code>.header</code> (шапка з фіолетовим фоном)<br>
+                ↳ <code>.image</code>, <code>.title</code>, <code>.subtitle</code><br><br>
+                <code>.card</code> → <code>.body</code> (основний контент)<br>
+                ↳ <code>.section</code> (інфо-блок)<br>
+                &nbsp;&nbsp;↳ <code>.title</code>, <code>.content</code><br>
+                ↳ <code>.stats</code> → <code>.item</code> → <code>.number</code>, <code>.label</code><br>
+                ↳ <code>.button</code>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="title">Приклад правильного вкладення:</div>
+            <div class="content">
+                Замість: <code>.card .header .title { }</code><br>
+                Пишемо в SCSS:<br>
+                <code>.card {</code><br>
+                <code>&nbsp;&nbsp;.header {</code><br>
+                <code>&nbsp;&nbsp;&nbsp;&nbsp;.title { }</code><br>
+                <code>&nbsp;&nbsp;}</code><br>
+                <code>}</code>
+            </div>
+        </div>
+
+        <div class="note">
+            <div class="title">🎯 Ключова ідея:</div>
+            <div class="content">
+                Класи <code>.title</code> в <code>.card .header</code> та в <code>.hints .section</code> - це різні елементи з різними стилями! Вкладення SCSS дозволяє писати їх окремо без конфліктів.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
