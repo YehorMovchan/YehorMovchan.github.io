@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приклад сайту</title>
+    <style>
+        /* scss/_variables.scss */
+.skill-card__icon, .skills-list, .hero .container, .header__nav ul, .header .container, .header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.skill-card, .hero .button--primary, .nav-cta, .header__nav ul li a {
+  border: 1px solid transparent;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.skill-card, .hero .button--primary, .nav-cta, .header__nav ul li a {
+  display: inline-block;
+  padding: 8px 20px;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+.skill-card:hover, .hero .button--primary:hover, .nav-cta:hover, .header__nav ul li a:hover {
+  color: #7340E2;
+  border-color: #7340E2;
+}
+
+.hero {
+  padding: 20px 0;
+}
+
+/* scss/_header.scss */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  background-color: #1F365B;
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header .container {
+  justify-content: space-between;
+}
+.header__nav ul {
+  list-style: none;
+}
+.header__nav ul li {
+  margin-left: 20px;
+}
+.header__nav ul li a {
+  background-color: transparent;
+  color: #C2D2EA;
+  padding: 10px 10px;
+}
+
+.nav-cta {
+  background-color: #7340E2;
+  color: #C2D2EA;
+  margin-left: 20px;
+}
+.nav-cta:hover {
+  background-color: #7340E2;
+}
+
+/* scss/_hero.scss */
+.hero {
+  background-color: #C2D2EA;
+  text-align: center;
+}
+.hero .container {
+  flex-direction: column;
+}
+.hero__title {
+  font-size: 3em;
+  margin-bottom: 10px;
+}
+.hero__name {
+  color: #7340E2;
+}
+.hero__subtitle {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+.hero .button--primary {
+  background-color: #7340E2;
+  color: #C2D2EA;
+  font-size: 1.1em;
+}
+.hero .button--primary:hover {
+  background-color: #7340E2;
+}
+
+/* scss/_about.scss */
+.skills-list {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.skill-card {
+  display: flex;
+  text-align: left;
+}
+.skill-card__icon {
+  font-size: 2em;
+  flex-shrink: 0;
+  margin-right: 10px;
+  padding-right: 10px;
+  border-right: 1px solid #dee2e6;
+}
+.skill-card__content {
+  padding-left: 10px;
+}
+.skill-card__title {
+  font-size: 1.2em;
+  color: #7340E2;
+  margin-bottom: 5px;
+}
+.skill-card__description {
+  color: #1F365B;
+}
+
+/*# sourceMappingURL=style.css.map */
+
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <nav class="header__nav">
+                <ul class="nav-list">
+                    <li class="nav-list__item"><a href="#about" class="nav-list__link">Про мене</a></li>
+                    <li class="nav-list__item"><a href="#projects" class="nav-list__link">Проєкти</a></li>
+                    <li class="nav-list__item"><a href="#contact" class="nav-list__link">Контакти</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero" class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <h1 class="hero__title">Привіт, я <span class="hero__name">Ім'я Студента</span>.</h1>
+                <p class="hero__subtitle">Я початківець веб-розробник, який створює адаптивні та сучасні сайти.</p>
+                <a href="#projects" class="button button--primary">Переглянути роботи</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container">            
+            <div class="skills-list">
+                <article class="skill-card">
+                    <div class="skill-card__icon">🛠️</div>
+                    <div class="skill-card__content">
+                        <h3 class="skill-card__title">HTML5 & CSS3</h3>
+                        <p class="skill-card__description">Створюю семантичну розмітку та використовую сучасні методи верстки, включаючи Flexbox та Grid.</p>
+                    </div>
+                </article>
+
+                </div>
+        </div>
+    </section>
+</body>
+</html>

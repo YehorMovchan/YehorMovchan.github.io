@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SASS: Змінні та Наслідування</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .section p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .code-block code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        .keyword { color: #c678dd; }
+        .variable { color: #e06c75; }
+        .property { color: #d19a66; }
+        .value { color: #98c379; }
+        .selector { color: #61afef; }
+        .comment { color: #5c6370; font-style: italic; }
+
+        .benefits {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .benefits ul {
+            list-style-position: inside;
+            padding-left: 20px;
+        }
+
+        .benefits li {
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+
+        .example-output {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #4caf50;
+        }
+
+        .example-output h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .tab-button:hover {
+            background: #764ba2;
+        }
+
+        .tab-button.active {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎨 SASS: Змінні та Наслідування</h1>
+        <p>Повний гід з двох найважливіших концепцій препроцесора SASS</p>
+    </header>
+
+    <div class="container">
+        <!-- Розділ 1: Змінні -->
+        <div class="section">
+            <h2>📦 Змінні в SASS</h2>
+            
+            <p>Змінні в SASS дозволяють зберігати значення, які можна повторно використовувати в усьому вашому коді. Це робить CSS більш гнучким, легким для підтримки та дозволяє уникнути повторень.</p>
+
+            <h3>Як оголошувати змінні</h3>
+            <p>Змінні в SASS починаються з символу <code>$</code> і оголошуються так само, як CSS властивості:</p>
+
+            <div class="code-block">
+                <code>
+<span class="comment">// Оголошення змінних</span><br>
+<span class="variable">$primary-color</span>: <span class="value">#667eea</span>;<br>
+<span class="variable">$secondary-color</span>: <span class="value">#764ba2</span>;<br>
+<span class="variable">$font-stack</span>: <span class="value">Helvetica, sans-serif</span>;<br>
+<span class="variable">$base-padding</span>: <span class="value">20px</span>;<br>
+<span class="variable">$border-radius</span>: <span class="value">8px</span>;<br><br>
+
+<span class="comment">// Використання змінних</span><br>
+<span class="selector">body</span> {<br>
+  <span class="property">font-family</span>: <span class="variable">$font-stack</span>;<br>
+  <span class="property">color</span>: <span class="variable">$primary-color</span>;<br>
+}<br><br>
+
+<span class="selector">.button</span> {<br>
+  <span class="property">background-color</span>: <span class="variable">$primary-color</span>;<br>
+  <span class="property">padding</span>: <span class="variable">$base-padding</span>;<br>
+  <span class="property">border-radius</span>: <span class="variable">$border-radius</span>;<br>
+  <br>
+  <span class="selector">&:hover</span> {<br>
+    <span class="property">background-color</span>: <span class="variable">$secondary-color</span>;<br>
+  }<br>
+}
+                </code>
+            </div>
+
+            <div class="example-output">
+                <h4>Результат компіляції в CSS:</h4>
+                <div class="code-block">
+                    <code>
+<span class="selector">body</span> {<br>
+  <span class="property">font-family</span>: <span class="value">Helvetica, sans-serif</span>;<br>
+  <span class="property">color</span>: <span class="value">#667eea</span>;<br>
+}<br><br>
+
+<span class="selector">.button</span> {<br>
+  <span class="property">background-color</span>: <span class="value">#667eea</span>;<br>
+  <span class="property">padding</span>: <span class="value">20px</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">8px</span>;<br>
+}<br><br>
+
+<span class="selector">.button:hover</span> {<br>
+  <span class="property">background-color</span>: <span class="value">#764ba2</span>;<br>
+}
+                    </code>
+                </div>
+            </div>
+
+            <h3>Типи змінних</h3>
+            <p>SASS підтримує різні типи даних для змінних:</p>
+
+            <div class="code-block">
+                <code>
+<span class="comment">// Числа</span><br>
+<span class="variable">$width</span>: <span class="value">100px</span>;<br>
+<span class="variable">$opacity</span>: <span class="value">0.8</span>;<br><br>
+
+<span class="comment">// Рядки</span><br>
+<span class="variable">$font-name</span>: <span class="value">"Arial"</span>;<br>
+<span class="variable">$image-path</span>: <span class="value">"../images/"</span>;<br><br>
+
+<span class="comment">// Кольори</span><br>
+<span class="variable">$red</span>: <span class="value">#ff0000</span>;<br>
+<span class="variable">$blue</span>: <span class="value">rgb(0, 0, 255)</span>;<br>
+<span class="variable">$green</span>: <span class="value">rgba(0, 255, 0, 0.5)</span>;<br><br>
+
+<span class="comment">// Булеві значення</span><br>
+<span class="variable">$is-rounded</span>: <span class="value">true</span>;<br><br>
+
+<span class="comment">// Списки</span><br>
+<span class="variable">$sizes</span>: <span class="value">10px 20px 30px 40px</span>;<br>
+<span class="variable">$colors</span>: <span class="value">red, green, blue</span>;<br><br>
+
+<span class="comment">// Maps (асоціативні масиви)</span><br>
+<span class="variable">$theme-colors</span>: (<br>
+  <span class="value">primary</span>: <span class="value">#667eea</span>,<br>
+  <span class="value">secondary</span>: <span class="value">#764ba2</span>,<br>
+  <span class="value">success</span>: <span class="value">#28a745</span><br>
+);
+                </code>
+            </div>
+
+            <h3>Область видимості змінних</h3>
+            <p>Змінні можуть бути глобальними або локальними:</p>
+
+            <div class="code-block">
+                <code>
+<span class="comment">// Глобальна змінна</span><br>
+<span class="variable">$global-color</span>: <span class="value">blue</span>;<br><br>
+
+<span class="selector">.container</span> {<br>
+  <span class="comment">// Локальна змінна (доступна тільки всередині .container)</span><br>
+  <span class="variable">$local-padding</span>: <span class="value">15px</span>;<br>
+  <span class="property">padding</span>: <span class="variable">$local-padding</span>;<br>
+  <span class="property">color</span>: <span class="variable">$global-color</span>;<br>
+}<br><br>
+
+<span class="comment">// Перевизначення глобальної змінної локально</span><br>
+<span class="selector">.header</span> {<br>
+  <span class="variable">$global-color</span>: <span class="value">red</span> <span class="keyword">!global</span>; <span class="comment">// !global робить зміну глобальною</span><br>
+  <span class="property">color</span>: <span class="variable">$global-color</span>;<br>
+}
+                </code>
+            </div>
+
+            <div class="info">
+                <strong>💡 Порада:</strong> Використовуйте <code>!global</code> обережно, оскільки це може призвести до неочікуваної поведінки при зміні глобальних змінних з локальних контекстів.
+            </div>
+
+            <h3>Інтерполяція змінних</h3>
+            <p>Інтерполяція дозволяє використовувати змінні в селекторах і назвах властивостей:</p>
+
+            <div class="code-block">
+                <code>
+<span class="variable">$side</span>: <span class="value">left</span>;<br>
+<span class="variable">$size</span>: <span class="value">large</span>;<br><br>
+
+<span class="selector">.box-#{$size}</span> {<br>
+  <span class="property">margin-#{$side}</span>: <span class="value">20px</span>;<br>
+  <span class="property">border-#{$side}</span>: <span class="value">2px solid black</span>;<br>
+}<br><br>
+
+<span class="comment">// Компілюється в:</span><br>
+<span class="comment">// .box-large {</span><br>
+<span class="comment">//   margin-left: 20px;</span><br>
+<span class="comment">//   border-left: 2px solid black;</span><br>
+<span class="comment">// }</span>
+                </code>
+            </div>
+
+            <div class="benefits">
+                <h3>✨ Переваги використання змінних:</h3>
+                <ul>
+                    <li><strong>Повторне використання:</strong> Визначте значення один раз і використовуйте скрізь</li>
+                    <li><strong>Легке оновлення:</strong> Змініть значення в одному місці, і воно оновиться всюди</li>
+                    <li><strong>Читабельність:</strong> Назви змінних роблять код більш зрозумілим</li>
+                    <li><strong>Підтримка:</strong> Значно спрощує підтримку великих проектів</li>
+                    <li><strong>Консистентність:</strong> Гарантує однакові значення по всьому проекту</li>
+                    <li><strong>Теми:</strong> Легко створювати різні теми змінюючи тільки змінні</li>
+                </ul>
+            </div>
+
+            <h3>Практичний приклад: Система кольорів</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// Базові кольори</span><br>
+<span class="variable">$primary</span>: <span class="value">#3498db</span>;<br>
+<span class="variable">$success</span>: <span class="value">#2ecc71</span>;<br>
+<span class="variable">$warning</span>: <span class="value">#f39c12</span>;<br>
+<span class="variable">$danger</span>: <span class="value">#e74c3c</span>;<br><br>
+
+<span class="comment">// Використання</span><br>
+<span class="selector">.btn-primary</span> {<br>
+  <span class="property">background</span>: <span class="variable">$primary</span>;<br>
+  <br>
+  <span class="selector">&:hover</span> {<br>
+    <span class="property">background</span>: <span class="variable">$primary-dark</span>;<br>
+  }<br>
+}<br><br>
+
+<span class="selector">.alert-success</span> {<br>
+  <span class="property">background</span>: <span class="variable">$success</span>;<br>
+  <span class="property">border-color</span>: <span class="keyword">darken</span>(<span class="variable">$success</span>, <span class="value">10%</span>);<br>
+}
+                </code>
+            </div>
+        </div>
+
+        <!-- Розділ 2: Наслідування -->
+        <div class="section">
+            <h2>🔗 Наслідування в SASS (@extend)</h2>
+            
+            <p>Наслідування в SASS дозволяє одному селектору успадковувати стилі іншого. Це допомагає уникнути дублювання коду та створювати більш ефективний CSS.</p>
+
+            <h3>Базове використання @extend</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// Базовий клас з загальними стилями</span><br>
+<span class="selector">.message</span> {<br>
+  <span class="property">padding</span>: <span class="value">15px</span>;<br>
+  <span class="property">border</span>: <span class="value">1px solid #ccc</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">5px</span>;<br>
+  <span class="property">margin-bottom</span>: <span class="value">10px</span>;<br>
+}<br><br>
+
+<span class="comment">// Успадкування базових стилів</span><br>
+<span class="selector">.success-message</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">.message</span>;<br>
+  <span class="property">background-color</span>: <span class="value">#d4edda</span>;<br>
+  <span class="property">border-color</span>: <span class="value">#c3e6cb</span>;<br>
+  <span class="property">color</span>: <span class="value">#155724</span>;<br>
+}<br><br>
+
+<span class="selector">.error-message</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">.message</span>;<br>
+  <span class="property">background-color</span>: <span class="value">#f8d7da</span>;<br>
+  <span class="property">border-color</span>: <span class="value">#f5c6cb</span>;<br>
+  <span class="property">color</span>: <span class="value">#721c24</span>;<br>
+}<br><br>
+
+<span class="selector">.warning-message</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">.message</span>;<br>
+  <span class="property">background-color</span>: <span class="value">#fff3cd</span>;<br>
+  <span class="property">border-color</span>: <span class="value">#ffeaa7</span>;<br>
+  <span class="property">color</span>: <span class="value">#856404</span>;<br>
+}
+                </code>
+            </div>
+
+            <div class="example-output">
+                <h4>Результат компіляції в CSS:</h4>
+                <div class="code-block">
+                    <code>
+<span class="selector">.message, .success-message, .error-message, .warning-message</span> {<br>
+  <span class="property">padding</span>: <span class="value">15px</span>;<br>
+  <span class="property">border</span>: <span class="value">1px solid #ccc</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">5px</span>;<br>
+  <span class="property">margin-bottom</span>: <span class="value">10px</span>;<br>
+}<br><br>
+
+<span class="selector">.success-message</span> {<br>
+  <span class="property">background-color</span>: <span class="value">#d4edda</span>;<br>
+  <span class="property">border-color</span>: <span class="value">#c3e6cb</span>;<br>
+  <span class="property">color</span>: <span class="value">#155724</span>;<br>
+}<br><br>
+
+<span class="comment">/* і так далі для інших класів */</span>
+                    </code>
+                </div>
+            </div>
+
+            <h3>Placeholder селектори (%)</h3>
+            <p>Placeholder селектори – це спеціальний тип селекторів, які існують тільки для наслідування і не генерують власний CSS код:</p>
+
+            <div class="code-block">
+                <code>
+<span class="comment">// Placeholder не з'явиться в фінальному CSS</span><br>
+<span class="selector">%button-base</span> {<br>
+  <span class="property">display</span>: <span class="value">inline-block</span>;<br>
+  <span class="property">padding</span>: <span class="value">10px 20px</span>;<br>
+  <span class="property">border</span>: <span class="value">none</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">4px</span>;<br>
+  <span class="property">cursor</span>: <span class="value">pointer</span>;<br>
+  <span class="property">text-align</span>: <span class="value">center</span>;<br>
+  <span class="property">transition</span>: <span class="value">all 0.3s ease</span>;<br>
+}<br><br>
+
+<span class="selector">.btn-primary</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%button-base</span>;<br>
+  <span class="property">background</span>: <span class="value">#007bff</span>;<br>
+  <span class="property">color</span>: <span class="value">white</span>;<br>
+}<br><br>
+
+<span class="selector">.btn-secondary</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%button-base</span>;<br>
+  <span class="property">background</span>: <span class="value">#6c757d</span>;<br>
+  <span class="property">color</span>: <span class="value">white</span>;<br>
+}
+                </code>
+            </div>
+
+            <div class="info">
+                <strong>💡 Чому використовувати %?</strong> Placeholder селектори краще, ніж звичайні класи для @extend, оскільки вони не створюють зайвий CSS код, якщо їх ніхто не успадковує.
+            </div>
+
+            <h3>Ланцюгове наслідування</h3>
+            <p>Можна створювати ланцюги наслідування:</p>
+
+            <div class="code-block">
+                <code>
+<span class="selector">%base-box</span> {<br>
+  <span class="property">padding</span>: <span class="value">20px</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">5px</span>;<br>
+}<br><br>
+
+<span class="selector">%colored-box</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%base-box</span>;<br>
+  <span class="property">border</span>: <span class="value">2px solid</span>;<br>
+}<br><br>
+
+<span class="selector">.info-box</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%colored-box</span>;<br>
+  <span class="property">background</span>: <span class="value">#d1ecf1</span>;<br>
+  <span class="property">border-color</span>: <span class="value">#17a2b8</span>;<br>
+}
+                </code>
+            </div>
+
+            <h3>Наслідування з модифікаторами</h3>
+            <div class="code-block">
+                <code>
+<span class="selector">.button</span> {<br>
+  <span class="property">padding</span>: <span class="value">10px 20px</span>;<br>
+  <span class="property">border</span>: <span class="value">none</span>;<br>
+  <span class="property">cursor</span>: <span class="value">pointer</span>;<br>
+  <br>
+  <span class="selector">&:hover</span> {<br>
+    <span class="property">opacity</span>: <span class="value">0.8</span>;<br>
+  }<br>
+}<br><br>
+
+<span class="selector">.button-large</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">.button</span>;<br>
+  <span class="property">padding</span>: <span class="value">15px 30px</span>;<br>
+  <span class="property">font-size</span>: <span class="value">18px</span>;<br>
+}<br><br>
+
+<span class="comment">// .button-large успадкує і :hover стан!</span>
+                </code>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Обережно з @extend!</strong><br>
+                Надмірне використання @extend може призвести до:<br>
+                • Складних та довгих селекторів у фінальному CSS<br>
+                • Неочікуваних побічних ефектів<br>
+                • Збільшення розміру фінального CSS файлу<br>
+                <br>
+                Використовуйте @extend обережно та переважно з placeholder селекторами.
+            </div>
+
+           
+
+            <div class="benefits">
+                <h3>✨ Переваги використання @extend:</h3>
+                <ul>
+                    <li><strong>DRY принцип:</strong> Не повторюйте код – успадковуйте його</li>
+                    <li><strong>Ефективність:</strong> Групує селектори, зменшуючи дублювання в CSS</li>
+                    <li><strong>Організація:</strong> Створює логічну структуру спадкування</li>
+                    <li><strong>Підтримка:</strong> Зміни в базовому класі автоматично поширюються</li>
+                    <li><strong>Чистота коду:</strong> Placeholder селектори не забруднюють фінальний CSS</li>
+                </ul>
+            </div>
+
+            <h3>Практичний приклад: Система карток</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// Базовий placeholder</span><br>
+<span class="selector">%card</span> {<br>
+  <span class="property">background</span>: <span class="value">white</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">8px</span>;<br>
+  <span class="property">padding</span>: <span class="value">20px</span>;<br>
+  <span class="property">box-shadow</span>: <span class="value">0 2px 4px rgba(0,0,0,0.1)</span>;<br>
+  <span class="property">transition</span>: <span class="value">transform 0.3s ease</span>;<br>
+  <br>
+  <span class="selector">&:hover</span> {<br>
+    <span class="property">transform</span>: <span class="value">translateY(-5px)</span>;<br>
+    <span class="property">box-shadow</span>: <span class="value">0 4px 8px rgba(0,0,0,0.15)</span>;<br>
+  }<br>
+}<br><br>
+
+<span class="comment">// Різні типи карток</span><br>
+<span class="selector">.product-card</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%card</span>;<br>
+  <span class="property">border-top</span>: <span class="value">3px solid #667eea</span>;<br>
+}<br><br>
+
+<span class="selector">.user-card</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%card</span>;<br>
+  <span class="property">border-left</span>: <span class="value">4px solid #764ba2</span>;<br>
+  <span class="property">display</span>: <span class="value">flex</span>;<br>
+  <span class="property">align-items</span>: <span class="value">center</span>;<br>
+}<br><br>
+
+<span class="selector">.article-card</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%card</span>;<br>
+  <span class="property">max-width</span>: <span class="value">600px</span>;<br>
+  <span class="property">margin</span>: <span class="value">0 auto</span>;<br>
+}
+                </code>
+            </div>
+
+            <h3>Комбінування змінних та наслідування</h3>
+            <p>Найбільша потужність виявляється при комбінуванні обох концепцій:</p>
+
+            <div class="code-block">
+                <code>
+<span class="comment">// Змінні для теми</span><br>
+<span class="variable">$primary-color</span>: <span class="value">#667eea</span>;<br>
+<span class="variable">$spacing-unit</span>: <span class="value">8px</span>;<br>
+<span class="variable">$border-radius</span>: <span class="value">4px</span>;<br><br>
+
+<span class="comment">// Placeholder з використанням змінних</span><br>
+<span class="selector">%button-base</span> {<br>
+  <span class="property">padding</span>: <span class="variable">$spacing-unit</span> * <span class="value">2</span>;<br>
+  <span class="property">border-radius</span>: <span class="variable">$border-radius</span>;<br>
+  <span class="property">border</span>: <span class="value">none</span>;<br>
+  <span class="property">cursor</span>: <span class="value">pointer</span>;<br>
+  <span class="property">font-weight</span>: <span class="value">bold</span>;<br>
+  <span class="property">transition</span>: <span class="value">all 0.3s</span>;<br>
+}<br><br>
+
+<span class="selector">.btn-primary</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%button-base</span>;<br>
+  <span class="property">background</span>: <span class="variable">$primary-color</span>;<br>
+  <span class="property">color</span>: <span class="value">white</span>;<br>
+  <br>
+  <span class="selector">&:hover</span> {<br>
+    <span class="property">background</span>: <span class="keyword">darken</span>(<span class="variable">$primary-color</span>, <span class="value">10%</span>);<br>
+  }<br>
+}<br><br>
+
+<span class="selector">.btn-outline</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%button-base</span>;<br>
+  <span class="property">background</span>: <span class="value">transparent</span>;<br>
+  <span class="property">border</span>: <span class="value">2px solid</span> <span class="variable">$primary-color</span>;<br>
+  <span class="property">color</span>: <span class="variable">$primary-color</span>;<br>
+  <br>
+  <span class="selector">&:hover</span> {<br>
+    <span class="property">background</span>: <span class="variable">$primary-color</span>;<br>
+    <span class="property">color</span>: <span class="value">white</span>;<br>
+  }<br>
+}
+                </code>
+            </div>
+        </div>
+
+        <!-- Порівняння та найкращі практики -->
+        <div class="section">
+            <h2>🎯 Порівняння та Найкращі Практики</h2>
+            
+            <h3>Коли використовувати що?</h3>
+            
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead>
+                        <tr style="background: #667eea; color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Ситуація</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Використовуйте</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Причина</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Повторювані значення (кольори, розміри)</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Змінні</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Легко змінювати по всьому проекту</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 12px; border: 1px solid #ddd;">Однакові групи стилів</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>@extend з %</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Уникає дублювання CSS</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Стилі з параметрами</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Mixins</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Гнучкість через аргументи</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 12px; border: 1px solid #ddd;">Теми та конфігурація</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Змінні + Maps</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Організована структура даних</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Базові стилі компонентів</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>@extend + Змінні</strong></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Комбінація переваг обох підходів</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>📚 Найкращі практики для змінних:</h3>
+            <div class="benefits">
+                <ul>
+                    <li>Використовуйте осмислені назви: <code>$primary-color</code> краще ніж <code>$blue</code></li>
+                    <li>Групуйте змінні за категоріями (кольори, шрифти, розміри)</li>
+                    <li>Створюйте окремий файл для змінних (<code>_variables.scss</code>)</li>
+                    <li>Використовуйте дефолтний прапор <code>!default</code> для змінних у бібліотеках</li>
+                    <li>Документуйте змінні коментарями</li>
+                    <li>Використовуйте maps для складних наборів даних</li>
+                </ul>
+            </div>
+
+            <h3>📚 Найкращі практики для наслідування:</h3>
+            <div class="benefits">
+                <ul>
+                    <li>Віддавайте перевагу placeholder селекторам <code>%</code> над звичайними класами</li>
+                    <li>Не використовуйте @extend всередині медіа-запитів</li>
+                    <li>Уникайте довгих ланцюгів наслідування (максимум 2-3 рівні)</li>
+                    <li>Використовуйте @extend для справді однакових стилів</li>
+                    <li>Для стилів з параметрами використовуйте mixins замість @extend</li>
+                    <li>Будьте обережні з наслідуванням у великих проектах</li>
+                </ul>
+            </div>
+
+            <h3>Приклад структури файлів</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// _variables.scss</span><br>
+<span class="variable">$primary-color</span>: <span class="value">#667eea</span>;<br>
+<span class="variable">$secondary-color</span>: <span class="value">#764ba2</span>;<br>
+<span class="variable">$font-stack</span>: <span class="value">Helvetica, sans-serif</span>;<br>
+<span class="variable">$spacing</span>: <span class="value">16px</span>;<br><br>
+
+<span class="comment">// _placeholders.scss</span><br>
+<span class="selector">%flex-center</span> {<br>
+  <span class="property">display</span>: <span class="value">flex</span>;<br>
+  <span class="property">justify-content</span>: <span class="value">center</span>;<br>
+  <span class="property">align-items</span>: <span class="value">center</span>;<br>
+}<br><br>
+
+<span class="selector">%card-base</span> {<br>
+  <span class="property">background</span>: <span class="value">white</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">8px</span>;<br>
+  <span class="property">padding</span>: <span class="variable">$spacing</span>;<br>
+  <span class="property">box-shadow</span>: <span class="value">0 2px 4px rgba(0,0,0,0.1)</span>;<br>
+}<br><br>
+
+<span class="comment">// main.scss</span><br>
+<span class="keyword">@import</span> <span class="value">'variables'</span>;<br>
+<span class="keyword">@import</span> <span class="value">'placeholders'</span>;<br><br>
+
+<span class="selector">.header</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%flex-center</span>;<br>
+  <span class="property">background</span>: <span class="variable">$primary-color</span>;<br>
+  <span class="property">padding</span>: <span class="variable">$spacing</span> * <span class="value">2</span>;<br>
+}
+                </code>
+            </div>
+
+            <h3>🚀 Реальний приклад: Система дизайну</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// === ЗМІННІ ===</span><br>
+<span class="comment">// Кольорова палітра</span><br>
+<span class="variable">$colors</span>: (<br>
+  <span class="value">primary</span>: <span class="value">#667eea</span>,<br>
+  <span class="value">secondary</span>: <span class="value">#764ba2</span>,<br>
+  <span class="value">success</span>: <span class="value">#2ecc71</span>,<br>
+  <span class="value">danger</span>: <span class="value">#e74c3c</span>,<br>
+  <span class="value">warning</span>: <span class="value">#f39c12</span>,<br>
+  <span class="value">info</span>: <span class="value">#3498db</span><br>
+);<br><br>
+
+<span class="comment">// Spacing система (8px базова одиниця)</span><br>
+<span class="variable">$spacing-xs</span>: <span class="value">4px</span>;<br>
+<span class="variable">$spacing-sm</span>: <span class="value">8px</span>;<br>
+<span class="variable">$spacing-md</span>: <span class="value">16px</span>;<br>
+<span class="variable">$spacing-lg</span>: <span class="value">24px</span>;<br>
+<span class="variable">$spacing-xl</span>: <span class="value">32px</span>;<br><br>
+
+<span class="comment">// === PLACEHOLDERS ===</span><br>
+<span class="selector">%container</span> {<br>
+  <span class="property">max-width</span>: <span class="value">1200px</span>;<br>
+  <span class="property">margin</span>: <span class="value">0 auto</span>;<br>
+  <span class="property">padding</span>: <span class="value">0</span> <span class="variable">$spacing-md</span>;<br>
+}<br><br>
+
+<span class="selector">%button</span> {<br>
+  <span class="property">display</span>: <span class="value">inline-block</span>;<br>
+  <span class="property">padding</span>: <span class="variable">$spacing-sm</span> <span class="variable">$spacing-md</span>;<br>
+  <span class="property">border</span>: <span class="value">none</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">4px</span>;<br>
+  <span class="property">cursor</span>: <span class="value">pointer</span>;<br>
+  <span class="property">font-weight</span>: <span class="value">600</span>;<br>
+  <span class="property">transition</span>: <span class="value">all 0.3s ease</span>;<br>
+  <br>
+  <span class="selector">&:hover</span> {<br>
+    <span class="property">transform</span>: <span class="value">translateY(-2px)</span>;<br>
+    <span class="property">box-shadow</span>: <span class="value">0 4px 8px rgba(0,0,0,0.15)</span>;<br>
+  }<br>
+}<br><br>
+
+<span class="comment">// === ВИКОРИСТАННЯ ===</span><br>
+<span class="selector">.main-container</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%container</span>;<br>
+}<br><br>
+
+<span class="selector">.btn-primary</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%button</span>;<br>
+  <span class="property">background</span>: <span class="keyword">map-get</span>(<span class="variable">$colors</span>, <span class="value">primary</span>);<br>
+  <span class="property">color</span>: <span class="value">white</span>;<br>
+}<br><br>
+
+<span class="selector">.btn-success</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%button</span>;<br>
+  <span class="property">background</span>: <span class="keyword">map-get</span>(<span class="variable">$colors</span>, <span class="value">success</span>);<br>
+  <span class="property">color</span>: <span class="value">white</span>;<br>
+}
+                </code>
+            </div>
+        </div>
+
+        <!-- Інтерактивні приклади -->
+        <div class="section">
+            <h2>💻 Інтерактивний приклад</h2>
+            <p>Ось як змінні та наслідування працюють разом у реальному коді:</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                <div>
+                    <h4 style="color: #667eea; margin-bottom: 10px;">SASS код:</h4>
+                    <div class="code-block" style="height: 400px; overflow-y: auto;">
+                        <code>
+<span class="variable">$theme-primary</span>: <span class="value">#667eea</span>;<br>
+<span class="variable">$theme-secondary</span>: <span class="value">#764ba2</span>;<br>
+<span class="variable">$spacing</span>: <span class="value">15px</span>;<br><br>
+
+<span class="selector">%card</span> {<br>
+  <span class="property">background</span>: <span class="value">white</span>;<br>
+  <span class="property">padding</span>: <span class="variable">$spacing</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">8px</span>;<br>
+  <span class="property">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.1)</span>;<br>
+}<br><br>
+
+<span class="selector">.product-card</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%card</span>;<br>
+  <span class="property">border-top</span>: <span class="value">3px solid</span> <span class="variable">$theme-primary</span>;<br>
+}<br><br>
+
+<span class="selector">.user-card</span> {<br>
+  <span class="keyword">@extend</span> <span class="selector">%card</span>;<br>
+  <span class="property">border-left</span>: <span class="value">4px solid</span> <span class="variable">$theme-secondary</span>;<br>
+}
+                        </code>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 style="color: #764ba2; margin-bottom: 10px;">Скомпільований CSS:</h4>
+                    <div class="code-block" style="height: 400px; overflow-y: auto;">
+                        <code>
+<span class="selector">.product-card, .user-card</span> {<br>
+  <span class="property">background</span>: <span class="value">white</span>;<br>
+  <span class="property">padding</span>: <span class="value">15px</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">8px</span>;<br>
+  <span class="property">box-shadow</span>: <span class="value">0 2px 10px rgba(0,0,0,0.1)</span>;<br>
+}<br><br>
+
+<span class="selector">.product-card</span> {<br>
+  <span class="property">border-top</span>: <span class="value">3px solid #667eea</span>;<br>
+}<br><br>
+
+<span class="selector">.user-card</span> {<br>
+  <span class="property">border-left</span>: <span class="value">4px solid #764ba2</span>;<br>
+}
+                        </code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info">
+                <strong>💡 Зверніть увагу:</strong> SASS об'єднав селектори <code>.product-card</code> і <code>.user-card</code> в одну групу для спільних стилів, що робить CSS більш ефективним!
+            </div>
+        </div>
+
+        <!-- Висновок -->
+        <div class="section">
+            <h2>🎓 Висновок</h2>
+            
+            <p style="font-size: 1.1em; line-height: 1.8;">
+                <strong>Змінні</strong> та <strong>наслідування</strong> – це два фундаментальних інструменти SASS, які роблять ваш CSS код більш maintainable, гнучким та організованим. 
+            </p>
+            
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 15px; margin: 30px 0;">
+                <h3 style="color: white; margin-bottom: 20px;">🌟 Ключові моменти для запам'ятовування:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 15px 0; padding-left: 25px; position: relative;">
+                        <span style="position: absolute; left: 0;">✓</span>
+                        <strong>Змінні</strong> зберігають значення для повторного використання
+                    </li>
+                    <li style="margin: 15px 0; padding-left: 25px; position: relative;">
+                        <span style="position: absolute; left: 0;">✓</span>
+                        Використовуйте <strong>placeholder селектори (%)</strong> для наслідування
+                    </li>
+                    <li style="margin: 15px 0; padding-left: 25px; position: relative;">
+                        <span style="position: absolute; left: 0;">✓</span>
+                        Комбінуйте обидві концепції для максимальної ефективності
+                    </li>
+                    <li style="margin: 15px 0; padding-left: 25px; position: relative;">
+                        <span style="position: absolute; left: 0;">✓</span>
+                        Організовуйте код у окремі файли (_variables.scss, _placeholders.scss)
+                    </li>
+                    <li style="margin: 15px 0; padding-left: 25px; position: relative;">
+                        <span style="position: absolute; left: 0;">✓</span>
+                        Використовуйте @extend обережно і свідомо
+                    </li>
+                </ul>
+            </div>
+
+            <p style="font-size: 1.05em; margin-top: 20px;">
+                Освоївши ці концепції, ви зможете писати чистіший, більш організований CSS код, який легко підтримувати та масштабувати. Практикуйтесь, експериментуйте і створюйте власні системи дизайну!
+            </p>
+        </div>
+    </div>
+    <footer>
+        <p style="font-size: 1.1em; margin-bottom: 10px;">Створено з ❤️ для вивчення SASS</p>
+        <p style="opacity: 0.8;">Змінні + Наслідування = Потужний CSS</p>
+    </footer>
+</body>
+</html>
