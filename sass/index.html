@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SASS: Mixins та Функції</title>
+    <style>
+/*
+ * Цей CSS-файл скомпільовано з SASS/SCSS.
+ * Він демонструє використання Змінних, Наслідування та Вкладеності.
+ */
+
+/* Базові стилі */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  color: #343a40;
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  color: #7340e2;
+  margin-bottom: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Наслідування: %spacing-vertical */
+.section, .project-card, .skill-card {
+  padding: 80px 0;
+}
+
+/* Наслідування: %decorative-base */
+.project-card, .skill-card {
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  background-color: #ffffff;
+}
+
+/* Наслідування: %button-element-base */
+.button--primary, .project-card__content .button--project, .nav-list__item .nav-list__link {
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  background-color: #ffffff;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* Наслідування: %hover-grow */
+.button--primary:hover, .project-card:hover, .skill-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* =================================== */
+/* HEADER */
+/* =================================== */
+.header {
+  background-color: #343a40;
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Вкладеність: .header .container */
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-end; /* Перевизначення для вирівнювання праворуч */
+}
+
+/* Вкладеність: .header__nav .nav-list */
+.header__nav .nav-list {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Вкладеність: .header__nav .nav-list__item */
+.header__nav .nav-list__item {
+  margin-left: 20px;
+}
+
+/* Вкладеність: .header__nav .nav-list__link (успадковує %button-element-base) */
+.header__nav .nav-list__item .nav-list__link {
+  background-color: transparent;
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* Вкладеність: .nav-list__link:hover */
+.header__nav .nav-list__item .nav-list__link:hover {
+  color: #39c0a8;
+}
+
+/* =================================== */
+/* HERO SECTION */
+/* =================================== */
+.hero {
+  background-color: #c2d2ea;
+  text-align: center;
+}
+
+/* Вкладеність: .hero .container */
+.hero .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Вкладеність: .hero__title */
+.hero__title {
+  font-size: 3em;
+  margin-bottom: 10px;
+}
+
+/* Вкладеність: .hero__name */
+.hero__name {
+  color: #7340e2;
+}
+
+/* Вкладеність: .hero__subtitle */
+.hero__subtitle {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+/* Вкладеність: .button--primary (успадковує %button-element-base) */
+.hero .button--primary {
+  background-color: #7340e2;
+  color: #ffffff; /* Результат SASS-функції text-contrast(#7340e2) */
+  font-size: 1.2em;
+}
+
+/* Вкладеність: .button--primary:hover */
+.hero .button--primary:hover {
+  background-color: #5d34b5; /* Результат SASS-функції darken(#7340e2, 10%) */
+}
+
+/* =================================== */
+/* PROJECTS SECTION */
+/* =================================== */
+.section--dark {
+  background-color: #343a40;
+  color: #ffffff;
+}
+
+.section--dark h2, .section--dark h3 {
+  color: #39c0a8;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 80px;
+}
+
+/* Міксин для адаптивності (media-tablet) */
+@media (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.project-card {
+  /* Успадковує %decorative-base та %hover-grow */
+}
+
+/* Вкладеність: .project-card__image */
+.project-card__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 5px 5px 0 0;
+}
+
+/* Вкладеність: .project-card__content */
+.project-card__content {
+  padding: 20px;
+}
+
+/* Вкладеність: .project-card__title */
+.project-card__title {
+  color: #7340e2;
+  margin-bottom: 10px;
+}
+
+/* Вкладеність: .project-card .button--project */
+.project-card .button--project {
+  background-color: #39c0a8;
+  color: #343a40; /* Результат SASS-функції text-contrast(#39c0a8) */
+  margin-top: 10px;
+}
+
+/* =================================== */
+/* ABOUT SECTION (SKILLS) */
+/* =================================== */
+.skills-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 80px;
+}
+
+.skill-card {
+  /* Успадковує %button-element-base та %hover-grow */
+  display: flex;
+  max-width: 45%;
+  text-align: left;
+}
+
+/* Вкладеність: .skill-card__icon */
+.skill-card__icon {
+  padding-right: 10px;
+  border-right: 1px solid #dee2e6;
+  margin-right: 10px;
+  font-size: 2em;
+  flex-shrink: 0;
+}
+
+/* Вкладеність: .skill-card__title */
+.skill-card__title {
+  color: #39c0a8;
+  font-size: 1.2em;
+}
+
+/* Вкладеність: .skill-card__description */
+.skill-card__description {
+  font-size: 0.9em;
+  color: #343a40;
+}
+    </style>
+    
+</head>
+<body>
+    <header>
+        <h1>⚡ SASS: Mixins та Функції</h1>
+        <p>Потужні інструменти для створення гнучкого та багаторазового коду</p>
+    </header>
+
+    <div class="container">
+        <!-- Розділ 1: Mixins -->
+        <div class="section">
+            <h2>🎨 Mixins в SASS</h2>
+            
+            <p>Mixins (міксини) – це блоки CSS коду, які можна повторно використовувати по всьому проекту. Вони можуть приймати аргументи, що робить їх надзвичайно гнучкими.</p>
+
+            <h3>Базовий Mixin без параметрів</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// Оголошення mixin</span><br>
+<span class="keyword">@mixin</span> <span class="function">reset-list</span> {<br>
+  <span class="property">margin</span>: <span class="value">0</span>;<br>
+  <span class="property">padding</span>: <span class="value">0</span>;<br>
+  <span class="property">list-style</span>: <span class="value">none</span>;<br>
+}<br><br>
+
+<span class="comment">// Використання mixin</span><br>
+<span class="selector">.menu</span> {<br>
+  <span class="keyword">@include</span> <span class="function">reset-list</span>;<br>
+  <span class="property">display</span>: <span class="value">flex</span>;<br>
+}<br><br>
+
+<span class="selector">.sidebar-list</span> {<br>
+  <span class="keyword">@include</span> <span class="function">reset-list</span>;<br>
+  <span class="property">color</span>: <span class="value">#333</span>;<br>
+}
+                </code>
+            </div>
+
+            <div class="example-output">
+                <h4>Результат компіляції в CSS:</h4>
+                <div class="code-block">
+                    <code>
+<span class="selector">.menu</span> {<br>
+  <span class="property">margin</span>: <span class="value">0</span>;<br>
+  <span class="property">padding</span>: <span class="value">0</span>;<br>
+  <span class="property">list-style</span>: <span class="value">none</span>;<br>
+  <span class="property">display</span>: <span class="value">flex</span>;<br>
+}<br><br>
+
+<span class="selector">.sidebar-list</span> {<br>
+  <span class="property">margin</span>: <span class="value">0</span>;<br>
+  <span class="property">padding</span>: <span class="value">0</span>;<br>
+  <span class="property">list-style</span>: <span class="value">none</span>;<br>
+  <span class="property">color</span>: <span class="value">#333</span>;<br>
+}
+                    </code>
+                </div>
+            </div>
+
+            <h3>Mixins з параметрами</h3>
+            <p>Параметри роблять mixins дуже гнучкими:</p>
+
+            <div class="code-block">
+                <code>
+<span class="comment">// Mixin з одним параметром</span><br>
+<span class="keyword">@mixin</span> <span class="function">border-radius</span>(<span class="variable">$radius</span>) {<br>
+  <span class="property">-webkit-border-radius</span>: <span class="variable">$radius</span>;<br>
+  <span class="property">-moz-border-radius</span>: <span class="variable">$radius</span>;<br>
+  <span class="property">border-radius</span>: <span class="variable">$radius</span>;<br>
+}<br><br>
+
+<span class="comment">// Використання</span><br>
+<span class="selector">.box</span> {<br>
+  <span class="keyword">@include</span> <span class="function">border-radius</span>(<span class="value">10px</span>);<br>
+}<br><br>
+
+<span class="selector">.circle</span> {<br>
+  <span class="keyword">@include</span> <span class="function">border-radius</span>(<span class="value">50%</span>);<br>
+}
+                </code>
+            </div>
+
+            <h3>Mixins з декількома параметрами</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// Mixin для box-shadow</span><br>
+<span class="keyword">@mixin</span> <span class="function">box-shadow</span>(<span class="variable">$x</span>, <span class="variable">$y</span>, <span class="variable">$blur</span>, <span class="variable">$color</span>) {<br>
+  <span class="property">-webkit-box-shadow</span>: <span class="variable">$x</span> <span class="variable">$y</span> <span class="variable">$blur</span> <span class="variable">$color</span>;<br>
+  <span class="property">-moz-box-shadow</span>: <span class="variable">$x</span> <span class="variable">$y</span> <span class="variable">$blur</span> <span class="variable">$color</span>;<br>
+  <span class="property">box-shadow</span>: <span class="variable">$x</span> <span class="variable">$y</span> <span class="variable">$blur</span> <span class="variable">$color</span>;<br>
+}<br><br>
+
+<span class="selector">.card</span> {<br>
+  <span class="keyword">@include</span> <span class="function">box-shadow</span>(<span class="value">0</span>, <span class="value">4px</span>, <span class="value">6px</span>, <span class="value">rgba(0, 0, 0, 0.1)</span>);<br>
+}<br><br>
+
+<span class="selector">.modal</span> {<br>
+  <span class="keyword">@include</span> <span class="function">box-shadow</span>(<span class="value">0</span>, <span class="value">10px</span>, <span class="value">25px</span>, <span class="value">rgba(0, 0, 0, 0.3)</span>);<br>
+}
+                </code>
+            </div>
+
+            <h3>Параметри за замовчуванням</h3>
+            <p>Можна встановити значення за замовчуванням для параметрів:</p>
+
+            <div class="code-block">
+                <code>
+<span class="comment">// Mixin з дефолтними значеннями</span><br>
+<span class="keyword">@mixin</span> <span class="function">button</span>(<span class="variable">$bg-color</span>: <span class="value">#007bff</span>, <span class="variable">$text-color</span>: <span class="value">white</span>, <span class="variable">$padding</span>: <span class="value">10px 20px</span>) {<br>
+  <span class="property">background-color</span>: <span class="variable">$bg-color</span>;<br>
+  <span class="property">color</span>: <span class="variable">$text-color</span>;<br>
+  <span class="property">padding</span>: <span class="variable">$padding</span>;<br>
+  <span class="property">border</span>: <span class="value">none</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">4px</span>;<br>
+  <span class="property">cursor</span>: <span class="value">pointer</span>;<br>
+}<br><br>
+
+<span class="comment">// Використання з дефолтними значеннями</span><br>
+<span class="selector">.btn-primary</span> {<br>
+  <span class="keyword">@include</span> <span class="function">button</span>();<br>
+}<br><br>
+
+<span class="comment">// Перевизначення деяких параметрів</span><br>
+<span class="selector">.btn-success</span> {<br>
+  <span class="keyword">@include</span> <span class="function">button</span>(<span class="value">#28a745</span>);<br>
+}<br><br>
+
+<span class="comment">// Перевизначення всіх параметрів</span><br>
+<span class="selector">.btn-large</span> {<br>
+  <span class="keyword">@include</span> <span class="function">button</span>(<span class="value">#6c757d</span>, <span class="value">white</span>, <span class="value">15px 30px</span>);<br>
+}
+                </code>
+            </div>
+
+            <h3>Іменовані аргументи</h3>
+            <p>Для покращення читабельності можна використовувати іменовані аргументи:</p>
+
+            <div class="code-block">
+                <code>
+<span class="keyword">@mixin</span> <span class="function">position</span>(<span class="variable">$position</span>, <span class="variable">$top</span>: <span class="value">null</span>, <span class="variable">$right</span>: <span class="value">null</span>, <span class="variable">$bottom</span>: <span class="value">null</span>, <span class="variable">$left</span>: <span class="value">null</span>) {<br>
+  <span class="property">position</span>: <span class="variable">$position</span>;<br>
+  <span class="property">top</span>: <span class="variable">$top</span>;<br>
+  <span class="property">right</span>: <span class="variable">$right</span>;<br>
+  <span class="property">bottom</span>: <span class="variable">$bottom</span>;<br>
+  <span class="property">left</span>: <span class="variable">$left</span>;<br>
+}<br><br>
+
+<span class="comment">// Використання з іменованими аргументами</span><br>
+<span class="selector">.header</span> {<br>
+  <span class="keyword">@include</span> <span class="function">position</span>(<span class="value">fixed</span>, <span class="variable">$top</span>: <span class="value">0</span>, <span class="variable">$left</span>: <span class="value">0</span>, <span class="variable">$right</span>: <span class="value">0</span>);<br>
+}<br><br>
+
+<span class="selector">.sidebar</span> {<br>
+  <span class="keyword">@include</span> <span class="function">position</span>(<span class="value">absolute</span>, <span class="variable">$top</span>: <span class="value">50px</span>, <span class="variable">$left</span>: <span class="value">0</span>);<br>
+}
+                </code>
+            </div>
+
+            <h3>Variadic аргументи (змінна кількість)</h3>
+            <p>Використовуйте <code>...</code> для прийняття змінної кількості аргументів:</p>
+
+            <div class="code-block">
+                <code>
+<span class="keyword">@mixin</span> <span class="function">transition</span>(<span class="variable">$properties</span>...) {<br>
+  <span class="property">-webkit-transition</span>: <span class="variable">$properties</span>;<br>
+  <span class="property">-moz-transition</span>: <span class="variable">$properties</span>;<br>
+  <span class="property">transition</span>: <span class="variable">$properties</span>;<br>
+}<br><br>
+
+<span class="selector">.button</span> {<br>
+  <span class="keyword">@include</span> <span class="function">transition</span>(<span class="value">background 0.3s ease</span>, <span class="value">transform 0.2s</span>);<br>
+}<br><br>
+
+<span class="selector">.link</span> {<br>
+  <span class="keyword">@include</span> <span class="function">transition</span>(<span class="value">color 0.2s</span>);<br>
+}
+                </code>
+            </div>
+
+            <h3>Mixins з @content</h3>
+            <p>Директива <code>@content</code> дозволяє передавати блок стилів у mixin:</p>
+
+            <div class="code-block">
+                <code>
+<span class="keyword">@mixin</span> <span class="function">media-query</span>(<span class="variable">$breakpoint</span>) {<br>
+  <span class="keyword">@if</span> <span class="variable">$breakpoint</span> == <span class="value">mobile</span> {<br>
+    <span class="keyword">@media</span> (<span class="property">max-width</span>: <span class="value">767px</span>) {<br>
+      <span class="keyword">@content</span>;<br>
+    }<br>
+  } <span class="keyword">@else if</span> <span class="variable">$breakpoint</span> == <span class="value">tablet</span> {<br>
+    <span class="keyword">@media</span> (<span class="property">min-width</span>: <span class="value">768px</span>) <span class="keyword">and</span> (<span class="property">max-width</span>: <span class="value">1023px</span>) {<br>
+      <span class="keyword">@content</span>;<br>
+    }<br>
+  } <span class="keyword">@else if</span> <span class="variable">$breakpoint</span> == <span class="value">desktop</span> {<br>
+    <span class="keyword">@media</span> (<span class="property">min-width</span>: <span class="value">1024px</span>) {<br>
+      <span class="keyword">@content</span>;<br>
+    }<br>
+  }<br>
+}<br><br>
+
+<span class="comment">// Використання</span><br>
+<span class="selector">.container</span> {<br>
+  <span class="property">width</span>: <span class="value">100%</span>;<br>
+  <br>
+  <span class="keyword">@include</span> <span class="function">media-query</span>(<span class="value">mobile</span>) {<br>
+    <span class="property">padding</span>: <span class="value">10px</span>;<br>
+  }<br>
+  <br>
+  <span class="keyword">@include</span> <span class="function">media-query</span>(<span class="value">desktop</span>) {<br>
+    <span class="property">max-width</span>: <span class="value">1200px</span>;<br>
+    <span class="property">margin</span>: <span class="value">0 auto</span>;<br>
+  }<br>
+}
+                </code>
+            </div>
+
+            <div class="benefits">
+                <h3>✨ Переваги використання Mixins:</h3>
+                <ul>
+                    <li><strong>Повторне використання:</strong> Пишіть код один раз, використовуйте скрізь</li>
+                    <li><strong>Параметризація:</strong> Один mixin може створювати різні варіанти стилів</li>
+                    <li><strong>Вендорні префікси:</strong> Зручно обгортати властивості з префіксами</li>
+                    <li><strong>Responsive дизайн:</strong> Спрощує роботу з медіа-запитами</li>
+                    <li><strong>Підтримка:</strong> Зміни в одному місці поширюються всюди</li>
+                    <li><strong>Гнучкість:</strong> @content дозволяє передавати довільні стилі</li>
+                </ul>
+            </div>
+
+            <h3>Практичні приклади Mixins</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// Flexbox центрування</span><br>
+<span class="keyword">@mixin</span> <span class="function">flex-center</span> {<br>
+  <span class="property">display</span>: <span class="value">flex</span>;<br>
+  <span class="property">justify-content</span>: <span class="value">center</span>;<br>
+  <span class="property">align-items</span>: <span class="value">center</span>;<br>
+}<br><br>
+
+<span class="comment">// Truncate text</span><br>
+<span class="keyword">@mixin</span> <span class="function">text-truncate</span> {<br>
+  <span class="property">overflow</span>: <span class="value">hidden</span>;<br>
+  <span class="property">text-overflow</span>: <span class="value">ellipsis</span>;<br>
+  <span class="property">white-space</span>: <span class="value">nowrap</span>;<br>
+}<br><br>
+
+<span class="comment">// Responsive font size</span><br>
+<span class="keyword">@mixin</span> <span class="function">responsive-font</span>(<span class="variable">$min</span>, <span class="variable">$max</span>) {<br>
+  <span class="property">font-size</span>: <span class="value">calc</span>(<span class="variable">#{$min}</span> + (<span class="variable">#{$max}</span> - <span class="variable">#{$min}</span>) * ((100vw - 320px) / (1200 - 320)));<br>
+}<br><br>
+
+<span class="comment">// Aspect ratio box</span><br>
+<span class="keyword">@mixin</span> <span class="function">aspect-ratio</span>(<span class="variable">$width</span>, <span class="variable">$height</span>) {<br>
+  <span class="property">position</span>: <span class="value">relative</span>;<br>
+  <span class="keyword">&::before</span> {<br>
+    <span class="property">content</span>: <span class="value">""</span>;<br>
+    <span class="property">display</span>: <span class="value">block</span>;<br>
+    <span class="property">padding-top</span>: (<span class="variable">$height</span> / <span class="variable">$width</span>) * <span class="value">100%</span>;<br>
+  }<br>
+}
+                </code>
+            </div>
+        </div>
+
+        <!-- Розділ 2: Функції -->
+        <div class="section">
+            <h2>⚙️ Функції в SASS</h2>
+            
+            <p>Функції в SASS повертають значення і використовуються для обчислень. На відміну від mixins, функції не генерують CSS код безпосередньо.</p>
+
+            <h3>Вбудовані функції SASS</h3>
+            <p>SASS має багато вбудованих функцій для роботи з кольорами, числами, рядками та списками:</p>
+
+            <h4>Колірні функції:</h4>
+            <div class="code-block">
+                <code>
+<span class="variable">$primary-color</span>: <span class="value">#3498db</span>;<br><br>
+
+<span class="selector">.button</span> {<br>
+  <span class="property">background</span>: <span class="variable">$primary-color</span>;<br>
+  <br>
+  <span class="selector">&:hover</span> {<br>
+    <span class="comment">// Затемнити колір на 10%</span><br>
+    <span class="property">background</span>: <span class="function">darken</span>(<span class="variable">$primary-color</span>, <span class="value">10%</span>);<br>
+  }<br>
+  <br>
+  <span class="selector">&:active</span> {<br>
+    <span class="comment">// Освітлити колір на 5%</span><br>
+    <span class="property">background</span>: <span class="function">lighten</span>(<span class="variable">$primary-color</span>, <span class="value">5%</span>);<br>
+  }<br>
+}<br><br>
+
+<span class="selector">.overlay</span> {<br>
+  <span class="comment">// Змінити прозорість</span><br>
+  <span class="property">background</span>: <span class="function">rgba</span>(<span class="variable">$primary-color</span>, <span class="value">0.8</span>);<br>
+  <span class="comment">// або</span><br>
+  <span class="property">background</span>: <span class="function">transparentize</span>(<span class="variable">$primary-color</span>, <span class="value">0.2</span>);<br>
+}<br><br>
+
+<span class="selector">.text</span> {<br>
+  <span class="comment">// Змішати два кольори</span><br>
+  <span class="property">color</span>: <span class="function">mix</span>(<span class="value">#ff0000</span>, <span class="value">#0000ff</span>, <span class="value">50%</span>);<br>
+  <br>
+  <span class="comment">// Насиченість кольору</span><br>
+  <span class="property">border-color</span>: <span class="function">saturate</span>(<span class="variable">$primary-color</span>, <span class="value">20%</span>);<br>
+}
+                </code>
+            </div>
+
+            <div class="info">
+                <h4>📚 Популярні колірні функції:</h4>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li><code>lighten($color, $amount)</code> - освітлює колір</li>
+                    <li><code>darken($color, $amount)</code> - затемнює колір</li>
+                    <li><code>saturate($color, $amount)</code> - збільшує насиченість</li>
+                    <li><code>desaturate($color, $amount)</code> - зменшує насиченість</li>
+                    <li><code>rgba($color, $alpha)</code> - додає прозорість</li>
+                    <li><code>mix($color1, $color2, $weight)</code> - змішує кольори</li>
+                    <li><code>complement($color)</code> - повертає комплементарний колір</li>
+                </ul>
+            </div>
+
+            <h4>Числові функції:</h4>
+            <div class="code-block">
+                <code>
+<span class="variable">$width</span>: <span class="value">200px</span>;<br>
+<span class="variable">$height</span>: <span class="value">100px</span>;<br><br>
+
+<span class="selector">.box</span> {<br>
+  <span class="comment">// Округлення</span><br>
+  <span class="property">width</span>: <span class="function">round</span>(<span class="value">123.456px</span>); <span class="comment">// 123px</span><br>
+  <span class="property">height</span>: <span class="function">ceil</span>(<span class="value">123.456px</span>); <span class="comment">// 124px</span><br>
+  <span class="property">margin</span>: <span class="function">floor</span>(<span class="value">123.456px</span>); <span class="comment">// 123px</span><br>
+  <br>
+  <span class="comment">// Абсолютне значення</span><br>
+  <span class="property">padding</span>: <span class="function">abs</span>(<span class="value">-20px</span>); <span class="comment">// 20px</span><br>
+  <br>
+  <span class="comment">// Мінімальне/максимальне</span><br>
+  <span class="property">min-width</span>: <span class="function">min</span>(<span class="variable">$width</span>, <span class="value">150px</span>); <span class="comment">// 150px</span><br>
+  <span class="property">max-width</span>: <span class="function">max</span>(<span class="variable">$width</span>, <span class="value">250px</span>); <span class="comment">// 250px</span><br>
+  <br>
+  <span class="comment">// Відсоток</span><br>
+  <span class="property">width</span>: <span class="function">percentage</span>(<span class="value">0.5</span>); <span class="comment">// 50%</span><br>
+  <span class="property">opacity</span>: <span class="function">percentage</span>(<span class="value">1/3</span>); <span class="comment">// 33.33333%</span><br>
+}
+                </code>
+            </div>
+
+            <h4>Рядкові функції:</h4>
+            <div class="code-block">
+                <code>
+<span class="selector">.element</span> {<br>
+  <span class="comment">// Об'єднання рядків</span><br>
+  <span class="property">content</span>: <span class="function">quote</span>(<span class="value">"Hello"</span>); <span class="comment">// "Hello"</span><br>
+  <span class="property">font-family</span>: <span class="function">unquote</span>(<span class="value">"Arial"</span>); <span class="comment">// Arial (без лапок)</span><br>
+  <br>
+  <span class="comment">// Перетворення в верхній/нижній регістр</span><br>
+  <span class="property">text-transform</span>: <span class="function">to-upper-case</span>(<span class="value">"hello"</span>); <span class="comment">// "HELLO"</span><br>
+  <span class="property">content</span>: <span class="function">to-lower-case</span>(<span class="value">"WORLD"</span>); <span class="comment">// "world"</span><br>
+  <br>
+  <span class="comment">// Довжина рядка</span><br>
+  <span class="property">content</span>: <span class="function">str-length</span>(<span class="value">"Hello"</span>); <span class="comment">// 5</span><br>
+}
+                </code>
+            </div>
+
+            <h4>Функції для списків:</h4>
+            <div class="code-block">
+                <code>
+<span class="variable">$colors</span>: <span class="value">red, green, blue, yellow</span>;<br>
+<span class="variable">$sizes</span>: <span class="value">10px 20px 30px</span>;<br><br>
+
+<span class="selector">.list-demo</span> {<br>
+  <span class="comment">// Довжина списку</span><br>
+  <span class="property">content</span>: <span class="function">length</span>(<span class="variable">$colors</span>); <span class="comment">// 4</span><br>
+  <br>
+  <span class="comment">// Отримати елемент за індексом (індекси з 1!)</span><br>
+  <span class="property">color</span>: <span class="function">nth</span>(<span class="variable">$colors</span>, <span class="value">2</span>); <span class="comment">// green</span><br>
+  <br>
+  <span class="comment">// Об'єднати списки</span><br>
+  <span class="variable">$all</span>: <span class="function">join</span>(<span class="variable">$colors</span>, <span class="variable">$sizes</span>);<br>
+  <br>
+  <span class="comment">// Додати елемент</span><br>
+  <span class="variable">$extended</span>: <span class="function">append</span>(<span class="variable">$colors</span>, <span class="value">purple</span>);<br>
+}
+                </code>
+            </div>
+
+            <h3>Створення власних функцій</h3>
+            <p>Ви можете створювати власні функції за допомогою директиви <code>@function</code>:</p>
+
+            <div class="code-block">
+                <code>
+<span class="comment">// Проста функція для обчислення ширини колонки</span><br>
+<span class="keyword">@function</span> <span class="function">calculate-column-width</span>(<span class="variable">$columns</span>, <span class="variable">$gutter</span>: <span class="value">20px</span>) {<br>
+  <span class="keyword">@return</span> <span class="value">calc</span>((100% - (<span class="variable">#{$columns}</span> - 1) * <span class="variable">#{$gutter}</span>) / <span class="variable">#{$columns}</span>);<br>
+}<br><br>
+
+<span class="selector">.column-3</span> {<br>
+  <span class="property">width</span>: <span class="function">calculate-column-width</span>(<span class="value">3</span>);<br>
+}<br><br>
+
+<span class="selector">.column-4</span> {<br>
+  <span class="property">width</span>: <span class="function">calculate-column-width</span>(<span class="value">4</span>, <span class="value">30px</span>);<br>
+}
+                </code>
+            </div>
+
+            <h3>Складніші приклади функцій</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// Функція для конвертації px в rem</span><br>
+<span class="keyword">@function</span> <span class="function">px-to-rem</span>(<span class="variable">$px</span>, <span class="variable">$base</span>: <span class="value">16px</span>) {<br>
+  <span class="keyword">@return</span> (<span class="variable">$px</span> / <span class="variable">$base</span>) * <span class="value">1rem</span>;<br>
+}<br><br>
+
+<span class="selector">.text</span> {<br>
+  <span class="property">font-size</span>: <span class="function">px-to-rem</span>(<span class="value">24px</span>); <span class="comment">// 1.5rem</span><br>
+  <span class="property">margin</span>: <span class="function">px-to-rem</span>(<span class="value">32px</span>); <span class="comment">// 2rem</span><br>
+}<br><br>
+
+<span class="comment">// Функція для отримання кольору з мапи</span><br>
+<span class="variable">$theme-colors</span>: (<br>
+  <span class="value">primary</span>: <span class="value">#3498db</span>,<br>
+  <span class="value">secondary</span>: <span class="value">#2ecc71</span>,<br>
+  <span class="value">danger</span>: <span class="value">#e74c3c</span><br>
+);<br><br>
+
+<span class="keyword">@function</span> <span class="function">theme-color</span>(<span class="variable">$key</span>) {<br>
+  <span class="keyword">@if</span> <span class="function">map-has-key</span>(<span class="variable">$theme-colors</span>, <span class="variable">$key</span>) {<br>
+    <span class="keyword">@return</span> <span class="function">map-get</span>(<span class="variable">$theme-colors</span>, <span class="variable">$key</span>);<br>
+  } <span class="keyword">@else</span> {<br>
+    <span class="keyword">@warn</span> <span class="value">"Колір #{$key} не знайдено в темі!"</span>;<br>
+    <span class="keyword">@return</span> <span class="value">null</span>;<br>
+  }<br>
+}<br><br>
+
+<span class="selector">.button</span> {<br>
+  <span class="property">background</span>: <span class="function">theme-color</span>(<span class="value">primary</span>);<br>
+  <span class="property">border-color</span>: <span class="function">darken</span>(<span class="function">theme-color</span>(<span class="value">primary</span>), <span class="value">10%</span>);<br>
+}<br><br>
+
+<span class="comment">// Функція для обчислення контрастного кольору тексту</span><br>
+<span class="keyword">@function</span> <span class="function">contrast-color</span>(<span class="variable">$color</span>) {<br>
+  <span class="variable">$luminance</span>: (<span class="function">red</span>(<span class="variable">$color</span>) * <span class="value">0.299</span> + <span class="function">green</span>(<span class="variable">$color</span>) * <span class="value">0.587</span> + <span class="function">blue</span>(<span class="variable">$color</span>) * <span class="value">0.114</span>) / <span class="value">255</span>;<br>
+  <br>
+  <span class="keyword">@if</span> <span class="variable">$luminance</span> > <span class="value">0.5</span> {<br>
+    <span class="keyword">@return</span> <span class="value">#000</span>; <span class="comment">// Темний текст на світлому фоні</span><br>
+  } <span class="keyword">@else</span> {<br>
+    <span class="keyword">@return</span> <span class="value">#fff</span>; <span class="comment">// Світлий текст на темному фоні</span><br>
+  }<br>
+}<br><br>
+
+<span class="selector">.card</span> {<br>
+  <span class="variable">$bg</span>: <span class="value">#3498db</span>;<br>
+  <span class="property">background</span>: <span class="variable">$bg</span>;<br>
+  <span class="property">color</span>: <span class="function">contrast-color</span>(<span class="variable">$bg</span>); <span class="comment">// автоматично білий</span><br>
+}
+                </code>
+            </div>
+
+            <div class="benefits">
+                <h3>✨ Переваги використання Функцій:</h3>
+                <ul>
+                    <li><strong>Обчислення:</strong> Виконують математичні операції та повертають значення</li>
+                    <li><strong>Чистота:</strong> Не генерують CSS безпосередньо, тільки повертають значення</li>
+                    <li><strong>Повторне використання:</strong> Логіка обчислень в одному місці</li>
+                    <li><strong>Динамічність:</strong> Дозволяють створювати адаптивні значення</li>
+                    <li><strong>Валідація:</strong> Можна перевіряти вхідні дані</li>
+                    <li><strong>Композиція:</strong> Функції можна комбінувати між собою</li>
+                </ul>
+            </div>
+
+            <h3>Умовні оператори у функціях</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// Функція з умовною логікою</span><br>
+<span class="keyword">@function</span> <span class="function">get-spacing</span>(<span class="variable">$size</span>) {<br>
+  <span class="keyword">@if</span> <span class="variable">$size</span> == <span class="value">small</span> {<br>
+    <span class="keyword">@return</span> <span class="value">8px</span>;<br>
+  } <span class="keyword">@else if</span> <span class="variable">$size</span> == <span class="value">medium</span> {<br>
+    <span class="keyword">@return</span> <span class="value">16px</span>;<br>
+  } <span class="keyword">@else if</span> <span class="variable">$size</span> == <span class="value">large</span> {<br>
+    <span class="keyword">@return</span> <span class="value">24px</span>;<br>
+  } <span class="keyword">@else</span> {<br>
+    <span class="keyword">@return</span> <span class="value">16px</span>; <span class="comment">// значення за замовчуванням</span><br>
+  }<br>
+}<br><br>
+
+<span class="comment">// Функція з циклом</span><br>
+<span class="keyword">@function</span> <span class="function">sum-list</span>(<span class="variable">$list</span>) {<br>
+  <span class="variable">$sum</span>: <span class="value">0</span>;<br>
+  <span class="keyword">@each</span> <span class="variable">$item</span> <span class="keyword">in</span> <span class="variable">$list</span> {<br>
+    <span class="variable">$sum</span>: <span class="variable">$sum</span> + <span class="variable">$item</span>;<br>
+  }<br>
+  <span class="keyword">@return</span> <span class="variable">$sum</span>;<br>
+}<br><br>
+
+<span class="variable">$total</span>: <span class="function">sum-list</span>(<span class="value">10 20 30 40</span>); <span class="comment">// 100</span>
+                </code>
+            </div>
+        </div>
+        <!-- Практичні приклади -->
+        <div class="section">
+            <h2>💼 Реальні приклади використання</h2>
+            
+            <h3>Приклад 1: Система сітки (Grid System)</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// Функція для обчислення ширини колонки</span><br>
+<span class="keyword">@function</span> <span class="function">grid-width</span>(<span class="variable">$columns</span>, <span class="variable">$total-columns</span>: <span class="value">12</span>) {<br>
+  <span class="keyword">@return</span> (<span class="variable">$columns</span> / <span class="variable">$total-columns</span>) * <span class="value">100%</span>;<br>
+}<br><br>
+
+<span class="comment">// Mixin для створення колонок</span><br>
+<span class="keyword">@mixin</span> <span class="function">make-column</span>(<span class="variable">$columns</span>, <span class="variable">$gutter</span>: <span class="value">30px</span>) {<br>
+  <span class="property">width</span>: <span class="function">grid-width</span>(<span class="variable">$columns</span>);<br>
+  <span class="property">padding-left</span>: <span class="variable">$gutter</span> / <span class="value">2</span>;<br>
+  <span class="property">padding-right</span>: <span class="variable">$gutter</span> / <span class="value">2</span>;<br>
+  <span class="property">float</span>: <span class="value">left</span>;<br>
+}<br><br>
+
+<span class="selector">.col-6</span> {<br>
+  <span class="keyword">@include</span> <span class="function">make-column</span>(<span class="value">6</span>); <span class="comment">// 50% ширини</span><br>
+}<br><br>
+
+<span class="selector">.col-4</span> {<br>
+  <span class="keyword">@include</span> <span class="function">make-column</span>(<span class="value">4</span>); <span class="comment">// 33.33% ширини</span><br>
+}
+                </code>
+            </div>
+
+            <h3>Приклад 2: Адаптивна типографіка</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// Функція для обчислення fluid font size</span><br>
+<span class="keyword">@function</span> <span class="function">fluid-font</span>(<span class="variable">$min-size</span>, <span class="variable">$max-size</span>, <span class="variable">$min-width</span>: <span class="value">320px</span>, <span class="variable">$max-width</span>: <span class="value">1200px</span>) {<br>
+  <span class="variable">$slope</span>: (<span class="variable">$max-size</span> - <span class="variable">$min-size</span>) / (<span class="variable">$max-width</span> - <span class="variable">$min-width</span>);<br>
+  <span class="variable">$intersection</span>: <span class="variable">$min-size</span> - <span class="variable">$slope</span> * <span class="variable">$min-width</span>;<br>
+  <br>
+  <span class="keyword">@return</span> <span class="value">calc</span>(<span class="variable">#{$intersection}</span> + <span class="variable">#{$slope}</span> * 100vw);<br>
+}<br><br>
+
+<span class="comment">// Mixin для responsive typography</span><br>
+<span class="keyword">@mixin</span> <span class="function">responsive-text</span>(<span class="variable">$min</span>, <span class="variable">$max</span>) {<br>
+  <span class="property">font-size</span>: <span class="variable">$min</span>;<br>
+  <br>
+  <span class="keyword">@media</span> (<span class="property">min-width</span>: <span class="value">320px</span>) {<br>
+    <span class="property">font-size</span>: <span class="function">fluid-font</span>(<span class="variable">$min</span>, <span class="variable">$max</span>);<br>
+  }<br>
+  <br>
+  <span class="keyword">@media</span> (<span class="property">min-width</span>: <span class="value">1200px</span>) {<br>
+    <span class="property">font-size</span>: <span class="variable">$max</span>;<br>
+  }<br>
+}<br><br>
+
+<span class="selector">h1</span> {<br>
+  <span class="keyword">@include</span> <span class="function">responsive-text</span>(<span class="value">24px</span>, <span class="value">48px</span>);<br>
+}<br><br>
+
+<span class="selector">p</span> {<br>
+  <span class="keyword">@include</span> <span class="function">responsive-text</span>(<span class="value">14px</span>, <span class="value">18px</span>);<br>
+}
+                </code>
+            </div>
+
+            <h3>Приклад 3: Система відступів (Spacing System)</h3>
+            <div class="code-block">
+                <code>
+<span class="variable">$base-spacing</span>: <span class="value">8px</span>;<br>
+<span class="variable">$spacing-levels</span>: (<br>
+  <span class="value">xs</span>: <span class="value">0.5</span>,<br>
+  <span class="value">sm</span>: <span class="value">1</span>,<br>
+  <span class="value">md</span>: <span class="value">2</span>,<br>
+  <span class="value">lg</span>: <span class="value">3</span>,<br>
+  <span class="value">xl</span>: <span class="value">4</span>,<br>
+  <span class="value">xxl</span>: <span class="value">6</span><br>
+);<br><br>
+
+<span class="comment">// Функція для отримання значення spacing</span><br>
+<span class="keyword">@function</span> <span class="function">spacing</span>(<span class="variable">$level</span>) {<br>
+  <span class="keyword">@if</span> <span class="function">map-has-key</span>(<span class="variable">$spacing-levels</span>, <span class="variable">$level</span>) {<br>
+    <span class="variable">$multiplier</span>: <span class="function">map-get</span>(<span class="variable">$spacing-levels</span>, <span class="variable">$level</span>);<br>
+    <span class="keyword">@return</span> <span class="variable">$base-spacing</span> * <span class="variable">$multiplier</span>;<br>
+  } <span class="keyword">@else</span> {<br>
+    <span class="keyword">@warn</span> <span class="value">"Spacing level '#{$level}' не існує!"</span>;<br>
+    <span class="keyword">@return</span> <span class="variable">$base-spacing</span>;<br>
+  }<br>
+}<br><br>
+
+<span class="comment">// Mixin для створення margin/padding класів</span><br>
+<span class="keyword">@mixin</span> <span class="function">spacing-utility</span>(<span class="variable">$property</span>, <span class="variable">$level</span>) {<br>
+  <span class="property">#{$property}</span>: <span class="function">spacing</span>(<span class="variable">$level</span>);<br>
+}<br><br>
+
+<span class="selector">.mt-lg</span> {<br>
+  <span class="keyword">@include</span> <span class="function">spacing-utility</span>(<span class="value">margin-top</span>, <span class="value">lg</span>); <span class="comment">// margin-top: 24px;</span><br>
+}<br><br>
+
+<span class="selector">.p-md</span> {<br>
+  <span class="keyword">@include</span> <span class="function">spacing-utility</span>(<span class="value">padding</span>, <span class="value">md</span>); <span class="comment">// padding: 16px;</span><br>
+}
+                </code>
+            </div>
+
+            <h3>Приклад 4: Система кнопок з темами</h3>
+            <div class="code-block">
+                <code>
+<span class="variable">$button-colors</span>: (<br>
+  <span class="value">primary</span>: <span class="value">#007bff</span>,<br>
+  <span class="value">success</span>: <span class="value">#28a745</span>,<br>
+  <span class="value">danger</span>: <span class="value">#dc3545</span>,<br>
+  <span class="value">warning</span>: <span class="value">#ffc107</span><br>
+);<br><br>
+
+<span class="comment">// Функція для отримання кольору кнопки</span><br>
+<span class="keyword">@function</span> <span class="function">button-color</span>(<span class="variable">$variant</span>) {<br>
+  <span class="keyword">@return</span> <span class="function">map-get</span>(<span class="variable">$button-colors</span>, <span class="variable">$variant</span>);<br>
+}<br><br>
+
+<span class="comment">// Функція для визначення кольору тексту</span><br>
+<span class="keyword">@function</span> <span class="function">text-color-for-bg</span>(<span class="variable">$bg-color</span>) {<br>
+  <span class="keyword">@if</span> <span class="function">lightness</span>(<span class="variable">$bg-color</span>) > <span class="value">50%</span> {<br>
+    <span class="keyword">@return</span> <span class="value">#212529</span>; <span class="comment">// темний текст</span><br>
+  } <span class="keyword">@else</span> {<br>
+    <span class="keyword">@return</span> <span class="value">#ffffff</span>; <span class="comment">// світлий текст</span><br>
+  }<br>
+}<br><br>
+
+<span class="comment">// Mixin для створення кнопки з варіантом</span><br>
+<span class="keyword">@mixin</span> <span class="function">button-variant</span>(<span class="variable">$variant</span>) {<br>
+  <span class="variable">$bg</span>: <span class="function">button-color</span>(<span class="variable">$variant</span>);<br>
+  <span class="variable">$text</span>: <span class="function">text-color-for-bg</span>(<span class="variable">$bg</span>);<br>
+  <br>
+  <span class="property">background-color</span>: <span class="variable">$bg</span>;<br>
+  <span class="property">color</span>: <span class="variable">$text</span>;<br>
+  <span class="property">border</span>: <span class="value">1px solid</span> <span class="function">darken</span>(<span class="variable">$bg</span>, <span class="value">5%</span>);<br>
+  <span class="property">padding</span>: <span class="value">10px 20px</span>;<br>
+  <span class="property">border-radius</span>: <span class="value">4px</span>;<br>
+  <span class="property">cursor</span>: <span class="value">pointer</span>;<br>
+  <span class="property">transition</span>: <span class="value">all 0.3s ease</span>;<br>
+  <br>
+  <span class="selector">&:hover</span> {<br>
+    <span class="property">background-color</span>: <span class="function">darken</span>(<span class="variable">$bg</span>, <span class="value">7%</span>);<br>
+    <span class="property">border-color</span>: <span class="function">darken</span>(<span class="variable">$bg</span>, <span class="value">10%</span>);<br>
+  }<br>
+  <br>
+  <span class="selector">&:active</span> {<br>
+    <span class="property">background-color</span>: <span class="function">darken</span>(<span class="variable">$bg</span>, <span class="value">10%</span>);<br>
+    <span class="property">transform</span>: <span class="value">scale(0.98)</span>;<br>
+  }<br>
+}<br><br>
+
+<span class="comment">// Використання</span><br>
+<span class="selector">.btn-primary</span> {<br>
+  <span class="keyword">@include</span> <span class="function">button-variant</span>(<span class="value">primary</span>);<br>
+}<br><br>
+
+<span class="selector">.btn-success</span> {<br>
+  <span class="keyword">@include</span> <span class="function">button-variant</span>(<span class="value">success</span>);<br>
+}<br><br>
+
+<span class="selector">.btn-danger</span> {<br>
+  <span class="keyword">@include</span> <span class="function">button-variant</span>(<span class="value">danger</span>);<br>
+}
+                </code>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p style="font-size: 1.1em; margin-bottom: 10px;">Створено з ❤️ для вивчення SASS</p>
+    </footer>
+</body>
+</html>
