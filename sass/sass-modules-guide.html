@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розділення стилів на модулі. Import та організація коду</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #0f4b6e 0%, #0873a9 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section h2 {
+            color: #0f4b6e;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #0f4b6e;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #0873a9;
+            font-size: 1.4em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .section h4 {
+            color: #0f4b6e;
+            font-size: 1.1em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #0873a9;
+            position: relative;
+        }
+
+        .code-block code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.8;
+            display: block;
+            white-space: pre;
+        }
+
+        .code-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #0873a9;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .keyword { color: #c678dd; }
+        .variable { color: #e06c75; }
+        .property { color: #d19a66; }
+        .value { color: #98c379; }
+        .selector { color: #61afef; }
+        .comment { color: #5c6370; font-style: italic; }
+        .function { color: #56b6c2; }
+        .string { color: #98c379; }
+
+        .benefits {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #0873a9;
+        }
+
+        .benefits ul, .section ul {
+            list-style-position: inside;
+            padding-left: 20px;
+        }
+
+        .benefits li, .section li {
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .warning-box strong {
+            color: #856404;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .success-box strong {
+            color: #155724;
+        }
+
+        .error-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .error-box strong {
+            color: #721c24;
+        }
+
+        .file-structure {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.8;
+            border: 2px solid #dee2e6;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .file-structure code {
+            display: block;
+            color: #495057;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #0873a9;
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .task-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #0873a9;
+        }
+
+        .task-card h4 {
+            color: #0873a9;
+            margin-bottom: 15px;
+        }
+
+        .interactive-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .demo-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+
+        .demo-panel h4 {
+            margin-bottom: 15px;
+            color: #0873a9;
+        }
+
+        .demo-result {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .btn-demo {
+            background: #0873a9;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        .btn-demo:hover {
+            background: #0f4b6e;
+        }
+
+        .live-example {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .live-example .recipe-card {
+            background-color: #f4e8d1;
+            border: 1px solid #ddd3b8;
+            border-radius: 8px;
+            padding: 24px;
+            max-width: 360px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            text-align: left;
+        }
+
+        .live-example .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .live-example .recipe-card__title {
+            color: #8a4b38;
+            font-size: 1.8rem;
+            margin: 0 0 16px;
+        }
+
+        .live-example .recipe-card__description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .live-example .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #8a4b38;
+            color: #fff;
+        }
+
+        .live-example .btn:hover {
+            background-color: #6d3a2c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .live-example .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .badge-new {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-important {
+            background: #dc3545;
+            color: white;
+        }
+
+        .badge-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .interactive-demo {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🌍 Розділення стилів на модулі</h1>
+        <p>Повний гід по організації CSS для масштабованих проектів</p>
+        <p style="font-size: 0.9em; margin-top: 10px;">Import, Partials та архітектурний патерн 7-1</p>
+    </header>
+
+    <div class="container">
+        <!-- Проблема монолітних файлів -->
+        <div class="section">
+            <h2>⚠️ Проблема монолітних файлів стилів</h2>
+            <p>При розробці великих веб-проєктів один CSS-файл може розростатися до тисяч рядків коду. Це створює низку серйозних проблем:</p>
+            
+            <div class="error-box">
+                <strong>❌ Типові проблеми монолітного підходу:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Складність навігації:</strong> Важко знайти потрібний селектор серед тисяч рядків</li>
+                    <li><strong>Конфлікти селекторів:</strong> Висока ймовірність перезапису стилів</li>
+                    <li><strong>Низька повторюваність:</strong> Складно виокремити та повторно використати компоненти</li>
+                    <li><strong>Проблеми командної роботи:</strong> Неможливо ефективно працювати над одним файлом</li>
+                    <li><strong>Складність підтримки:</strong> Зміни в одному місці можуть зламати стилі в іншому</li>
+                </ul>
+            </div>
+
+            <h3>Приклад монолітного файлу:</h3>
+            <div class="code-block">
+                <span class="code-label">styles.css - 5000+ рядків 😱</span>
+                <code>
+<span class="comment">/* Навігація */</span>
+<span class="selector">.header</span> { <span class="property">background</span>: <span class="value">#fff</span>; }
+<span class="selector">.nav</span> { <span class="property">display</span>: <span class="value">flex</span>; }
+<span class="comment">/* ...100 рядків... */</span>
+
+<span class="comment">/* Кнопки */</span>
+<span class="selector">.btn</span> { <span class="property">padding</span>: <span class="value">10px</span>; }
+<span class="comment">/* ...200 рядків... */</span>
+
+<span class="comment">/* Картки */</span>
+<span class="selector">.card</span> { <span class="property">border</span>: <span class="value">1px solid #ccc</span>; }
+<span class="comment">/* ...1000+ рядків... */</span>
+
+<span class="comment">/* І так далі... */</span>
+                </code>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Рішення: Модульність</strong>
+                <p style="margin-top: 10px;">Розділення кодової бази стилів на менші, логічно пов'язані файли (модулі). Кожен модуль відповідає за конкретну частину інтерфейсу.</p>
+            </div>
+        </div>
+
+        <!-- Часткові файли -->
+        <div class="section">
+            <h2>🔧 Часткові файли (Partials)</h2>
+            <p>Часткові файли в Sass/SCSS — це основний інструмент для реалізації модульності.</p>
+            
+            <div class="benefits">
+                <h3>Що таке Partial?</h3>
+                <p>Частковий файл — це файл Sass, ім'я якого <strong>починається з символу підкреслення (_)</strong>, наприклад:</p>
+                <ul>
+                    <li><code>_variables.scss</code> — змінні проєкту</li>
+                    <li><code>_mixins.scss</code> — міксини</li>
+                    <li><code>_header.scss</code> — стилі для шапки</li>
+                    <li><code>_button.scss</code> — стилі для кнопок</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚡ Ключова особливість:</strong>
+                <p style="margin-top: 10px;">Sass-компілятор <strong>ігнорує файли</strong>, що починаються з підкреслення, і <strong>не компілює їх в окремі CSS-файли</strong>. Вони призначені лише для імпорту в інші файли.</p>
+            </div>
+
+            <h3>Приклад часткового файлу</h3>
+            <div class="code-block">
+                <span class="code-label">_variables.scss</span>
+                <code>
+<span class="comment">// Кольори проєкту</span>
+<span class="variable">$primary-color</span>: <span class="value">#3498db</span>;
+<span class="variable">$secondary-color</span>: <span class="value">#2ecc71</span>;
+<span class="variable">$danger-color</span>: <span class="value">#e74c3c</span>;
+<span class="variable">$text-color</span>: <span class="value">#333</span>;
+<span class="variable">$bg-color</span>: <span class="value">#f4f4f4</span>;
+
+<span class="comment">// Типографіка</span>
+<span class="variable">$font-family-base</span>: <span class="value">'Helvetica Neue', Arial, sans-serif</span>;
+<span class="variable">$font-size-base</span>: <span class="value">16px</span>;
+<span class="variable">$line-height-base</span>: <span class="value">1.6</span>;
+
+<span class="comment">// Відступи</span>
+<span class="variable">$spacing-small</span>: <span class="value">8px</span>;
+<span class="variable">$spacing-medium</span>: <span class="value">16px</span>;
+<span class="variable">$spacing-large</span>: <span class="value">24px</span>;
+
+<span class="comment">// Інше</span>
+<span class="variable">$border-radius</span>: <span class="value">8px</span>;
+<span class="variable">$transition-speed</span>: <span class="value">0.3s</span>;
+                </code>
+            </div>
+
+            <div class="code-block">
+                <span class="code-label">_button.scss</span>
+                <code>
+<span class="comment">// Базові стилі для кнопок</span>
+<span class="selector">.btn</span> {
+  <span class="property">display</span>: <span class="value">inline-block</span>;
+  <span class="property">padding</span>: <span class="variable">$spacing-medium</span> <span class="variable">$spacing-large</span>;
+  <span class="property">font-family</span>: <span class="variable">$font-family-base</span>;
+  <span class="property">border</span>: <span class="value">none</span>;
+  <span class="property">border-radius</span>: <span class="variable">$border-radius</span>;
+  <span class="property">cursor</span>: <span class="value">pointer</span>;
+  <span class="property">transition</span>: <span class="value">all</span> <span class="variable">$transition-speed</span>;
+
+  <span class="comment">// Модифікатори</span>
+  <span class="selector">&--primary</span> {
+    <span class="property">background-color</span>: <span class="variable">$primary-color</span>;
+    <span class="property">color</span>: <span class="value">white</span>;
+    
+    <span class="selector">&:hover</span> {
+      <span class="property">background-color</span>: <span class="function">darken</span>(<span class="variable">$primary-color</span>, <span class="value">10%</span>);
+    }
+  }
+
+  <span class="selector">&--secondary</span> {
+    <span class="property">background-color</span>: <span class="variable">$secondary-color</span>;
+    <span class="property">color</span>: <span class="value">white</span>;
+    
+    <span class="selector">&:hover</span> {
+      <span class="property">background-color</span>: <span class="function">darken</span>(<span class="variable">$secondary-color</span>, <span class="value">10%</span>);
+    }
+  }
+}
+                </code>
+            </div>
+        </div>
+
+        <!-- Директива @import -->
+        <div class="section">
+            <h2>📜 Директива @import</h2>
+            <p>Директива <code>@import</code> дозволяє включати вміст одного Sass-файлу в інший. Це основний інструмент для об'єднання часткових файлів.</p>
+
+            <h3>Синтаксис</h3>
+            <div class="code-block">
+                <span class="code-label">main.scss</span>
+                <code>
+<span class="comment">// При імпорті можна не вказувати _ та .scss</span>
+@import 'variables';        <span class="comment">// Імпортує _variables.scss</span>
+@import 'mixins';          <span class="comment">// Імпортує _mixins.scss</span>
+@import 'components/button'; <span class="comment">// Імпортує components/_button.scss</span>
+                </code>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Важливо! Не плутати з нативним CSS @import</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Sass @import</strong> — виконується під час компіляції, об'єднує файли в один</li>
+                    <li><strong>CSS @import</strong> — створює додатковий HTTP-запит, сповільнює завантаження</li>
+                </ul>
+            </div>
+
+            <h3>Порівняння: Sass @import vs CSS @import</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Параметр</th>
+                        <th>Sass @import</th>
+                        <th>CSS @import</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Момент виконання</td>
+                        <td>✅ Під час компіляції</td>
+                        <td>❌ У браузері</td>
+                    </tr>
+                    <tr>
+                        <td>HTTP-запити</td>
+                        <td>✅ Один файл</td>
+                        <td>❌ Багато запитів</td>
+                    </tr>
+                    <tr>
+                        <td>Продуктивність</td>
+                        <td>✅ Висока</td>
+                        <td>❌ Низька</td>
+                    </tr>
+                    <tr>
+                        <td>Використання змінних</td>
+                        <td>✅ Між файлами</td>
+                        <td>❌ Неможливо</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Приклад неправильного використання</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">/* ❌ НЕПРАВИЛЬНО - Це CSS @import! */</span>
+@import <span class="function">url</span>(<span class="string">'styles.css'</span>);
+
+<span class="comment">/* ✅ ПРАВИЛЬНО - Sass @import */</span>
+@import 'styles';
+                </code>
+            </div>
+
+            <div class="success-box">
+                <strong>🆕 Сучасна альтернатива: @use <span class="badge badge-new">NEW</span></strong>
+                <p style="margin-top: 10px;">В сучасному Sass рекомендується використовувати директиву <code>@use</code>. Вона вирішує проблеми з глобальним простором імен.</p>
+            </div>
+
+            <h3>Порівняння @import та @use</h3>
+            <div class="interactive-demo">
+                <div class="demo-panel">
+                    <h4>Старий підхід: @import</h4>
+                    <div class="code-block" style="margin: 10px 0;">
+                        <code style="font-size: 0.85em;">
+<span class="comment">// _variables.scss</span>
+<span class="variable">$color</span>: <span class="value">blue</span>;
+
+<span class="comment">// main.scss</span>
+@import 'variables';
+<span class="selector">.box</span> { 
+  <span class="property">color</span>: <span class="variable">$color</span>; 
+}
+                        </code>
+                    </div>
+                    <p style="font-size: 0.9em;">⚠️ Глобальний простір імен</p>
+                </div>
+                
+                <div class="demo-panel">
+                    <h4>Новий підхід: @use</h4>
+                    <div class="code-block" style="margin: 10px 0;">
+                        <code style="font-size: 0.85em;">
+<span class="comment">// _variables.scss</span>
+<span class="variable">$color</span>: <span class="value">blue</span>;
+
+<span class="comment">// main.scss</span>
+@use 'variables';
+<span class="selector">.box</span> { 
+  <span class="property">color</span>: <span class="variable">variables.$color</span>; 
+}
+                        </code>
+                    </div>
+                    <p style="font-size: 0.9em;">✅ Простір імен модуля</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Патерн 7-1 -->
+        <div class="section">
+            <h2>⚙️ Архітектурний патерн 7-1</h2>
+            <p>Патерн 7-1 (7 folders, 1 file) — це популярна та перевірена часом архітектура для структурування Sass/SCSS проєктів.</p>
+            
+            <div class="benefits">
+                <h3>Концепція:</h3>
+                <p><strong>7 директорій</strong> з частковими файлами + <strong>1 головний файл</strong> (main.scss), який їх імпортує</p>
+            </div>
+
+            <h3>Структура проєкту</h3>
+            <div class="file-structure">
+<code>styles/
+│
+├── abstracts/              ← Абстракції (без CSS)
+│   ├── _variables.scss     ← Змінні
+│   ├── _functions.scss     ← Функції
+│   └── _mixins.scss        ← Міксини
+│
+├── base/                   ← Базові стилі
+│   ├── _reset.scss         ← Скидання стилів
+│   ├── _typography.scss    ← Типографіка
+│   └── _base.scss          ← Базові теги
+│
+├── components/             ← Компоненти UI
+│   ├── _button.scss        ← Кнопки
+│   ├── _card.scss          ← Картки
+│   ├── _form.scss          ← Форми
+│   └── _modal.scss         ← Модальні вікна
+│
+├── layout/                 ← Макет сайту
+│   ├── _header.scss        ← Шапка
+│   ├── _footer.scss        ← Підвал
+│   ├── _navigation.scss    ← Навігація
+│   └── _grid.scss          ← Сітка
+│
+├── pages/                  ← Стилі сторінок
+│   ├── _home.scss          ← Головна
+│   ├── _about.scss         ← Про нас
+│   └── _contact.scss       ← Контакти
+│
+├── themes/                 ← Теми оформлення
+│   ├── _light.scss         ← Світла тема
+│   └── _dark.scss          ← Темна тема
+│
+├── vendors/                ← Сторонні бібліотеки
+│   ├── _bootstrap.scss     ← Bootstrap
+│   └── _normalize.scss     ← Normalize.css
+│
+└── main.scss               ← Головний файл!
+</code>
+            </div>
+
+            <h3>Детальний опис кожної директорії</h3>
+            
+            <h4>1️⃣ abstracts/ (або utils/)</h4>
+            <p>Містить код, який <strong>не генерує CSS напряму</strong>. Це інструменти для використання в інших файлах.</p>
+            <div class="code-block">
+                <span class="code-label">abstracts/_mixins.scss</span>
+                <code>
+<span class="comment">// Міксин для flexbox центрування</span>
+@mixin <span class="function">flex-center</span> {
+  <span class="property">display</span>: <span class="value">flex</span>;
+  <span class="property">justify-content</span>: <span class="value">center</span>;
+  <span class="property">align-items</span>: <span class="value">center</span>;
+}
+
+<span class="comment">// Міксин для адаптивності</span>
+@mixin <span class="function">responsive</span>(<span class="variable">$breakpoint</span>) {
+  @if <span class="variable">$breakpoint</span> == <span class="value">mobile</span> {
+    @media (max-width: <span class="value">768px</span>) { @content; }
+  }
+}
+                </code>
+            </div>
+
+            <h4>2️⃣ base/</h4>
+            <p>Базові стилі для проєкту: скидання, типографіка, базові теги.</p>
+            <div class="code-block">
+                <span class="code-label">base/_reset.scss</span>
+                <code>
+<span class="comment">// Скидання стилів браузера</span>
+<span class="selector">*</span>,
+<span class="selector">*::before</span>,
+<span class="selector">*::after</span> {
+  <span class="property">margin</span>: <span class="value">0</span>;
+  <span class="property">padding</span>: <span class="value">0</span>;
+  <span class="property">box-sizing</span>: <span class="value">border-box</span>;
+}
+                </code>
+            </div>
+
+            <h4>3️⃣ components/</h4>
+            <p>Стилі для перевикористовуваних UI-компонентів. <strong>Один файл = один компонент</strong>.</p>
+            <div class="code-block">
+                <span class="code-label">components/_card.scss</span>
+                <code>
+<span class="selector">.card</span> {
+  <span class="property">background</span>: <span class="value">white</span>;
+  <span class="property">border-radius</span>: <span class="variable">$border-radius</span>;
+  <span class="property">padding</span>: <span class="variable">$spacing-large</span>;
+  <span class="property">box-shadow</span>: <span class="value">0 2px 8px rgba(0,0,0,0.1)</span>;
+
+  <span class="selector">&__title</span> {
+    <span class="property">font-size</span>: <span class="value">1.5rem</span>;
+    <span class="property">margin-bottom</span>: <span class="variable">$spacing-medium</span>;
+  }
+
+  <span class="selector">&__content</span> {
+    <span class="property">line-height</span>: <span class="variable">$line-height-base</span>;
+  }
+}
+                </code>
+            </div>
+
+            <h4>4️⃣ layout/</h4>
+            <p>Стилі для основних частин макету: шапка, підвал, сайдбар, навігація.</p>
+            <div class="code-block">
+                <span class="code-label">layout/_header.scss</span>
+                <code>
+<span class="selector">.header</span> {
+  <span class="property">background</span>: <span class="value">white</span>;
+  <span class="property">box-shadow</span>: <span class="value">0 2px 4px rgba(0,0,0,0.1)</span>;
+  <span class="property">padding</span>: <span class="variable">$spacing-medium</span> <span class="value">0</span>;
+
+  <span class="selector">&__container</span> {
+    <span class="property">max-width</span>: <span class="value">1200px</span>;
+    <span class="property">margin</span>: <span class="value">0 auto</span>;
+    @include <span class="function">flex-center</span>;
+    <span class="property">justify-content</span>: <span class="value">space-between</span>;
+  }
+}
+                </code>
+            </div>
+
+            <h4>5️⃣ pages/</h4>
+            <p>Стилі, специфічні для окремих сторінок.</p>
+            <div class="code-block">
+                <span class="code-label">pages/_home.scss</span>
+                <code>
+<span class="selector">.home-hero</span> {
+  <span class="property">height</span>: <span class="value">100vh</span>;
+  @include <span class="function">flex-center</span>;
+  <span class="property">background</span>: <span class="function">linear-gradient</span>(<span class="value">135deg</span>, <span class="variable">$primary-color</span>, <span class="variable">$secondary-color</span>);
+  <span class="property">color</span>: <span class="value">white</span>;
+}
+                </code>
+            </div>
+
+            <h4>6️⃣ themes/</h4>
+            <p>Стилі для різних тем оформлення.</p>
+            <div class="code-block">
+                <span class="code-label">themes/_dark.scss</span>
+                <code>
+<span class="selector">.theme-dark</span> {
+  <span class="property">--bg-color</span>: <span class="value">#1a1a1a</span>;
+  <span class="property">--text-color</span>: <span class="value">#f4f4f4</span>;
+  
+  <span class="selector">body</span> {
+    <span class="property">background</span>: <span class="function">var</span>(<span class="value">--bg-color</span>);
+    <span class="property">color</span>: <span class="function">var</span>(<span class="value">--text-color</span>);
+  }
+}
+                </code>
+            </div>
+
+            <h4>7️⃣ vendors/</h4>
+            <p>CSS-файли сторонніх бібліотек та фреймворків.</p>
+
+            <h3>Головний файл main.scss</h3>
+            <p>Цей файл <strong>не містить стилів</strong>, а лише імпортує всі часткові файли у <strong>правильному порядку</strong>.</p>
+            
+            <div class="warning-box">
+                <strong>⚠️ Порядок імпорту критично важливий!</strong>
+                <p style="margin-top: 10px;">Змінні та міксини повинні бути доступні до того, як їх використовують інші файли.</p>
+            </div>
+
+            <div class="code-block">
+                <span class="code-label">main.scss</span>
+                <code>
+<span class="comment">// ===================================</span>
+<span class="comment">// 1. АБСТРАКЦІЇ (повинні бути першими!)</span>
+<span class="comment">// ===================================</span>
+@import 'abstracts/variables';
+@import 'abstracts/functions';
+@import 'abstracts/mixins';
+
+<span class="comment">// ===================================</span>
+<span class="comment">// 2. СТОРОННІ БІБЛІОТЕКИ</span>
+<span class="comment">// ===================================</span>
+@import 'vendors/normalize';
+@import 'vendors/bootstrap';
+
+<span class="comment">// ===================================</span>
+<span class="comment">// 3. БАЗОВІ СТИЛІ</span>
+<span class="comment">// ===================================</span>
+@import 'base/reset';
+@import 'base/typography';
+@import 'base/base';
+
+<span class="comment">// ===================================</span>
+<span class="comment">// 4. МАКЕТ</span>
+<span class="comment">// ===================================</span>
+@import 'layout/header';
+@import 'layout/footer';
+@import 'layout/navigation';
+@import 'layout/grid';
+
+<span class="comment">// ===================================</span>
+<span class="comment">// 5. КОМПОНЕНТИ</span>
+<span class="comment">// ===================================</span>
+@import 'components/button';
+@import 'components/card';
+@import 'components/form';
+@import 'components/modal';
+
+<span class="comment">// ===================================</span>
+<span class="comment">// 6. СТОРІНКИ</span>
+<span class="comment">// ===================================</span>
+@import 'pages/home';
+@import 'pages/about';
+@import 'pages/contact';
+
+<span class="comment">// ===================================</span>
+<span class="comment">// 7. ТЕМИ</span>
+<span class="comment">// ===================================</span>
+@import 'themes/light';
+@import 'themes/dark';
+                </code>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Переваги модульного підходу:</strong>
+                <ul style="margin-top: 10px;">
+                    <li>Код легко читати та підтримувати</li>
+                    <li>Кожен компонент у своєму файлі</li>
+                    <li>Змінні та міксини використовуються повторно</li>
+                    <li>Легко знайти потрібний стиль</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Типові помилки -->
+        <div class="section">
+            <h2>❌ Типові помилки та їх уникнення</h2>
+            <p>Розглянемо найпоширеніші помилки при роботі з модульною структурою Sass/SCSS:</p>
+
+            <h3>Помилка 1: Неправильний порядок @import</h3>
+            <div class="error-box">
+                <strong>❌ НЕПРАВИЛЬНО:</strong>
+                <div class="code-block" style="margin-top: 10px;">
+                    <code>
+<span class="comment">// main.scss</span>
+@import 'components/button';  <span class="comment">// Помилка! Використовує $primary-color</span>
+@import 'abstracts/variables'; <span class="comment">// Змінна визначена тут</span>
+                    </code>
+                </div>
+                <p style="margin-top: 10px;"><strong>Результат:</strong> Помилка компіляції — змінна не визначена!</p>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ ПРАВИЛЬНО:</strong>
+                <div class="code-block" style="margin-top: 10px;">
+                    <code>
+<span class="comment">// main.scss</span>
+@import 'abstracts/variables'; <span class="comment">// Спочатку змінні</span>
+@import 'components/button';   <span class="comment">// Потім компоненти</span>
+                    </code>
+                </div>
+                <p style="margin-top: 10px;"><strong>Правило:</strong> Завжди імпортувати abstracts першими!</p>
+            </div>
+
+            <h3>Помилка 2: Використання нативного CSS @import</h3>
+            <div class="error-box">
+                <strong>❌ НЕПРАВИЛЬНО:</strong>
+                <div class="code-block" style="margin-top: 10px;">
+                    <code>
+@import <span class="function">url</span>(<span class="string">'styles.css'</span>);  <span class="comment">// Це CSS @import!</span>
+@import <span class="string">"https://fonts.googleapis.com/..."</span>;
+                    </code>
+                </div>
+                <p style="margin-top: 10px;"><strong>Проблема:</strong> Створює додаткові HTTP-запити, сповільнює сайт</p>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ ПРАВИЛЬНО:</strong>
+                <div class="code-block" style="margin-top: 10px;">
+                    <code>
+@import 'styles';  <span class="comment">// Sass @import без url() та розширення</span>
+                    </code>
+                </div>
+            </div>
+
+            <h3>Помилка 3: Надто гранулярне розділення</h3>
+            <div class="error-box">
+                <strong>❌ НЕПРАВИЛЬНО:</strong>
+                <div class="file-structure" style="margin-top: 10px; background: #f8d7da; border-color: #dc3545;">
+components/
+├── _button-padding.scss       <span style="color: #721c24;">← 1 правило</span>
+├── _button-color.scss         <span style="color: #721c24;">← 1 правило</span>
+├── _button-hover.scss         <span style="color: #721c24;">← 1 правило</span>
+└── _button-border.scss        <span style="color: #721c24;">← 1 правило</span>
+                </div>
+                <p style="margin-top: 10px;"><strong>Проблема:</strong> Занадто багато файлів для простого компонента</p>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ ПРАВИЛЬНО:</strong>
+                <div class="file-structure" style="margin-top: 10px; background: #d4edda; border-color: #28a745;">
+components/
+└── _button.scss               <span style="color: #155724;">← Всі стилі кнопки</span>
+                </div>
+                <p style="margin-top: 10px;"><strong>Правило:</strong> Один файл = один компонент або одна логічна сутність</p>
+            </div>
+
+            <h3>Помилка 4: Циклічні залежності</h3>
+            <div class="error-box">
+                <strong>❌ НЕПРАВИЛЬНО:</strong>
+                <div class="code-block" style="margin-top: 10px;">
+                    <code>
+<span class="comment">// _header.scss</span>
+@import 'navigation';  <span class="comment">// Імпортує navigation</span>
+
+<span class="comment">// _navigation.scss</span>
+@import 'header';      <span class="comment">// Імпортує header - циклічна залежність!</span>
+                    </code>
+                </div>
+                <p style="margin-top: 10px;"><strong>Результат:</strong> Нескінченний цикл, помилка компіляції</p>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ ПРАВИЛЬНО:</strong>
+                <div class="code-block" style="margin-top: 10px;">
+                    <code>
+<span class="comment">// main.scss - централізований імпорт</span>
+@import 'layout/header';
+@import 'layout/navigation';
+
+<span class="comment">// _header.scss та _navigation.scss не імпортують один одного</span>
+                    </code>
+                </div>
+                <p style="margin-top: 10px;"><strong>Правило:</strong> Усі імпорти робити в main.scss, уникати перехресних імпортів</p>
+            </div>
+
+            <h3>Помилка 5: Забули підкреслення в імені файлу</h3>
+            <div class="error-box">
+                <strong>❌ НЕПРАВИЛЬНО:</strong>
+                <div class="file-structure" style="margin-top: 10px; background: #f8d7da; border-color: #dc3545;">
+components/
+├── button.scss                <span style="color: #721c24;">← Без підкреслення!</span>
+└── card.scss                  <span style="color: #721c24;">← Без підкреслення!</span>
+                </div>
+                <p style="margin-top: 10px;"><strong>Проблема:</strong> Sass компілює кожен файл окремо → багато CSS-файлів</p>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ ПРАВИЛЬНО:</strong>
+                <div class="file-structure" style="margin-top: 10px; background: #d4edda; border-color: #28a745;">
+components/
+├── _button.scss               <span style="color: #155724;">← З підкресленням</span>
+└── _card.scss                 <span style="color: #155724;">← З підкресленням</span>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>💡 Швидка перевірка:</strong>
+                <ul style="margin-top: 10px;">
+                    <li>Всі часткові файли починаються з <code>_</code></li>
+                    <li>Тільки <code>main.scss</code> без підкреслення</li>
+                    <li>При імпорті <code>_</code> та <code>.scss</code> можна не писати</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Практичний приклад -->
+        <div class="section">
+            <h2>💡 Практичний приклад: Картка рецепту</h2>
+            <p>Розглянемо створення стилів для компонента картки рецепту, використовуючи модульний підхід.</p>
+
+            <h3>Живий приклад</h3>
+            <div class="live-example">
+                <article class="recipe-card">
+                    <h2 class="recipe-card__title">Яблучний пиріг 🥧</h2>
+                    <p class="recipe-card__description">
+                        Класичний рецепт домашнього пирога з ароматною корицею та соковитими яблуками.
+                    </p>
+                    <button class="btn btn--primary" type="button">Детальніше</button>
+                </article>
+            </div>
+
+            <h3>HTML-структура</h3>
+            <div class="code-block">
+                <code>
+<span class="selector">&lt;article</span> <span class="property">class</span>=<span class="string">"recipe-card"</span><span class="selector">&gt;</span>
+  <span class="selector">&lt;h2</span> <span class="property">class</span>=<span class="string">"recipe-card__title"</span><span class="selector">&gt;</span>Яблучний пиріг 🥧<span class="selector">&lt;/h2&gt;</span>
+  <span class="selector">&lt;p</span> <span class="property">class</span>=<span class="string">"recipe-card__description"</span><span class="selector">&gt;</span>
+    Класичний рецепт домашнього пирога.
+  <span class="selector">&lt;/p&gt;</span>
+  <span class="selector">&lt;button</span> <span class="property">class</span>=<span class="string">"btn btn--primary"</span><span class="selector">&gt;</span>Детальніше<span class="selector">&lt;/button&gt;</span>
+<span class="selector">&lt;/article&gt;</span>
+                </code>
+            </div>
+
+            <h3>SCSS-структура файлів</h3>
+            
+            <h4>Крок 1: Визначаємо змінні</h4>
+            <div class="code-block">
+                <span class="code-label">abstracts/_variables.scss</span>
+                <code>
+<span class="comment">// Кольори</span>
+<span class="variable">$primary-color</span>: <span class="value">#8a4b38</span>;      <span class="comment">// Коричневий</span>
+<span class="variable">$secondary-color</span>: <span class="value">#f4e8d1</span>;    <span class="comment">// Кремовий</span>
+<span class="variable">$accent-color</span>: <span class="value">#d4863f</span>;       <span class="comment">// Помаранчевий</span>
+
+<span class="comment">// Типографіка</span>
+<span class="variable">$font-family-base</span>: <span class="value">'Helvetica Neue', Arial, sans-serif</span>;
+<span class="variable">$font-size-title</span>: <span class="value">1.8rem</span>;
+<span class="variable">$font-size-base</span>: <span class="value">1rem</span>;
+
+<span class="comment">// Відступи та розміри</span>
+<span class="variable">$border-radius-base</span>: <span class="value">8px</span>;
+<span class="variable">$spacing-small</span>: <span class="value">8px</span>;
+<span class="variable">$spacing-medium</span>: <span class="value">16px</span>;
+<span class="variable">$spacing-large</span>: <span class="value">24px</span>;
+                </code>
+            </div>
+
+            <h4>Крок 2: Створюємо стилі для кнопки</h4>
+            <div class="code-block">
+                <span class="code-label">components/_button.scss</span>
+                <code>
+<span class="selector">.btn</span> {
+  <span class="property">display</span>: <span class="value">inline-block</span>;
+  <span class="property">padding</span>: <span class="value">10px 20px</span>;
+  <span class="property">border</span>: <span class="value">none</span>;
+  <span class="property">border-radius</span>: <span class="variable">$border-radius-base</span>;
+  <span class="property">cursor</span>: <span class="value">pointer</span>;
+  <span class="property">font-family</span>: <span class="variable">$font-family-base</span>;
+  <span class="property">font-size</span>: <span class="variable">$font-size-base</span>;
+  <span class="property">transition</span>: <span class="value">all 0.3s ease</span>;
+
+  <span class="comment">// Модифікатор для первинної кнопки</span>
+  <span class="selector">&--primary</span> {
+    <span class="property">background-color</span>: <span class="variable">$primary-color</span>;
+    <span class="property">color</span>: <span class="value">white</span>;
+
+    <span class="selector">&:hover</span> {
+      <span class="property">background-color</span>: <span class="function">darken</span>(<span class="variable">$primary-color</span>, <span class="value">10%</span>);
+      <span class="property">transform</span>: <span class="function">translateY</span>(<span class="value">-2px</span>);
+      <span class="property">box-shadow</span>: <span class="value">0 4px 8px rgba(0,0,0,0.2)</span>;
+    }
+
+    <span class="selector">&:active</span> {
+      <span class="property">transform</span>: <span class="function">translateY</span>(<span class="value">0</span>);
+    }
+  }
+}
+                </code>
+            </div>
+
+            <h4>Крок 3: Створюємо стилі для картки</h4>
+            <div class="code-block">
+                <span class="code-label">components/_card.scss</span>
+                <code>
+<span class="selector">.recipe-card</span> {
+  <span class="property">background-color</span>: <span class="variable">$secondary-color</span>;
+  <span class="property">border</span>: <span class="value">1px solid</span> <span class="function">darken</span>(<span class="variable">$secondary-color</span>, <span class="value">10%</span>);
+  <span class="property">border-radius</span>: <span class="variable">$border-radius-base</span>;
+  <span class="property">padding</span>: <span class="variable">$spacing-large</span>;
+  <span class="property">max-width</span>: <span class="value">350px</span>;
+  <span class="property">font-family</span>: <span class="variable">$font-family-base</span>;
+  <span class="property">box-shadow</span>: <span class="value">0 2px 8px rgba(0,0,0,0.1)</span>;
+  <span class="property">transition</span>: <span class="value">transform 0.3s ease</span>;
+
+  <span class="selector">&:hover</span> {
+    <span class="property">transform</span>: <span class="function">translateY</span>(<span class="value">-5px</span>);
+    <span class="property">box-shadow</span>: <span class="value">0 8px 16px rgba(0,0,0,0.15)</span>;
+  }
+
+  <span class="comment">// Елемент: заголовок</span>
+  <span class="selector">&__title</span> {
+    <span class="property">color</span>: <span class="variable">$primary-color</span>;
+    <span class="property">font-size</span>: <span class="variable">$font-size-title</span>;
+    <span class="property">margin-top</span>: <span class="value">0</span>;
+    <span class="property">margin-bottom</span>: <span class="variable">$spacing-medium</span>;
+  }
+
+  <span class="comment">// Елемент: опис</span>
+  <span class="selector">&__description</span> {
+    <span class="property">color</span>: <span class="value">#555</span>;
+    <span class="property">line-height</span>: <span class="value">1.6</span>;
+    <span class="property">margin-bottom</span>: <span class="variable">$spacing-medium</span>;
+  }
+}
+                </code>
+            </div>
+
+            <h4>Крок 4: Збираємо все в main.scss</h4>
+            <div class="code-block">
+                <span class="code-label">main.scss</span>
+                <code>
+<span class="comment">// Головний файл, що збирає всі модулі</span>
+
+<span class="comment">// Спочатку імпортуємо змінні</span>
+@import 'abstracts/variables';
+
+<span class="comment">// Потім імпортуємо компоненти</span>
+@import 'components/button';
+@import 'components/card';
+                </code>
+            </div>
+
+            <h3>Результат компіляції</h3>
+            <p>Після компіляції <code>main.scss</code> буде створено єдиний <code>main.css</code> файл зі всіма стилями у правильному порядку:</p>
+            
+            <div class="code-block">
+                <span class="code-label">main.css (скомпільований)</span>
+                <code>
+<span class="comment">/* Всі стилі об'єднані в один файл */</span>
+<span class="selector">.btn</span> {
+  <span class="property">display</span>: <span class="value">inline-block</span>;
+  <span class="property">padding</span>: <span class="value">10px 20px</span>;
+  <span class="property">border</span>: <span class="value">none</span>;
+  <span class="property">border-radius</span>: <span class="value">8px</span>;
+  <span class="property">cursor</span>: <span class="value">pointer</span>;
+  <span class="property">font-family</span>: <span class="value">'Helvetica Neue', Arial, sans-serif</span>;
+}
+
+<span class="selector">.btn--primary</span> {
+  <span class="property">background-color</span>: <span class="value">#8a4b38</span>;
+  <span class="property">color</span>: <span class="value">white</span>;
+}
+
+<span class="selector">.recipe-card</span> {
+  <span class="property">background-color</span>: <span class="value">#f4e8d1</span>;
+  <span class="property">border</span>: <span class="value">1px solid #ddd3b8</span>;
+  <span class="comment">/* ...та інші стилі... */</span>
+}
